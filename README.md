@@ -28,3 +28,9 @@ for times in ["2019", "2020", "2021"]:
 也可以直接安装本包
 pip install PaperCrawlerUtil
 ```
+
+```python
+本模块使用自己搭建的一个代理池，代码来自https://github.com/Germey/ProxyPool.git
+也可以自己在本地搭建这样的代理服务器，然后使用如下代码更换代理池
+basic_config(proxy_pool_url="http://localhost:xxxx")
+```
