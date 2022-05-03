@@ -8,8 +8,38 @@ import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
-PROXY_POOL_URL = 'http://liwudi.fun:56923/random'
-logging.basicConfig(filename='my.log', level=logging.WARNING)
+
+PROXY_POOL_URL = "http://liwudi.fun:56923/random"
+logging.basicConfig(filename='../my.log', level=logging.WARNING)
+log_style = "log"
+
+
+def log(string):
+    global log_style
+    if log_style == "log":
+        logging.warning(string)
+    elif log_style == "print":
+        print(string)
+    elif log_style == "all":
+        logging.warning(string)
+        print(string)
+
+
+def basic_config(log_file_name="../my.log", log_level=logging.WARNING,
+                 proxy_pool_url="http://liwudi.fun:56923/random",
+                 style="log"):
+    """
+
+    :param log_file_name: 日志文件名称
+    :param log_level: 日志等级
+    :param proxy_pool_url: 代理获取地址
+    :param style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
+    :return:
+    """
+    global PROXY_POOL_URL
+    global log_style
+    PROXY_POOL_URL = proxy_pool_url
+    log_style = style
 
 
 def get_split(lens=20, style='='):
@@ -64,28 +94,33 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
                 proxy = get_proxy()
             elif (not proxy_provide) and require_proxy:
                 proxy = get_proxy()
-            logging.warning(proxy)
+            log(proxy)
             ua = UserAgent()  # 实例化
             headers = {"User-Agent": ua.random}
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
-            logging.warning("第{}次准备爬取{}内容".format(str(i), url))
-            if require_proxy and is_this_time_use_proxy:
-                request = requests.get(url, headers=headers, proxies=proxies)
-                logging.warning("随机使用代理")
-            elif random_proxy and not is_this_time_use_proxy():
-                request = requests.get(url, headers=headers)
-                logging.warning("随机不使用代理")
-            elif not random_proxy:
+            log("第{}次准备爬取{}内容".format(str(i), url))
+            if require_proxy:
+                if random_proxy and is_this_time_use_proxy():
+                    log("随机使用代理")
+                    request = requests.get(url, headers=headers, proxies=proxies)
+                elif random_proxy and not is_this_time_use_proxy():
+                    log("随机不使用代理")
+                    request = requests.get(url, headers=headers)
+                elif not random_proxy:
+                    request = requests.get(url, headers=headers, proxies=proxies)
+                else:
+                    request = requests.get(url, headers=headers, proxies=proxies)
+            else:
                 request = requests.get(url, headers=headers)
             html = request.content
-            logging.warning("爬取成功，返回内容")
+            log("爬取成功，返回内容")
             time.sleep(sleep_time)
         except Exception as result:
-            logging.warning("错误信息:%s" % result)
-            logging.warning("尝试重连")
+            log("错误信息:%s" % result)
+            log("尝试重连")
             time.sleep(sleep_time)
         if len(html) != 0:
-            logging.warning(get_split())
+            log(get_split())
             return html
     return html
 
@@ -120,7 +155,7 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
     else:
         proxy_provide = True
     for i in range(max_retry):
-        logging.warning("第{}次准备抽取{}文件".format(str(i), url))
+        log("第{}次准备抽取{}文件".format(str(i), url))
         try:
             if len(proxies) == 0 and require_proxy:
                 proxies = get_proxy()
@@ -136,17 +171,17 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
             urlretrieve(url, path)
-            logging.warning("文件提取成功")
+            log("文件提取成功")
             success = True
             time.sleep(sleep_time)
         except Exception as e:
-            logging.warning("抽取失败:{}".format(e))
+            log("抽取失败:{}".format(e))
             time.sleep(sleep_time)
         if success:
             return success
             time.sleep(sleep_time)
     if not success:
-        logging.warning("{}提取失败".format(url))
+        log("{}提取失败".format(url))
         time.sleep(sleep_time)
         return success
 
@@ -168,8 +203,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
         if len(html) != 0:
             break
     if len(html) == 0:
-        logging.warning("获取html文件达到最大次数，停止获取doi:{}".format(doi))
-        print("获取html文件达到最大次数，停止获取doi:{}".format(doi))
+        log("获取html文件达到最大次数，停止获取doi:{}".format(doi))
         return
     attr_list = get_attribute_of_html(html, {"href=": "in"}, ["button"])
     for paths in attr_list:
@@ -177,7 +211,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
         try:
             path = paths.split("href=")[1].split("?download")[0]
         except Exception as e:
-            logging.warning("链接抽取错误:{}".format(e))
+            log("链接抽取错误:{}".format(e))
             continue
         time.sleep(sleep_time)
         for i in range(max_retry):
@@ -187,7 +221,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
             if success:
                 break
         if not success:
-            logging.warning("抽取文件达到最大次数，停止获取doi:{}".format(doi))
+            log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
             print("抽取文件达到最大次数，停止获取doi:{}".format(doi))
 
 
@@ -245,14 +279,14 @@ def local_path_generate(folder_name, file_name=""):
     :return: 返回文件绝对路径
     """
     if os.path.exists(folder_name):
-        logging.warning("文件夹存在")
+        log("文件夹存在")
     else:
         os.makedirs(folder_name)
-    if len(file_name):
+    if len(file_name) == 0:
         file_name = str(time.strftime("%H_%M_%S", time.localtime()))
         file_name = file_name + ".pdf"
     dir = os.path.abspath(folder_name)
-    work_path = os.path.join(dir, '').format(file_name)
+    work_path = os.path.join(dir, file_name)
     return work_path
 
 
