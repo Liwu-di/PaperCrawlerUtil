@@ -5,7 +5,7 @@ It contains many tools which can finish part function.
 There is an example:
 
 ```python
-from CrawlerUtil.util import *
+from PaperCrawlerUtil.util import *
 
 
 basic_config(style="print")
