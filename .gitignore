@@ -1,2 +1,7 @@
 .idea/
 my.log
+dist/
+PaperCrawlerUtil.egg-info/
+setup.py
+PaperCrawlerUtil/__pycache__/
+build/
