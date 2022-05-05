@@ -13,6 +13,11 @@ PROXY_POOL_URL = "http://liwudi.fun:56923/random"
 logging.basicConfig(filename='../my.log', level=logging.WARNING)
 log_style = "log"
 
+EQUAL = "equal"
+NOT_EQUAL = "not equal"
+IN = "in"
+NOT_IN = "not in"
+
 
 def log(string):
     global log_style
@@ -145,7 +150,8 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
     :param require_proxy:decide whether use proxy
     :param max_retry: max times to retry if fail to retrieve
     :param sleep_time: thread sleep time which finish part function
-    :param random_proxy: if this arg is true, whatever provide proxy, will random to use local address to access url
+    :param random_proxy: if this arg is true, whatever provide proxy,
+    will random to use local address to access url
     :return:a bool value represent whether success to save file
     """
     success = False
@@ -230,14 +236,19 @@ def verify_rule(rule, element):
     verify the element string. if element satisfy all rules provided by rule arg,
     return true.
     :param rule:a dictionary that represent rules. the key is the match string and the value
-    is the rule. The rule is only support "in" and "not in". example:{"href": "in"}
+    is the rule. The rule is only support "in" and "not in" and "equal" and "not equal".
+     example:{"href": "in"}
     :param element:the string will be verified
     :return:a bool value represent whether element satisfy all rule
     """
     for key, value in rule.items():
-        if str(value) == 'in' and str(key) not in str(element):
+        if str(value) == IN and str(key) not in str(element):
             return False
-        elif str(value) == 'not in' and str(key) in str(element):
+        elif str(value) == NOT_IN and str(key) in str(element):
+            return False
+        elif str(value) == EQUAL and str(value) != str(element):
+            return False
+        elif str(value) == NOT_EQUAL and str(value) == str(element):
             return False
     return True
 
