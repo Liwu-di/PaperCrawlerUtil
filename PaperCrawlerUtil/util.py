@@ -228,7 +228,6 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
                 break
         if not success:
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
-            print("抽取文件达到最大次数，停止获取doi:{}".format(doi))
 
 
 def verify_rule(rule, element):
