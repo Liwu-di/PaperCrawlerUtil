@@ -7,7 +7,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-
+import pandas
+import pdfplumber
 
 PROXY_POOL_URL = "http://liwudi.fun:56923/random"
 logging.basicConfig(filename='../my.log', level=logging.WARNING)
@@ -32,19 +33,19 @@ def log(string):
 
 def basic_config(log_file_name="../my.log", log_level=logging.WARNING,
                  proxy_pool_url="http://liwudi.fun:56923/random",
-                 style="log"):
+                 logs_style="log"):
     """
 
     :param log_file_name: 日志文件名称
     :param log_level: 日志等级
     :param proxy_pool_url: 代理获取地址
-    :param style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
+    :param logs_style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
     :return:
     """
     global PROXY_POOL_URL
     global log_style
     PROXY_POOL_URL = proxy_pool_url
-    log_style = style
+    log_style = logs_style
 
 
 def get_split(lens=20, style='='):
@@ -300,7 +301,117 @@ def local_path_generate(folder_name, file_name=""):
     return work_path
 
 
+def write_file(path, mode, string, encoding="utf-8"):
+    try:
+        with open(path, mode=mode, encoding=encoding) as f:
+            f.write(string)
+        f.close()
+        log("写入文件{}成功".format(path))
+    except Exception as e:
+        log("写入文件{}失败：{}".format(path, e))
+
+
+def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
+    """
+        用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
+        如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
+        :param path: pdf path
+        :param begin_tag: the tag which will begin from this position to abstract text
+        :param end_tag: the tag which will end util this position to abstract text
+        :param ranges: which pages you want to abstract
+        :return: the string
+    """
+    txt = ""
+    with pdfplumber.open(path) as pdf:
+        if len(pdf.pages) >= 0:
+            for i in range(ranges[0], ranges[1] + 1):
+                txt = txt + pdf.pages[i].extract_text()
+            if len(begin_tag) == 0 and len(end_tag) == 0:
+                txt = txt
+            elif len(begin_tag) == 0 and len(end_tag) > 0:
+                ele = ""
+                for ele in end_tag:
+                    if txt.find(ele):
+                        break
+                txt = txt.split(ele)[0]
+            elif len(begin_tag) > 0 and len(end_tag) == 0:
+                ele = ""
+                for ele in begin_tag:
+                    if txt.find(ele):
+                        break
+                txt = txt.split(ele)[1]
+            elif len(begin_tag) > 0 and len(end_tag) > 0:
+                ele1 = ""
+                ele2 = ""
+                for ele1 in begin_tag:
+                    if txt.find(ele1):
+                        break
+                for ele2 in end_tag:
+                    if txt.find(ele2):
+                        break
+                txt = txt.split(ele1)[1].split(ele2)[0]
+    pdf.close()
+    return txt
+
+
+def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_style="==="):
+    """
+    用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
+    如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
+    :param path: pdf path
+    :param begin_tag: the tag which will begin from this position to abstract text
+    :param end_tag: the tag which will end util this position to abstract text
+    :param ranges: which pages you want to abstract
+    :param split_style: split style which will used to split string of each file of directory
+    :return: the string
+    """
+    if begin_tag is None:
+        begin_tag = []
+    if end_tag is None:
+        end_tag = ["1. Introduction", "1. introduction", "Introduction", "introduction"]
+    txt = ""
+    valid_count = 0
+    sum_count = 0
+    file_list = []
+    if os.path.isfile(path):
+        file_list.append(path)
+    else:
+        file_list.extend(getAllFiles(path))
+    for ele in file_list:
+        if ele.endswith("pdf"):
+            tem = get_para_from_one_pdf(ele, begin_tag, end_tag, ranges)
+            txt = txt + tem + "\n"
+            txt = txt + get_split(style=split_style) + get_split(style="\n", lens=3)
+            if len(tem) > 0:
+                valid_count = valid_count + 1
+                log("有效抽取文件：{}".format(ele))
+            sum_count = sum_count + 1
+        else:
+            sum_count = sum_count + 1
+            log("错误：{}不是PDF文件".format(ele))
+    log("总计抽取了文件数量：{}，其中有效抽取（>0）数量：{}".format(sum_count, valid_count))
+    return txt
+
+
+def getAllFiles(targetDir):
+    """
+    遍历文件夹
+    :param targetDir: 遍历的文件夹
+    :return: 所有文件的名称
+    """
+    files = []
+    listFiles = os.listdir(targetDir)
+    for i in range(0, len(listFiles)):
+        path = os.path.join(targetDir, listFiles[i])
+        if os.path.isdir(path):
+            files.extend(getAllFiles(path))
+        elif os.path.isfile(path):
+            files.append(path)
+    return files
+
+
 if __name__ == "__main__":
-    dir = os.path.abspath("PAMI_sum")
-    work_path = os.path.join(dir, '3.pdf')
-    get_pdf_url_by_doi("10.1109/TPAMI.2020.3042298", work_path)
+    basic_config(logs_style="print")
+    title_and_abstract = get_para_from_pdf(path="E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", ranges=(0, 2))
+    write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "title_and_abstract.txt"),
+               mode="w+", string=title_and_abstract)
