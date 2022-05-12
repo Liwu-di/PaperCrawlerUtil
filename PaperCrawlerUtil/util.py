@@ -19,6 +19,9 @@ NOT_EQUAL = "not equal"
 IN = "in"
 NOT_IN = "not in"
 
+LOG_STYLE_LOG = "log"
+LOG_STYLE_PRINT = "print"
+LOG_STYLE_ALL = "all"
 
 def log(string):
     global log_style

@@ -24,13 +24,29 @@ for times in ["2019", "2020", "2021"]:
             retrieve_file("https://openaccess.thecvf.com/" + pdf_path, work_path)
 
 ```
-```python
-也可以直接安装本包
-pip install PaperCrawlerUtil
-```
 
 ```python
 本模块使用自己搭建的一个代理池，代码来自https://github.com/Germey/ProxyPool.git
 也可以自己在本地搭建这样的代理服务器，然后使用如下代码更换代理池
 basic_config(proxy_pool_url="http://localhost:xxxx")
+
+同时可以替换，其他的一些配置，如下所示，其中日志的等级只能配置一次，之后不会再生效
+basic_config(log_file_name="1.log",
+                 log_level=logging.WARNING,
+                 proxy_pool_url="http://xxx",
+                 logs_style=LOG_STYLE_LOG)
+```
+
+```python
+如下所示，可以抽取路径上的PDF中的信息，其中路径可以是PDF也可以是文件路径，会自动判断
+如果是文件夹，则会遍历所有文件，然后返回总的字符串，可以自选分割符的形式
+同时信息的提取是通过两个标记实现的，即通过开始和结束标记截取字段
+title_and_abstract = get_para_from_pdf(path="E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", ranges=(0, 2))
+write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "title_and_abstract.txt"),
+               mode="w+", string=title_and_abstract)
+```
+
+```python
+也可以直接安装本包
+pip install PaperCrawlerUtil
 ```
