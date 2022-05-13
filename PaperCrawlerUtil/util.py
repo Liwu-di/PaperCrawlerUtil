@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 import pandas
 import pdfplumber
+import http.client
+import hashlib
+import json
 
 PROXY_POOL_URL = "http://liwudi.fun:56923/random"
 logging.basicConfig(filename='../my.log', level=logging.WARNING)
@@ -413,8 +416,59 @@ def getAllFiles(targetDir):
     return files
 
 
+def sentence_translate(string, appid="20200316000399558", secret_key="BK6HRAv6QJDGBwaZgr4F"):
+    httpClient = None
+    myurl = '/api/trans/vip/translate'
+    fromLang = 'auto'  # 原文语种
+    toLang = 'zh'  # 译文语种
+    salt = random.randint(32768, 65536)
+    q = string
+    sign = appid + q + str(salt) + secret_key
+    sign = hashlib.md5(sign.encode()).hexdigest()
+    myurl = myurl + '?appid=' + appid + '&q=' + urllib.parse.quote(
+        q) + '&from=' + fromLang + '&to=' + toLang + '&salt=' + str(
+        salt) + '&sign=' + sign
+    result = {}
+    try:
+        httpClient = http.client.HTTPConnection('api.fanyi.baidu.com')
+        httpClient.request('GET', myurl)
+        response = httpClient.getresponse()
+        result_all = response.read().decode("utf-8")
+        result = json.loads(result_all)
+        time.sleep(1.2)
+    except Exception as e:
+        log(e)
+        time.sleep(1.2)
+    finally:
+        if httpClient:
+            httpClient.close()
+    res = ""
+    try:
+        res = res + result["trans_result"][0]["dst"]
+    except Exception as e:
+        log("翻译错误：{}".format(e))
+    return res
+
+
+def text_translate(path, appid="20200316000399558", secret_key="BK6HRAv6QJDGBwaZgr4F"):
+    line = ""
+    res = ""
+    with open(path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        for ele in lines:
+            line = line + ele
+            if len(line) >= 3000:
+                line = line.replace("\n", "")
+                res = res + sentence_translate(line)
+                line = ""
+    f.close()
+    if len(line) > 0:
+        res = res + sentence_translate(line)
+    return res
+
+
 if __name__ == "__main__":
-    basic_config(logs_style="print")
-    title_and_abstract = get_para_from_pdf(path="E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", ranges=(0, 2))
-    write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "title_and_abstract.txt"),
-               mode="w+", string=title_and_abstract)
+    basic_config(logs_style=LOG_STYLE_PRINT)
+    write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "2.txt"),
+               mode="w+",
+               string=text_translate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3\\title_and_abstract.txt"))
