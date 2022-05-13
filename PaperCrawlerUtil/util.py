@@ -336,26 +336,33 @@ def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
                 txt = txt
             elif len(begin_tag) == 0 and len(end_tag) > 0:
                 ele = ""
-                for ele in end_tag:
-                    if txt.find(ele):
+                for e in end_tag:
+                    if txt.find(e) >= 0:
+                        ele = e
                         break
-                txt = txt.split(ele)[0]
+                if len(ele) > 0:
+                    txt = txt.split(ele)[0]
             elif len(begin_tag) > 0 and len(end_tag) == 0:
                 ele = ""
-                for ele in begin_tag:
-                    if txt.find(ele):
+                for e in begin_tag:
+                    if txt.find(e) >= 0:
+                        ele = e
                         break
-                txt = txt.split(ele)[1]
+                if len(ele) > 0:
+                    txt = txt.split(ele)[1]
             elif len(begin_tag) > 0 and len(end_tag) > 0:
                 ele1 = ""
                 ele2 = ""
-                for ele1 in begin_tag:
-                    if txt.find(ele1):
+                for e1 in begin_tag:
+                    if txt.find(e1) >= 0:
+                        ele1 = e1
                         break
-                for ele2 in end_tag:
-                    if txt.find(ele2):
+                for e2 in end_tag:
+                    if txt.find(e2) >= 0:
+                        ele2 = e2
                         break
-                txt = txt.split(ele1)[1].split(ele2)[0]
+                if len(ele1) > 0 and len(ele2) > 0:
+                    txt = txt.split(ele1)[1].split(ele2)[0]
     pdf.close()
     return txt
 
@@ -374,7 +381,9 @@ def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_s
     if begin_tag is None:
         begin_tag = []
     if end_tag is None:
-        end_tag = ["1. Introduction", "1. introduction", "Introduction", "introduction"]
+        end_tag = ["1. Introduction", "1. introduction",
+                   "Introduction", "introduction",
+                   "1.", "摘要"]
     txt = ""
     valid_count = 0
     sum_count = 0
@@ -469,6 +478,9 @@ def text_translate(path, appid="20200316000399558", secret_key="BK6HRAv6QJDGBwaZ
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "1.txt"),
+               mode="w+",
+               string=get_para_from_pdf("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3"))
     write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "2.txt"),
                mode="w+",
-               string=text_translate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3\\title_and_abstract.txt"))
+               string=text_translate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3\\1.txt"))
