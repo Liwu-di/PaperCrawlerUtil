@@ -26,13 +26,14 @@ LOG_STYLE_LOG = "log"
 LOG_STYLE_PRINT = "print"
 LOG_STYLE_ALL = "all"
 
+
 def log(string):
     global log_style
-    if log_style == "log":
+    if log_style == LOG_STYLE_LOG:
         logging.warning(string)
-    elif log_style == "print":
+    elif log_style == LOG_STYLE_PRINT:
         print(string)
-    elif log_style == "all":
+    elif log_style == LOG_STYLE_ALL:
         logging.warning(string)
         print(string)
 
@@ -484,3 +485,4 @@ if __name__ == "__main__":
     write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "2.txt"),
                mode="w+",
                string=text_translate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3\\1.txt"))
+    get_pdf_url_by_doi(doi="xxxx", work_path=local_path_generate("./"))
