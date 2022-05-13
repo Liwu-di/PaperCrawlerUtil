@@ -78,6 +78,7 @@ def sentence_translate(string, appid, secret_key, is_proxy, max_retry):
             continue
         else:
             return res
+    return ""
 
 
 def text_translate(path, appid="20200316000399558", secret_key="BK6HRAv6QJDGBwaZgr4F", max_retry=10, is_proxy=True):
@@ -234,7 +235,7 @@ def getAllFiles(targetDir):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    a = "E:\\git-code\\paper-crawler\\CVPR\\CVPR_2020\\3\\1"
+    a = "E:\\git-code\\paper-crawler\\CVPR\\CVPR_2020\\1\\1"
     # write_file(path=local_path_generate(a, "1.txt"),
     #            mode="w+",
     #            string=get_para_from_pdf(a))
