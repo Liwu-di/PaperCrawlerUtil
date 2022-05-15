@@ -96,7 +96,7 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
     :return: 返回文件绝对路径
     """
     if os.path.exists(folder_name):
-        log("文件夹存在")
+        log("文件夹{}存在".format(folder_name))
     else:
         os.makedirs(folder_name)
     if len(file_name) == 0:
