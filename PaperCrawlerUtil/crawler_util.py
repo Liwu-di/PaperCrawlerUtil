@@ -1,11 +1,11 @@
-import random
-import time
 import urllib
 from urllib.request import urlretrieve
-from common_util import *
+
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+
+from common_util import *
 
 
 def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, sleep_time=1.2, random_proxy=True):
@@ -201,4 +201,3 @@ def get_attribute_of_html(html, rule=None, attr_list=None):
         if verify_rule(rule, elements):
             list.append(str(elements))
     return list
-

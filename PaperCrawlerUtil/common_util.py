@@ -1,9 +1,9 @@
 import logging
 import os
-import time
 import random
-import requests
+import time
 
+import requests
 
 PROXY_POOL_URL = "http://liwudi.fun:56923/random"
 logging.basicConfig(filename='../my.log', level=logging.WARNING)
