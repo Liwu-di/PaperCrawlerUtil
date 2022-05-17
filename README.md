@@ -10,17 +10,25 @@ from PaperCrawlerUtil.crawler_util import *
 
 basic_config(logs_style="print")
 for times in ["2019", "2020", "2021"]:
+    # random_proxy_header_access 访问网站并且返回html字符串，其中可以设置是否使用代理等等
     html = random_proxy_header_access("https://openaccess.thecvf.com/CVPR{}".format(times), random_proxy=False)
+    # get_attribute_of_html 获取html字符串中所需要的元素，可以配置一个字典，键表示待匹配字符串，值表示规则，还可以选择获取什么样的元素
+    # 默认只获取标签<a>
     attr_list = get_attribute_of_html(html, {'href': IN, 'CVPR': IN, "py": IN, "day": IN})
     for ele in attr_list:
         path = ele.split("<a href=\"")[1].split("\">")[0]
         path = "https://openaccess.thecvf.com/" + path
+        # 继续访问获取论文地址
         html = random_proxy_header_access(path, random_proxy=False)
+        # 同上获取网页元素
         attr_list = get_attribute_of_html(html,
                                           {'href': "in", 'CVPR': "in", "content": "in", "papers": "in"})
         for eles in attr_list:
             pdf_path = eles.split("<a href=\"")[1].split("\">")[0]
+            # local_path_generate 生成文件名绝对路径，要求提供文件夹名称，
+            # 文件名不提供则默认使用当前时间作为文件名
             work_path = local_path_generate("cvpr{}".format(times))
+            # retrieve_file 获取文件，可以设置是否使用代理等等
             retrieve_file("https://openaccess.thecvf.com/" + pdf_path, work_path)
 ```
 ```python

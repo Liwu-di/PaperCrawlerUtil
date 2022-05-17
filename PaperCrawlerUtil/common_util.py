@@ -105,6 +105,7 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
         log("创建文件夹{}失败".format(e))
     if len(file_name) == 0:
         file_name = str(time.strftime("%H_%M_%S", time.localtime()))
+        file_name = file_name + str(random.randint(10000, 99999))
         file_name = file_name + suffix
     dir = os.path.abspath(folder_name)
     work_path = os.path.join(dir, file_name)
