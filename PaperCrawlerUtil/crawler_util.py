@@ -33,11 +33,11 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
                 proxy = get_proxy()
             elif (not proxy_provide) and require_proxy:
                 proxy = get_proxy()
-            log(proxy)
+            log("使用代理：{}".format(proxy))
             ua = UserAgent()  # 实例化
             headers = {"User-Agent": ua.random}
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
-            log("第{}次准备爬取{}内容".format(str(i), url))
+            log("第{}次准备爬取{}的内容".format(str(i), url))
             if require_proxy:
                 if random_proxy and two_one_choose():
                     log("随机使用代理")
@@ -153,24 +153,28 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
 
 
-def verify_rule(rule, element):
+def verify_rule(rule, origin):
     """
     verify the element string. if element satisfy all rules provided by rule arg,
     return true.
     :param rule:a dictionary that represent rules. the key is the match string and the value
     is the rule. The rule is only support "in" and "not in" and "equal" and "not equal".
      example:{"href": "in"}
-    :param element:the string will be verified
+    :param origin:the string will be verified
     :return:a bool value represent whether element satisfy all rule
     """
+    if rule is None or len(rule) == 0:
+        return True
+    if origin is None or len(origin) == 0:
+        return False
     for key, value in rule.items():
-        if str(value) == IN and str(key) not in str(element):
+        if str(value) == IN and str(key) not in str(origin):
             return False
-        elif str(value) == NOT_IN and str(key) in str(element):
+        elif str(value) == NOT_IN and str(key) in str(origin):
             return False
-        elif str(value) == EQUAL and str(value) != str(element):
+        elif str(value) == EQUAL and str(value) != str(origin):
             return False
-        elif str(value) == NOT_EQUAL and str(value) == str(element):
+        elif str(value) == NOT_EQUAL and str(value) == str(origin):
             return False
     return True
 

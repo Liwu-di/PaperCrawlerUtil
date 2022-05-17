@@ -62,7 +62,7 @@ def get_split(lens=20, style='='):
 
 def get_proxy():
     """
-    get a proxy from liwudi.fun which create by me to collect
+    get a proxy from proxy url which create by me to collect
     ip proxies
     :return:
     """
@@ -70,7 +70,8 @@ def get_proxy():
         response = requests.get(PROXY_POOL_URL)
         if response.status_code == 200:
             return response.text
-    except ConnectionError:
+    except ConnectionError as e:
+        log(e)
         return None
 
 
@@ -95,10 +96,13 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
     :param file_name: 文件名称，带后缀格式
     :return: 返回文件绝对路径
     """
-    if os.path.exists(folder_name):
-        log("文件夹{}存在".format(folder_name))
-    else:
-        os.makedirs(folder_name)
+    try:
+        if os.path.exists(folder_name):
+            log("文件夹{}存在".format(folder_name))
+        else:
+            os.makedirs(folder_name)
+    except Exception as e:
+        log("创建文件夹{}失败".format(e))
     if len(file_name) == 0:
         file_name = str(time.strftime("%H_%M_%S", time.localtime()))
         file_name = file_name + suffix
