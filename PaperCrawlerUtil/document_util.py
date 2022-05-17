@@ -11,8 +11,8 @@ from common_util import *
 
 
 def baidu_translate(string,
-                    appid="20200316000399558",
-                    secret_key="BK6HRAv6QJDGBwaZgr4F",
+                    appid,
+                    secret_key,
                     src="auto",
                     dst="zh",
                     sleep_time=1.2):
@@ -111,8 +111,8 @@ def sentence_translate(string, appid, secret_key, max_retry, proxies, probabilit
 
 
 def text_translate(path,
-                   appid="20200316000399558",
-                   secret_key="BK6HRAv6QJDGBwaZgr4F",
+                   appid,
+                   secret_key,
                    max_retry=10,
                    is_google=True,
                    probability=0.5,
@@ -295,10 +295,4 @@ def getAllFiles(target_dir):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    # a = "E:\\git-code\\paper-crawler\\CVPR\\CVPR_2020\\1\\1"
-    # # write_file(path=local_path_generate(a, "1.txt"),
-    # #            mode="w+",
-    # #            string=get_para_from_pdf(a))
-    # write_file(path=local_path_generate(a, "2.txt"),
-    #            mode="w+",
-    #            string=text_translate(a + "\\1.txt"))
+
