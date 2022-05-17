@@ -86,7 +86,7 @@ def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.
     return ""
 
 
-def sentence_translate(string, appid, secret_key, max_retry, proxies, probability):
+def sentence_translate(string, appid, secret_key, max_retry, proxies, probability, is_google):
     """
     随机使用百度谷歌翻译句子
     :param string: 待翻译语句
@@ -95,18 +95,26 @@ def sentence_translate(string, appid, secret_key, max_retry, proxies, probabilit
     :param max_retry: 最大尝试次数
     :param proxies: 代理
     :param probability: 两种翻译的使用概率
+    :param is_google: 是否使用谷歌翻译
     :return:
     """
     for i in range(max_retry):
         res = ""
-        if two_one_choose(probability):
+        if is_google:
+            if two_one_choose(probability):
+                res = baidu_translate(string, appid, secret_key)
+            else:
+                res = google_translate(string, proxies=proxies)
+            if len(res) == 0:
+                continue
+            else:
+                return res
+        else:
             res = baidu_translate(string, appid, secret_key)
-        else:
-            res = google_translate(string, proxies=proxies)
-        if len(res) == 0:
-            continue
-        else:
-            return res
+            if len(res) == 0:
+                continue
+            else:
+                return res
     return ""
 
 
@@ -139,11 +147,11 @@ def text_translate(path,
             line = line + ele
             if len(line) >= 3000:
                 line = line.replace("\n", " ")
-                res = res + sentence_translate(line, appid, secret_key, max_retry, proxies, probability)
+                res = res + sentence_translate(line, appid, secret_key, max_retry, proxies, probability, is_google)
                 line = ""
     f.close()
     if len(line) > 0:
-        res = res + sentence_translate(line, appid, secret_key, max_retry, proxies, probability)
+        res = res + sentence_translate(line, appid, secret_key, max_retry, proxies, probability, is_google)
     return res
 
 

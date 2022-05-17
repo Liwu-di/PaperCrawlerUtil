@@ -55,6 +55,20 @@ title_and_abstract = get_para_from_pdf(path="E:\\git-code\\paper-crawler\\CVPR\\
 write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "title_and_abstract.txt"),
                mode="w+", string=title_and_abstract)
 ```
+```python
+from PaperCrawlerUtil.document_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.common_util import *
+
+basic_config(logs_style=LOG_STYLE_PRINT)
+# 通过百度翻译api平台申请获得
+appid = "20200316xxxx99558"
+secret_key = "BK6xxxxxDGBwaZgr4F"
+# 实现文本翻译， 可以结合上一块代码获取PDF中的文字翻译，注意的是使用了百度
+# 和谷歌翻译，因此如果使用谷歌翻译，则需要提供代理，默认会尝试http://127.0.01:1080 这个地址
+text_translate("", appid, secret_key, is_google=True)
+
+```
 
 ```commandline
 也可以直接安装本包
