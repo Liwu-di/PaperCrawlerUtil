@@ -1,3 +1,4 @@
+import time
 import urllib
 from urllib.request import urlretrieve
 
@@ -92,10 +93,15 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
                 proxies = get_proxy()
             opener = urllib.request.build_opener()
             ua = UserAgent()
-            if require_proxy and two_one_choose():
-                opener.addheaders = [('User-Agent', ua.random),
-                                     ('proxy', "http://" + proxies),
-                                     ('proxy', "https://" + proxies)]
+            if require_proxy:
+                if random_proxy and two_one_choose():
+                    opener.addheaders = [('User-Agent', ua.random),
+                                         ('proxy', "http://" + proxies),
+                                         ('proxy', "https://" + proxies)]
+                elif random_proxy and not two_one_choose():
+                    opener.addheaders = [('User-Agent', ua.random)]
+                else:
+                    opener.addheaders = [('User-Agent', ua.random)]
             else:
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
@@ -131,9 +137,12 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
         html = random_proxy_header_access(url, get_proxy(), max_retry=1)
         if len(html) == 0:
             log("爬取失败，字符串长度为0")
+            time.sleep(sleep_time)
             continue
         elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
             log("爬取失败，无法从字符串中提取需要的元素")
+            time.sleep(sleep_time)
+            continue
         else:
             log("从sichub获取目标文件链接成功，等待分析提取")
             break
@@ -151,7 +160,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
         time.sleep(sleep_time)
         for i in range(max_retry):
             success = retrieve_file(
-                'https://' + domain_list[random.randint(0, 2)] + path.replace('\'', '').replace('\\', ''),
+                path.replace('\'', ''),
                 work_path, get_proxy(), require_proxy=True, max_retry=1)
             if success:
                 log("文件{}提取成功".format(work_path))
