@@ -129,7 +129,13 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
     for i in range(max_retry):
         url = 'https://' + domain_list[random.randint(0, 2)] + doi
         html = random_proxy_header_access(url, get_proxy(), max_retry=1)
-        if len(html) != 0:
+        if len(html) == 0:
+            log("爬取失败，字符串长度为0")
+            continue
+        elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
+            log("爬取失败，无法从字符串中提取需要的元素")
+        else:
+            log("从sichub获取目标文件链接成功，等待分析提取")
             break
     if len(html) == 0:
         log("获取html文件达到最大次数，停止获取doi:{}".format(doi))
@@ -140,7 +146,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
         try:
             path = paths.split("href=")[1].split("?download")[0]
         except Exception as e:
-            log("链接抽取错误:{}".format(e))
+            log("链接{}截取错误:{}".format(paths, e))
             continue
         time.sleep(sleep_time)
         for i in range(max_retry):
@@ -148,6 +154,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
                 'https://' + domain_list[random.randint(0, 2)] + path.replace('\'', '').replace('\\', ''),
                 work_path, get_proxy(), require_proxy=True, max_retry=1)
             if success:
+                log("文件{}提取成功".format(work_path))
                 break
         if not success:
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))

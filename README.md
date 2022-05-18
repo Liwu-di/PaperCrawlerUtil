@@ -1,7 +1,9 @@
 # PaperCrawlerUtil
-一套用来爬论文的工具，a collection of utils to get paper
-This project is an util package to create a crawler.
-It contains many tools which can finish part function.
+一套用来构建小爬虫的工具组，包括访问链接， 获取元素，抽取文件等等
+也有已经实现好通过scihub获取论文的小工具，还有对于pdf转doc，文本翻译等
+A set of tools for building small crawlers, including accessing links, getting elements, extracting files, etc.
+There are also small tools that have been implemented to obtain papers through scihub, 
+as well as pdf to doc, text translation, etc.
 There is an example:
 
 ```python
