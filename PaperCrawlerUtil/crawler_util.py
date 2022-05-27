@@ -34,7 +34,8 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
                 proxy = get_proxy()
             elif (not proxy_provide) and require_proxy:
                 proxy = get_proxy()
-            log("使用代理：{}".format(proxy))
+            if require_proxy:
+                log("使用代理：{}".format(proxy))
             ua = UserAgent()  # 实例化
             headers = {"User-Agent": ua.random}
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
@@ -121,9 +122,13 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
         return success
 
 
-def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
+def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
+                       require_proxy=False, random_proxy=True, proxies=""):
     """
     save file from sci_hub by doi string provided
+    :param require_proxy:
+    :param random_proxy:
+    :param proxies:
     :param doi: paper doi
     :param work_path: file path to save
     :param sleep_time: thread sleep time which finish part function
@@ -134,7 +139,10 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
     html = ''
     for i in range(max_retry):
         url = 'https://' + domain_list[random.randint(0, 2)] + doi
-        html = random_proxy_header_access(url, get_proxy(), max_retry=1)
+        html = random_proxy_header_access(url,
+                                          max_retry=1, proxy=proxies,
+                                          random_proxy=random_proxy,
+                                          require_proxy=require_proxy)
         if len(html) == 0:
             log("爬取失败，字符串长度为0")
             time.sleep(sleep_time)
@@ -159,9 +167,14 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10):
             continue
         time.sleep(sleep_time)
         for i in range(max_retry):
+            path = path.replace("'", "").replace("\"", "").replace(",", "")
+            if (not path.startswith("http:")) and (not path.startswith("https:")):
+                path = "https://" + (path.replace("//", "", 1))
+            else:
+                path = path
             success = retrieve_file(
-                path.replace('\'', ''),
-                work_path, get_proxy(), require_proxy=True, max_retry=1)
+                path,
+                work_path, proxies=proxies, require_proxy=require_proxy, max_retry=1)
             if success:
                 log("文件{}提取成功".format(work_path))
                 break
@@ -221,3 +234,12 @@ def get_attribute_of_html(html, rule=None, attr_list=None):
         if verify_rule(rule, elements):
             list.append(str(elements))
     return list
+
+
+if __name__ == "__main__":
+    basic_config(logs_style=LOG_STYLE_PRINT)
+    # appid = "20200316000399558"
+    # secret_key = "BK6HRAv6QJDGBwaZgr4F"
+    # text_translate("", appid, secret_key)
+    a = local_path_generate("./")
+    get_pdf_url_by_doi("10.1109/ACCESS.2020.2969854", work_path=a, require_proxy=True, random_proxy=True)
