@@ -23,9 +23,9 @@ for times in ["2019", "2020", "2021"]:
         # 继续访问获取论文地址
         html = random_proxy_header_access(path, random_proxy=False)
         # 同上获取网页元素
-        attr_list = get_attribute_of_html(html,
+        attr_lists = get_attribute_of_html(html,
                                           {'href': "in", 'CVPR': "in", "content": "in", "papers": "in"})
-        for eles in attr_list:
+        for eles in attr_lists:
             pdf_path = eles.split("<a href=\"")[1].split("\">")[0]
             # local_path_generate 生成文件名绝对路径，要求提供文件夹名称，
             # 文件名不提供则默认使用当前时间作为文件名

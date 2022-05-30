@@ -236,10 +236,39 @@ def get_attribute_of_html(html, rule=None, attr_list=None):
     return list
 
 
+def get_pdf_form_arXiv(title, folder_name, sleep_time=1.2, max_retry=10,
+                       require_proxy=True, random_proxy=True, proxies="",
+                       max_get=3):
+    """
+    从arXiv获取论文，
+    :param title:
+    :param folder_name:
+    :param sleep_time:
+    :param max_retry:
+    :param require_proxy:
+    :param random_proxy:
+    :param proxies:
+    :param max_get: 当搜索结果有多个时，最多获取的数量
+    :return:
+    """
+    html = random_proxy_header_access(url="https://arxiv.org/search/?query="
+                                          + title.replace(" ", "+")
+                                          + "&searchtype=all&source=header",
+                                      proxy=proxies, require_proxy=require_proxy, max_retry=max_retry,
+                                      sleep_time=sleep_time, random_proxy=random_proxy)
+    attr_list = get_attribute_of_html(html, rule={"pdf": IN, "arxiv": IN, "href": IN})
+    count = 0
+    for k in attr_list:
+        path = k.split("href=\"")[1].split("\"")[0]
+        retrieve_file(path,
+                      local_path_generate(folder_name=folder_name, file_name=title + str(count) + ".pdf"),
+                      proxies=proxies, require_proxy=require_proxy,
+                      max_retry=max_retry, sleep_time=sleep_time, random_proxy=random_proxy)
+        count = count + 1
+        if count >= max_get:
+            break
+    get_split()
+
+
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    # appid = "20200316000399558"
-    # secret_key = "BK6HRAv6QJDGBwaZgr4F"
-    # text_translate("", appid, secret_key)
-    a = local_path_generate("./")
-    get_pdf_url_by_doi("10.1109/ACCESS.2020.2969854", work_path=a, require_proxy=True, random_proxy=True)
