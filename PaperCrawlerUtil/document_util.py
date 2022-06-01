@@ -202,49 +202,60 @@ def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
         :return: the string
     """
     txt = ""
-    with pdfplumber.open(path) as pdf:
-        if len(pdf.pages) >= 0:
-            for i in range(ranges[0], ranges[1] + 1):
-                txt = txt + pdf.pages[i].extract_text()
-            if len(begin_tag) == 0 and len(end_tag) == 0:
-                txt = txt
-            elif len(begin_tag) == 0 and len(end_tag) > 0:
-                ele = ""
-                for e in end_tag:
-                    if txt.find(e) >= 0:
-                        ele = e
-                        break
-                if len(ele) > 0:
-                    txt = txt.split(ele)[0]
-            elif len(begin_tag) > 0 and len(end_tag) == 0:
-                ele = ""
-                for e in begin_tag:
-                    if txt.find(e) >= 0:
-                        ele = e
-                        break
-                if len(ele) > 0:
-                    txt = txt.split(ele)[1]
-            elif len(begin_tag) > 0 and len(end_tag) > 0:
-                ele1 = ""
-                ele2 = ""
-                for e1 in begin_tag:
-                    if txt.find(e1) >= 0:
-                        ele1 = e1
-                        break
-                for e2 in end_tag:
-                    if txt.find(e2) >= 0:
-                        ele2 = e2
-                        break
-                if len(ele1) > 0 and len(ele2) > 0:
-                    txt = txt.split(ele1)[1].split(ele2)[0]
-    pdf.close()
-    return txt
+    try:
+        with pdfplumber.open(path) as pdf:
+            if len(pdf.pages) >= 0:
+                left_range = ranges[0]
+                right_range = ranges[1] + 1
+                if right_range >= len(pdf.pages):
+                    right_range = len(pdf.pages)
+                if left_range >= len(pdf.pages):
+                    left_range = 0
+                for i in range(left_range, right_range):
+                    txt = txt + pdf.pages[i].extract_text()
+                if len(begin_tag) == 0 and len(end_tag) == 0:
+                    txt = txt
+                elif len(begin_tag) == 0 and len(end_tag) > 0:
+                    ele = ""
+                    for e in end_tag:
+                        if txt.find(e) >= 0:
+                            ele = e
+                            break
+                    if len(ele) > 0:
+                        txt = txt.split(ele)[0]
+                elif len(begin_tag) > 0 and len(end_tag) == 0:
+                    ele = ""
+                    for e in begin_tag:
+                        if txt.find(e) >= 0:
+                            ele = e
+                            break
+                    if len(ele) > 0:
+                        txt = txt.split(ele)[1]
+                elif len(begin_tag) > 0 and len(end_tag) > 0:
+                    ele1 = ""
+                    ele2 = ""
+                    for e1 in begin_tag:
+                        if txt.find(e1) >= 0:
+                            ele1 = e1
+                            break
+                    for e2 in end_tag:
+                        if txt.find(e2) >= 0:
+                            ele2 = e2
+                            break
+                    if len(ele1) > 0 and len(ele2) > 0:
+                        txt = txt.split(ele1)[1].split(ele2)[0]
+        pdf.close()
+        return txt
+    except Exception as e:
+        log("打开PDF异常：{}".format(e))
+        return txt
 
 
 def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_style="===", valid_threshold=0):
     """
     用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
     如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
+    :param valid_threshold: decide whether paragraph digest success
     :param path: pdf path
     :param begin_tag: the tag which will begin from this position to abstract text
     :param end_tag: the tag which will end util this position to abstract text
@@ -257,7 +268,7 @@ def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_s
     if end_tag is None:
         end_tag = ["1. Introduction", "1. introduction",
                    "Introduction", "introduction",
-                   "1.", "摘要"]
+                   "1.摘要", "1. 摘要", "1.", "1"]
     txt = ""
     valid_count = 0
     sum_count = 0
@@ -303,4 +314,3 @@ def getAllFiles(target_dir):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-
