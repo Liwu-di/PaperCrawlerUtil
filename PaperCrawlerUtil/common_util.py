@@ -2,10 +2,12 @@ import logging
 import os
 import random
 import time
+from types import TracebackType
+from typing import Optional
 
 import requests
 
-PROXY_POOL_URL = "http://liwudi.fun:56923/random"
+PROXY_POOL_URL = ""
 logging.basicConfig(filename='../my.log', level=logging.WARNING)
 log_style = "log"
 
@@ -31,8 +33,8 @@ def log(string):
 
 
 def basic_config(log_file_name="../my.log", log_level=logging.WARNING,
-                 proxy_pool_url="http://liwudi.fun:56923/random",
-                 logs_style="log"):
+                 proxy_pool_url="",
+                 logs_style=LOG_STYLE_PRINT):
     """
 
     :param log_file_name: 日志文件名称
@@ -66,6 +68,10 @@ def get_proxy():
     ip proxies
     :return:
     """
+    if len(PROXY_POOL_URL) <= 0:
+        log("使用了代理（require_proxy=Ture）,但是没有设置代理连接")
+        log("请使用basic_config(proxy_pool_url=\"\")设置")
+        raise Exception("无法获取代理连接")
     try:
         response = requests.get(PROXY_POOL_URL)
         if response.status_code == 200:
@@ -120,3 +126,14 @@ def write_file(path, mode, string, encoding="utf-8"):
         log("写入文件{}成功".format(path))
     except Exception as e:
         log("写入文件{}失败：{}".format(path, e))
+
+
+class NoProxyException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+    def __str__(self) -> str:
+        return repr("无法获取代理")
+
+    def __repr__(self) -> str:
+        return super().__repr__()

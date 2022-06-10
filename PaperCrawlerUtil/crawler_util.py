@@ -9,7 +9,9 @@ from fake_useragent import UserAgent
 from PaperCrawlerUtil.common_util import *
 
 
-def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, sleep_time=1.2, random_proxy=True):
+def random_proxy_header_access(url, proxy='',
+                               require_proxy=False, max_retry=10, sleep_time=1.2,
+                               random_proxy=True, time_out=(10, 20)):
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
@@ -21,6 +23,8 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
     :param sleep_time:每次爬取睡眠时间
     :return:返回爬取的网页或者最大尝试次数之后返回空
     :param random_proxy:随机使用代理，默认为真，随机使用真实地址而不使用代理
+    :param time_out: 一个元组或者整数，元组前者表示连接超时阈值，后者表示获取内容超时阈值、
+                    如果是整数，则两者值设为一样
     """
     proxy_provide = False
     if len(proxy) == 0:
@@ -43,19 +47,21 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
             if require_proxy:
                 if random_proxy and two_one_choose():
                     log("随机使用代理")
-                    request = requests.get(url, headers=headers, proxies=proxies)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
                 elif random_proxy and not two_one_choose():
                     log("随机不使用代理")
-                    request = requests.get(url, headers=headers)
+                    request = requests.get(url, headers=headers, timeout=time_out)
                 elif not random_proxy:
-                    request = requests.get(url, headers=headers, proxies=proxies)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
                 else:
-                    request = requests.get(url, headers=headers, proxies=proxies)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
             else:
-                request = requests.get(url, headers=headers)
+                request = requests.get(url, headers=headers, timeout=time_out)
             html = request.content
             log("爬取成功，返回内容")
             time.sleep(sleep_time)
+        except NoProxyException:
+            raise NoProxyException
         except Exception as result:
             log("错误信息:%s" % result)
             log("尝试重连")
@@ -66,7 +72,7 @@ def random_proxy_header_access(url, proxy='', require_proxy=True, max_retry=10, 
     return html
 
 
-def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep_time=1.2, random_proxy=True):
+def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, sleep_time=1.2, random_proxy=True):
     """
     retrieve file from provided url and save to path
     :param url: file url
@@ -110,6 +116,8 @@ def retrieve_file(url, path, proxies="", require_proxy=True, max_retry=10, sleep
             log("文件提取成功")
             success = True
             time.sleep(sleep_time)
+        except NoProxyException:
+            raise NoProxyException
         except Exception as e:
             log("抽取失败:{}".format(e))
             time.sleep(sleep_time)
@@ -237,7 +245,7 @@ def get_attribute_of_html(html, rule=None, attr_list=None):
 
 
 def get_pdf_form_arXiv(title, folder_name, sleep_time=1.2, max_retry=10,
-                       require_proxy=True, random_proxy=True, proxies="",
+                       require_proxy=False, random_proxy=True, proxies="",
                        max_get=3):
     """
     从arXiv获取论文，
