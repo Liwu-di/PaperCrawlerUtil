@@ -179,6 +179,10 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
         if ele.endswith(".pdf"):
             try:
                 cv = Converter(ele)
+                if start_pages is None:
+                    start_pages = 0
+                if end_pages is None:
+                    end_pages = len(cv.pages)
                 if not file:
                     cv.convert(local_path_generate(word_path), start=start_pages, end=end_pages)
                 else:
