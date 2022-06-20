@@ -160,7 +160,7 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
     转换pdf 到word文件，可以自动识别是文件夹还是单个文件，其中word_path表示的生成的word的文件夹，不论是
     单个还是文件夹批量转换，这个值都是文件夹
     :param pdf_path: pdf的路径
-    :param word_path: 用于存放word的路径
+    :param word_path: 用于存放word的路径，必须是文件夹路径
     :param end_pages: 结束页码
     :param start_pages: 开始页码
     :return:
@@ -186,7 +186,7 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
                 if not file:
                     cv.convert(local_path_generate(word_path), start=start_pages, end=end_pages)
                 else:
-                    cv.convert(word_path, start=start_pages, end=end_pages)
+                    cv.convert(local_path_generate(word_path, suffix=".docx"), start=start_pages, end=end_pages)
                     count = count + 1
                 log("总计pdf文件个数{}，已经完成{}".format(len(file_list), count))
             except Exception as e:
