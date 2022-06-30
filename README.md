@@ -77,3 +77,8 @@ text_translate("", appid, secret_key, is_google=True)
 pip install PaperCrawlerUtil
 ```
 
+```commandline
+本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
+则需要自己提供代理或者将require_proxy置为False
+```
+
