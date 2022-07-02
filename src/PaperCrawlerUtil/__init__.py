@@ -9,4 +9,4 @@ from crawler_util import *
 from document_util import *
 from common_util import *
 
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True)
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False)

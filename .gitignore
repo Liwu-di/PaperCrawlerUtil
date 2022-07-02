@@ -6,3 +6,5 @@ setup.py
 src/__pycache__/
 build/
 15.py
+*.log
+test.py
