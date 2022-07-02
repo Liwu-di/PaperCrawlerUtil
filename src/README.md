@@ -7,8 +7,7 @@ as well as pdf to doc, text translation, etc.
 There is an example:
 
 ```python
-from PaperCrawlerUtil.crawler_util import *
-
+from src import *
 
 basic_config(logs_style="print")
 for times in ["2019", "2020", "2021"]:
@@ -24,7 +23,7 @@ for times in ["2019", "2020", "2021"]:
         html = random_proxy_header_access(path, random_proxy=False)
         # 同上获取网页元素
         attr_lists = get_attribute_of_html(html,
-                                          {'href': "in", 'CVPR': "in", "content": "in", "papers": "in"})
+                                           {'href': "in", 'CVPR': "in", "content": "in", "papers": "in"})
         for eles in attr_lists:
             pdf_path = eles.split("<a href=\"")[1].split("\">")[0]
             # local_path_generate 生成文件名绝对路径，要求提供文件夹名称，
@@ -57,10 +56,11 @@ title_and_abstract = get_para_from_pdf(path="E:\\git-code\\paper-crawler\\CVPR\\
 write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_2021\\3\\3", "title_and_abstract.txt"),
                mode="w+", string=title_and_abstract)
 ```
+
 ```python
-from PaperCrawlerUtil.document_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.common_util import *
+from src import *
+from src import *
+from src import *
 
 basic_config(logs_style=LOG_STYLE_PRINT)
 # 通过百度翻译api平台申请获得

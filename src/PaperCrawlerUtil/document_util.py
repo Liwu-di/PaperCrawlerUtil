@@ -7,7 +7,7 @@ import pdfplumber
 from googletrans import Translator
 from pdf2docx import Converter
 
-from PaperCrawlerUtil.crawler_util import *
+from crawler_util import *
 
 
 def baidu_translate(string,

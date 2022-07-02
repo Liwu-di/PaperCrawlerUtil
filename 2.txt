@@ -1,0 +1,2150 @@
+Adversarial attack and Robustness【对抗攻击和鲁棒性】
+
+对抗性攻击和鲁棒性【对抗鲁棒性】】
+Adversarial Authorship Attribution for Deobfuscation
+
+Deobfuscation的对抗作者归因
+Adversarial Soft Prompt Tuning for Cross-Domain Sentiment Analysis
+
+对抗性软提示调整进行跨域情绪分析
+Flooding-X: Improving BERT's Resistance to Adversarial Attacks via LossRestricted Fine-Tuning
+
+Flooding-X：通过损失限制的微调改善Bert对对抗攻击的抵抗力
+From the Detection of Toxic Spans in Online Discussions to the Analysis of Toxic-to-Civil Transfer
+
+从在线讨论中的有毒跨度的检测到对毒性到civil转移的分析
+Imputing Out-of-Vocabulary Embeddings with LOVE Makes Language Models Robust with Little Cost
+
+用爱归档胶卷嵌入的嵌入方式使语言模型强大，几乎没有成本
+ParaDetox: Detoxification with Parallel Data
+
+悖论：与平行数据的排毒
+Pass off Fish Eyes for Pearls: Attacking Model Selection of Pre-trained Models
+
+传递鱼眼作为珍珠：攻击模型选择预训练模型
+SHIELD: Defending Textual Neural Networks against Multiple Black-Box
+
+盾：捍卫文本神经网络针对多个黑框
+Adversarial Attacks with Stochastic Multi-Expert Patcher
+
+随机多专家补丁程序的对抗攻击
+Towards Robustness of Text-to-SQL Models Against Natural and Realistic Adversarial Table Perturbation
+
+针对自然和现实的对抗表扰动，文本到SQL模型的稳健性
+ToxiGen: A Large-Scale Machine-Generated Dataset for Adversarial and Implicit Hate Speech Detection
+
+毒素：用于对抗和隐性仇恨言语检测的大型机器生成的数据集
+Dialogue and Interactive Systems【对话与交互系统】
+
+对话和交互式系统【【交互】】】
+A Model-agnostic Data Manipulation Method for Persona-based Dialogue Generation
+
+基于角色的对话生成的模型不足的数据操纵方法
+A Taxonomy of Empathetic Questions in Social Dialogs
+
+社交对话中的善解人意问题的分类学
+Achieving Conversational Goals with Unsupervised Post-hoc Knowledge Injection
+
+通过无监督的事后知识注入实现对话目标
+Achieving Reliable Human Assessment of Open-Domain Dialogue Systems
+
+实现对开放域对话系统的可靠人类评估
+An Interpretable Neuro-Symbolic Reasoning Framework for Task-Oriented Dialogue Generation
+
+一个可解释的神经符号推理框架，用于以任务为导向的对话生成
+Beyond Goldfish Memory: Long-Term Open-Domain Conversation
+
+超越金鱼记忆：长期开放域对话
+Beyond the Granularity: Multi-Perspective Dialogue Collaborative Selection for Dialogue State Tracking
+
+超越粒度：对话状态跟踪的多人对话协作选择
+CASPI Causal-aware Safe Policy Improvement for Task-oriented Dialogue
+
+CASPI因果关系的安全政策改进了以任务为导向的对话
+ChatMatch: Evaluating Chatbots by Autonomous Chat Tournaments
+
+ChatMatch：通过自主聊天锦标赛评估聊天机器人
+CICERO: A Dataset for Contextualized Commonsense Inference in Dialogues
+
+CICERO：用于对话中的上下文定量推断的数据集
+Contextual Fine-to-Coarse Distillation for Coarse-grained Response Selection in Open-Domain Conversations
+
+在开放域对话中选择粗粒响应选择的上下文精细到蛋白蒸馏
+Continual Prompt Tuning for Dialog State Tracking
+
+持续及时调整对话框跟踪
+DEAM: Dialogue Coherence Evaluation using AMR-based Semantic Manipulations
+
+DEAM：使用基于AMR的语义操纵的对话连贯评估
+DialogVED: A Pre-trained Latent Variable Encoder-Decoder Model for Dialog Response Generation
+
+对话：对话框响应生成的预训练的潜在变量编码器模型
+Dynamic Schema Graph Fusion Network for Multi-Domain Dialogue State Tracking
+
+多域对话状态跟踪的动态模式图融合网络
+GlobalWoZ: Globalizing MultiWoZ to Develop Multilingual Task-Oriented Dialogue Systems
+
+GlobalWoz：全球化多WOB，以开发多语言以任务为导向的对话系统
+HeterMPC: A Heterogeneous Graph Neural Network for Response Generation in Multi-Party Conversations
+
+HeterMPC：多方对话中响应生成的异质图神经网络
+Improving Multi-label Malevolence Detection in Dialogues through Multifaceted Label Correlation Enhancement
+
+通过多方面的标签相关性增强，改善对话中的多标签恶毒检测
+Interactive Word Completion for Plains Cree
+
+Plains Cree的交互式单词完成
+Internet-Augmented Dialogue Generation
+
+互联网上的对话生成
+Knowledge Enhanced Reflection Generation for Counseling Dialogues
+
+知识增强了咨询对话的反思生成
+M3ED: Multi-modal Multi-scene Multi-label Emotional Dialogue Database
+
+M3ED：多模式多场景多标签情感对话数据库
+MISC: A Mixed Strategy-Aware Model integrating COMET for Emotional Support Conversation
+
+MISC：一种混合策略感知模型，将彗星集成为情感支持对话
+Multi-Party Empathetic Dialogue Generation: A New Task for Dialog Systems
+
+多方同情对话生成：对话系统的新任务
+Multi-Task Pre-Training for Plug-and-Play Task-Oriented Dialogue System
+
+用于插入任务的对话系统的多任务预培训
+Multimodal Dialogue Response Generation
+
+多模式对话响应一代
+Online Semantic Parsing for Latency Reduction in Task-Oriented Dialogue
+
+在线语义解析，以减少以任务为导向的对话
+Other Roles Matter! Enhancing Role-Oriented Dialogue Summarization via Role Interactions
+
+其他角色很重要！通过角色互动增强面向角色的对话摘要
+ProphetChat: Enhancing Dialogue Generation with Simulation of Future Conversation
+
+先知：通过模拟未来对话增强对话的生成
+QAConv: Question Answering on Informative Conversations
+
+QACONV：有关信息性对话的问题
+SaFeRDialogues: Taking Feedback Gracefully after Conversational Safety Failures
+
+Saferdialogues：在对话安全失败后优雅地获得反馈
+SafetyKit: First Aid for Measuring Safety in Open-domain Conversational Systems
+
+安全套件：测量开放域对话系统安全性的急救
+SalesBot: Transitioning from Chit-Chat to Task-Oriented Dialogues
+
+Salesbot：从chit聊天过渡到面向任务的对话
+Should a Chatbot be Sarcastic? Understanding User Preferences Towards Sarcasm Generation
+
+聊天机器人应该讽刺吗？了解用户对讽刺生成的偏好
+Situated Dialogue Learning through Procedural Environment Generation
+
+通过程序环境生成学习的对话学习
+Structural Characterization for Dialogue Disentanglement
+
+对话解开的结构表征
+The AI Doctor Is In: A Survey of Task-Oriented Dialogue Systems for Healthcare Applications
+
+AI医生正在：针对医疗保健应用的面向任务对话系统的调查
+There Are a Thousand Hamlets in a Thousand People's Eyes: Enhancing Knowledge-grounded Dialogue with Personal Memory
+
+一千人的眼睛中有一千个小村庄：增强知识的对话与个人记忆
+Think Before You Speak: Explicitly Generating Implicit Commonsense Knowledge for Response Generation
+
+在说话之前先思考：明确生成隐性常识性知识为响应产生
+UniTranSeR: A Unified Transformer Semantic Representation Framework for Multimodal Task-Oriented Dialog System
+
+Unitranser：多模式面向任务的对话框系统的统一变压器语义表示框架
+What does the sea say to the shore? A BERT based DST style approach for speaker to dialogue attribution in novels
+
+大海对岸边怎么说？基于BERT的DST样式方法，用于小说中的对话归因于对话归因
+Where to Go for the Holidays: Towards Mixed-Type Dialogs for Clarification of User Goals
+
+假期去哪里：迈向混合型对话框以澄清用户目标
+Speaker Information Can Guide Models to Better Inductive Biases: A Case Study On Predicting Code-Switching
+
+说话者信息可以指导模型以更好的归纳偏见：关于预测代码转换的案例研究
+Discourse and Pragmatics【语篇和语用学】
+
+话语和实用主义者【【】】】
+CoCoLM: Complex Commonsense Enhanced Language Model with Discourse Relations
+
+COCOLM：复杂的常识增强语言模型与话语关系
+Context Matters: A Pragmatic Study of PLMs’ Negation Understanding
+
+上下文事项：对PLM的否定理解的务实研究
+Learning to Mediate Disparities Towards Pragmatic Communication
+
+学会调解差异方面的务实交流
+Modeling Persuasive Discourse to Adaptively Support Students' Argumentative Writing
+
+建模有说服力的话语以适应性地支持学生的辩论性写作
+Neural reality of argument structure constructions
+
+论证结构结构的神经现实
+Probing for Predicate Argument Structures in Pretrained Language Models
+
+探究验证语言模型中的谓词参数结构
+RST Discourse Parsing with Second-Stage EDU-Level Pre-training
+
+首先通过第二阶段EDU级预培训来解析
+Data Augmentation【数据增广】
+
+数据增强【【】】】
+An Investigation of the (In)effectiveness of Counterfactually Augmented Data
+
+对反事实增强数据的（在）有效性的调查
+CipherDAug: Ciphertext based Data Augmentation for Neural Machine Translation
+
+Cipherdaug：基于密文的基于神经机器翻译的数据增强
+Continual Few-shot Relation Learning via Embedding Space Regularization and Data Augmentation
+
+通过嵌入空间正则化和数据增强的持续几次射击关系学习
+Deduplicating Training Data Makes Language Models Better
+
+重复培训数据使语言模型更好
+FlipDA: Effective and Robust Data Augmentation for Few-Shot Learning
+
+FLIPDA：有效且强大的数据增强功能可用于几次学习
+Generating Data to Mitigate Spurious Correlations in Natural Language Inference Datasets
+
+生成数据以减轻自然语言推理数据集的虚假相关性
+Keywords and Instances: A Hierarchical Contrastive Learning Framework Unifying Hybrid Granularities for Text Generation
+
+关键词和实例：层次对比学习框架，将文本生成的混合粒度统一
+MELM: Data Augmentation with Masked Entity Language Modeling for LowResource NER
+
+MELM：使用蒙版实体语言建模的数据增强，用于低资源
+PromDA: Prompt-based Data Augmentation for Low-Resource NLU Tasks
+
+PROMDA：低资源NLU任务的基于及时的数据增强
+Synthetic Question Value Estimation for Domain Adaptation of Question Answering
+
+域的综合问题价值估计，以适应问题答案
+Training Data is More Valuable than You Think: A Simple and Effective Method by Retrieving from Training Data
+
+培训数据比您想象的更有价值：通过从培训数据中检索的一种简单有效的方法
+Generation【文本生成】
+
+一代【文本生成】
+A Token-level Reference-free Hallucination Detection Benchmark for Freeform Text Generation
+
+自由形式文本生成的代币级别的无参考幻觉检测基准
+A Well-Composed Text is Half Done! Composition Sampling for Diverse Conditional Generation
+
+组成良好的文本完成了一半！各种条件产生的组成抽样
+Accurate Online Posterior Alignments for Principled Lexically-Constrained Decoding
+
+准确的在线后对齐，用于有原则的词汇约束解码
+Active Evaluation: Efficient NLG Evaluation with Few Pairwise Comparisons
+
+主动评估：有效的NLG评估，少数成对比较
+AraT5: Text-to-Text Transformers for Arabic Language Generation
+
+ARAT5：阿拉伯语言生成的文本到文本变压器
+Continual Sequence Generation with Adaptive Compositional Modules
+
+具有自适应组成模块的持续序列产生
+Controllable Dictionary Example Generation: Generating Example Sentences for Specific Targeted Audiences
+
+可控词典示例生成：为特定目标受众生成示例句子
+CTRLEval: An Unsupervised Reference-Free Metric for Evaluating Controlled Text Generation
+
+Ctrleval：无监督的无参考度量，用于评估受控文本生成
+Few-shot Controllable Style Transfer for Low-Resource Multilingual Settings
+
+低资源多语言设置的几乎没有可控的风格转移
+Fine-Grained Controllable Text Generation Using Non-Residual Prompting
+
+使用非残基提示的细粒度可控文本生成
+Flexible Generation from Fragmentary Linguistic Input
+
+零碎语言输入的灵活产生
+FrugalScore: Learning Cheaper, Lighter and Faster Evaluation Metrics for Automatic Text Generation
+
+FrugalScore：自动文本生成的更便宜，更轻松，更快的评估指标
+Generating Scientific Definitions with Controllable Complexity
+
+生成具有可控复杂性的科学定义
+Hierarchical Sketch Induction for Paraphrase Generation
+
+释义生成的分层草图归纳
+How Do Seq2Seq Models Perform on End-to-End Data-to-Text Generation?
+
+SEQ2SEQ模型如何在端到端的数据到文本生成上执行？
+Hybrid Semantics for Goal-Directed Natural Language Generation
+
+目标定向的自然语言产生的混合语义
+Improving Compositional Generalization with Self-Training for Data-to-Text Generation
+
+通过自我训练进行数据到文本生成改善组成概括
+Improving Personalized Explanation Generation through Visualization
+
+通过可视化改善个性化的解释生成
+Inducing Positive Perspectives with Text Reframing
+
+通过翻新诱导积极的观点
+latent-GLAT: Glancing at Latent Variables for Parallel Text Generation
+
+潜在 - 挡板：平行文本生成的潜在变量
+Lexical Knowledge Internalization for Neural Dialog Generation
+
+神经对话世代的词汇知识内在化
+Mix and Match: Learning-free Controllable Text Generationusing Energy Language Models
+
+混合与匹配：使用能量语言模型的无学习可控文本生成
+Multitasking Framework for Unsupervised Simple Definition Generation
+
+无监督的简单定义生成的多任务框架
+Neural Pipeline for Zero-Shot Data-to-Text Generation
+
+零照片数据之间的神经管道生成
+Non-neural Models Matter: a Re-evaluation of Neural Referring Expression Generation Systems
+
+非神经模型很重要：对神经参考表达产生系统的重新评估
+ODE Transformer: An Ordinary Differential Equation-Inspired Model for Sequence Generation
+
+ODE Transformer：序列生成的普通微分方程启发的模型
+Overlap-based Vocabulary Generation Improves Cross-lingual Transfer Among Related Languages
+
+基于重叠的词汇生成改善了相关语言之间的跨语性转移
+PLANET: Dynamic Content Planning in Autoregressive Transformers for Long-form Text Generation
+
+星球：自回旋变压器中的动态内容计划，用于长篇文本生成
+Predicate-Argument Based Bi-Encoder for Paraphrase Identification
+
+基于谓词Argument的题材识别的双重编码器
+Principled Paraphrase Generation with Parallel Corpora
+
+与平行语料库的原则释义生成
+Quality Controlled Paraphrase Generation
+
+质量控制的解释器
+Rare Tokens Degenerate All Tokens: Improving Neural Text Generation via Adaptive Gradient Gating for Rare Token Embeddings
+
+稀有代币退化所有令牌：通过自适应梯度门控改善神经文本的生成
+RoMe: A Robust Metric for Evaluating Natural Language Generation
+
+罗马：一个可用于评估自然语言生成的强大指标
+Semi-Supervised Formality Style Transfer with Consistency Training
+
+半监督的形式风格转移和一致性训练
+So Different Yet So Alike! Constrained Unsupervised Text Style Transfer
+
+如此不同，但是如此相似！受限的无监督文本样式转移
+Spurious Correlations in Reference-Free Evaluation of Text Generation
+
+文本生成无参考评估的虚假相关性
+Tailor: Generating and Perturbing Text with Semantic Controls
+
+裁缝：通过语义控件生成和扰动文本
+Towards Better Characterization of Paraphrases
+
+为了更好地表征释义
+Uncertainty Determines the Adequacy of the Mode and the Tractability of Decoding in Sequence-to-Sequence Models
+
+不确定性决定了模式的适当性和在序列到序列模型中解码的障碍
+An Imitation Learning Curriculum for Text Editing with Non-Autoregressive Models
+
+通过非自动性模型编辑文本编辑的模仿学习课程
+Understanding Iterative Revision from Human-Written Text
+
+了解人文写的文本的迭代修订
+Information Extraction【信息抽取】
+
+信息提取【【】】
+Alignment-Augmented Consistent Translation for Multilingual Open Information Extraction
+
+对齐的一致翻译，用于多语言开放信息提取
+Automatic Error Analysis for Document-level Information Extraction
+
+文档级信息提取的自动错误分析
+BenchIE: A Framework for Multi-Faceted Fact-Based Open Information Extraction Evaluation
+
+替补：基于多方面的事实开放信息提取评估的框架
+Dynamic Global Memory for Document-level Argument Extraction
+
+文档级参数提取的动态全局内存
+Dynamic Prefix-Tuning for Generative Template-based Event Extraction
+
+基于生成模板的事件提取的动态前缀调节
+FaVIQ: FAct Verification from Information-seeking Questions
+
+faviq：来自寻求信息问题的事实验证
+FormNet: Structural Encoding beyond Sequential Modeling in Form Document Information Extraction
+
+FormNet：表单文档信息提取中的结构编码超出顺序建模
+Generating Scientific Claims for Zero-Shot Scientific Fact Checking
+
+为零射门科学事实检查产生科学主张
+JointCL: A Joint Contrastive Learning Framework for Zero-Shot Stance Detection
+
+intontcl：零射击姿势检测的联合对比度学习框架
+KNN-Contrastive Learning for Out-of-Domain Intent Classification
+
+KNN对抗性学习，用于室外意图分类
+Legal Judgment Prediction via Event Extraction with Constraints
+
+通过限制事件提取的法律判断预测
+MILIE: Modular & Iterative Multilingual Open Information Extraction
+
+MILIE：模块化和迭代多语言开放信息提取
+Modeling U.S. State-Level Policies by Extracting Winners and Losers from Legislative Texts
+
+通过从立法文本中提取赢家和输家来对美国州级政策进行建模
+OIE@OIA: an Adaptable and Efficient Open Information Extraction Framework
+
+oie@oia：适应性有效的开放信息提取框架
+Packed Levitated Marker for Entity and Relation Extraction
+
+实体和关系提取的包装悬浮标记
+Pre-training to Match for Unified Low-shot Relation Extraction
+
+预训练以匹配统一的低射击关系提取
+Prompt for Extraction? PAIE: Prompting Argument Interaction for Event Argument Extraction
+
+提示提示？PAIE：提示事件参数提取的参数交互
+Retrieval-guided Counterfactual Generation for QA
+
+质量保证的检索引导反事实生成
+Right for the Right Reason: Evidence Extraction for Trustworthy Tabular Reasoning
+
+出于正确的理由：可信赖的表格推理的证据提取
+Saliency as Evidence: Event Detection with Trigger Saliency Attribution
+
+显着性作为证据：带有触发显着归因的事件检测
+Text-to-Table: A New Way of Information Extraction
+
+文本到桌子：一种新的信息提取方式
+Toward Interpretable Semantic Textual Similarity via Optimal Transportbased Contrastive Sentence Learning
+
+通过最佳的基于运输的对比度学习来朝着可解释的语义文本相似性
+Transkimmer: Transformer Learns to Layer-wise Skim
+
+TransKimmer：变形金刚学会从图层略读
+Unified Structure Generation for Universal Information Extraction
+
+通用信息提取的统一结构生成
+Information Retrieval and Text Mining【信息检索与文本挖掘】
+
+信息检索和文本挖掘【【与文本】】
+Automatic Identification and Classification of Bragging in Social Media
+
+在社交媒体中自动识别和分类
+Bilingual alignment transfers to multilingual alignment for unsupervised parallel text mining
+
+双语对齐转移到多语言对齐，以进行无监督的平行文本挖掘
+Can Unsupervised Knowledge Transfer from Social Discussions Help Argument Mining?
+
+从社会讨论中进行无监督的知识转移可以帮助挖掘吗？
+ClarET: Pre-training a Correlation-Aware Context-To-Event Transformer for Event-Centric Generation and Classification
+
+紫红色：预先培训以事件为中心的相关性上下文到事实变压器
+Cross-Lingual Phrase Retrieval
+
+跨语性短语检索
+Learning to Rank Visual Stories From Human Ranking Data
+
+从人类排名数据中学习对视觉故事进行排名
+Multi-View Document Representation Learning for Open-Domain Dense Retrieval
+
+开放域密集检索的多视图文档表示学习
+New Intent Discovery with Pre-training and Contrastive Learning
+
+通过预训练和对比学习的新意图发现
+Pre-training and Fine-tuning Neural Topic Model: A Simple yet Effective Approach to Incorporating External Knowledge
+
+预训练和微调神经主题模型：一种简单而有效的方法来纳入外部知识
+RELiC: Retrieving Evidence for Literary Claims
+
+遗物：检索文学主张的证据
+Retrieval-guided Counterfactual Generation for QA
+
+质量保证的检索引导反事实生成
+SDR: Efficient Neural Re-ranking using Succinct Document Representation
+
+SDR：使用简洁的文档表示有效的神经重新排列
+Sentence-aware Contrastive Learning for Open-Domain Passage Retrieval
+
+开放域通道检索的句子意识到的对比度学习
+Show Me More Details: Discovering Hierarchies of Procedures from Semistructured Web Data
+
+向我展示更多详细信息：从半结构化Web数据中发现过程的层次结构
+Training Data is More Valuable than You Think: A Simple and Effective Method by Retrieving from Training Data
+
+培训数据比您想象的更有价值：通过从培训数据中检索的一种简单有效的方法
+UCTopic: Unsupervised Contrastive Learning for Phrase Representations and Topic Mining
+
+摘要：无监督的对比度学习短语表示和主题挖掘
+Unsupervised Corpus Aware Language Model Pre-training for Dense Passage Retrieval
+
+无监督的语料库意识语言模型预培训用于训练
+Zoom Out and Observe: News Environment Perception for Fake News Detection
+
+缩小和观察：假新闻检测的新闻环境感知
+Interpretability and Analysis of Models for NLP【NLP模型的可解释性与分析】
+
+NLP【nlp模型模型解释性】】】】】】】】】】】】】】】】】】】】】和分析
+A Closer Look at How Fine-tuning Changes BERT
+
+仔细观察微调如何变化bert
+A Comparative Study of Faithfulness Metrics for Model Interpretability Methods
+
+模型可解释性方法的忠诚指标的比较研究
+A Comparison of Strategies for Source-Free Domain Adaptation
+
+无源域适应策略的比较
+Active Evaluation: Efficient NLG Evaluation with Few Pairwise Comparisons
+
+主动评估：有效的NLG评估，少数成对比较
+Adaptive Testing and Debugging of NLP Models
+
+NLP模型的自适应测试和调试
+An Empirical Study of Memorization in NLP
+
+NLP记忆的经验研究
+An Empirical Study on Explanations in Out-of-Domain Settings
+
+关于室外设置中解释的实证研究
+An Empirical Survey of the Effectiveness of Debiasing Techniques for Pretrained Language Models
+
+对验证技术对审计语言模型的有效性的经验调查
+An Investigation of the (In)effectiveness of Counterfactually Augmented Data
+
+对反事实增强数据的（在）有效性的调查
+Can Explanations Be Useful for Calibrating Black Box Models?
+
+解释对校准黑匣子型号有用吗？
+Can Pre-trained Language Models Interpret Similes as Smart as Human?
+
+预训练的语言模型可以将明喻解释为像人类一样聪明吗？
+Can Prompt Probe Pretrained Language Models? Understanding the Invisible Risks from a Causal View
+
+可以提示探测验证的语言模型吗？从因果观点了解无形的风险
+Can Synthetic Translations Improve Bitext Quality?
+
+合成翻译可以提高bitext质量吗？
+Can Transformer be Too Compositional? Analysing Idiom Processing in Neural Machine Translation
+
+变压器会太组成吗？分析神经机器翻译中的成语处理
+Causal Probing for Grammatical Number: From Encoding to Usage
+
+语法编号的因果探测：从编码到用法
+Coherence boosting: When your pretrained language model is not paying enough attention
+
+增强连贯性：当您验证的语言模型没有引起足够的关注时
+Context Matters: A Pragmatic Study of PLMs’ Negation Understanding
+
+上下文事项：对PLM的否定理解的务实研究
+Cross-Lingual Ability of Multilingual Masked Language Models: A Study of Language Structure
+
+多语言蒙版语言模型的跨语性能力：语言结构的研究
+Dataset Geography: Mapping Language Data to Language Users
+
+数据集地理：将语言数据映射到语言用户
+Do Transformer Models Show Similar Attention Patterns to Task-Specific Human Gaze?
+
+变压器模型是否显示出与特定于任务的人类目光相似的注意力模式？
+Does Recommend-Revise Produce Reliable Annotations? An Analysis on Missing Instances in DocRED
+
+推荐革命会产生可靠的注释吗？对DOCRED中缺失实例的分析
+Explanation Graph Generation via Pre-trained Language Models: An Empirical Study with Contrastive Learning
+
+通过预训练的语言模型的解释图生成：对比度学习的实证研究
+Finding Structural Knowledge in Multimodal-BERT
+
+在多模式 - 伯特中找到结构知识
+Generating Biographies on Wikipedia: The Impact of Gender Bias on the Retrieval-Based Generation of Women Biographies
+
+生成维基百科的传记：性别偏见对基于检索的女性传记的影响
+GPT-D: Inducing Dementia-related Linguistic Anomalies by Deliberate Degradation of Artificial Neural Language Models
+
+GPT-D：通过故意降级人工神经语言模型引起与痴呆有关的语言异常
+How can NLP Help Revitalize Endangered Languages? A Case Study and Roadmap for the Cherokee Language
+
+NLP如何帮助振兴濒危语言？切诺基语言的案例研究和路线图
+ILDAE: Instance-Level Difficulty Analysis of Evaluation Data
+
+Ildae：实例级别的评估数据难度分析
+IMPLI: Investigating NLI Models' Performance on Figurative Language
+
+暗示：调查NLI模型在比喻语言上的表现
+Improving Generalizability in Implicitly Abusive Language Detection with Concept Activation Vectors
+
+用概念激活向量提高隐式滥用语言检测的普遍性
+Interpretability for Language Learners Using Example-Based Grammatical Error Correction
+
+语言学习者使用基于示例的语法错误校正的解释性
+Interpreting Character Embeddings With Perceptual Representations: The Case of Shape, Sound, and Color
+
+解释具有感知表示的字符嵌入：形状，声音和颜色的情况
+Investigating Failures of Automatic Translation in the Case of Unambiguous Gender
+
+在性别明确的情况下，调查自动翻译失败
+Investigating Non-local Features for Neural Constituency Parsing
+
+研究神经选区解析的非本地特征
+Is Attention Explanation? An Introduction to the Debate
+
+注意力解释吗？辩论的介绍
+Life after BERT: What do Other Muppets Understand about Language?
+
+伯特之后的生活：其他木偶对语言有什么了解？
+Low-Rank Softmax Can Have Unargmaxable Classes in Theory but Rarely in Practice
+
+低排名的软马克斯在理论上可能具有不可忽略的类别，但在实践中很少
+Measuring Fairness of Text Classifiers via Prediction Sensitivity
+
+通过预测敏感性来衡量文本分类器的公平性
+Memorisation versus Generalisation in Pre-trained Language Models
+
+在预训练的语言模型中的记忆与概括
+Metaphors in Pre-Trained Language Models: Probing and Generalization Across Datasets and Languages
+
+预训练的语言模型中的隐喻：跨数据集探测和概括
+On the Sensitivity and Stability of Model Interpretations in NLP
+
+关于NLP模型解释的灵敏度和稳定性
+Pretraining with Artificial Language: Studying Transferable Knowledge in Language Models
+
+用人工语言进行预处理：在语言模型中研究可转移的知识
+Probing as Quantifying Inductive Bias
+
+探测为量化电感偏差
+Probing Simile Knowledge from Pre-trained Language Models
+
+从预训练的语言模型中探索明式知识
+ProtoTEx: Explaining Model Decisions with Prototype Tensors
+
+Prototex：用原型张量解释模型决策
+Reports of personal experiences and stories in argumentation: datasets and analysis
+
+关于论证中的个人经验和故事的报告：数据集和分析
+Rewire-then-Probe: A Contrastive Recipe for Probing Biomedical Knowledge of Pre-trained Language Models
+
+重新旋转 - 探针：探测预训练语言模型的生物医学知识的对比配方
+Sense Embeddings are also Biased -- Evaluating Social Biases in Static and Contextualised Sense Embeddings
+
+感官嵌入也有偏见 - 评估静态和上下文化的嵌入中的社会偏见
+Signal in Noise: Exploring Meaning Encoded in Random Character Sequences with Character-Aware Language Models
+
+噪音中的信号：探索用字符刻录语言模型以随机字符序列编码的含义
+Systematic Inequalities in Language Technology Performance across the World’s Languages
+
+全球语言的语言技术表现的系统不平等
+That Is a Suspicious Reaction!: Interpreting Logits Variation to Detect NLP Adversarial Attacks
+
+这是一个可疑的反应！：解释逻辑变化以检测NLP对抗攻击
+The Dangers of Underclaiming: Reasons for Caution When Reporting How NLP Systems Fail
+
+未听到的危险：报告NLP系统如何失败时谨慎的原因
+The Moral Debater: A Study on the Computational Generation of Morally Framed Arguments
+
+道德辩论者：关于道德框架论点的计算产生的研究
+The Paradox of the Compositionality of Natural Language: A Neural Machine Translation Case Study
+
+自然语言组成的悖论：神经机器翻译案例研究
+Things not Written in Text: Exploring Spatial Commonsense from Visual Signals
+
+未用文字写的东西：探索视觉信号的空间常识
+Toward Interpretable Semantic Textual Similarity via Optimal Transportbased Contrastive Sentence Learning
+
+通过最佳的基于运输的对比度学习来朝着可解释的语义文本相似性
+Transformers in the loop: Polarity in neural models of language
+
+循环中的变压器：语言神经模型中的极性
+Upstream Mitigation Is Not All You Need: Testing the Bias Transfer Hypothesis in Pre-Trained Language Models
+
+上游缓解并不是您所需要的：在预训练的语言模型中测试偏差转移假设
+When did you become so smart, oh wise one?! Sarcasm Explanation in Multi-modal Multi-party Dialogues
+
+你什么时候变得如此聪明，哦，明智的呢？多模式多方对话中的讽刺解释
+Where to Go for the Holidays: Towards Mixed-Type Dialogs for Clarification of User Goals
+
+假期去哪里：迈向混合型对话框以澄清用户目标
+Which side are you on? Insider-Outsider classification in conspiracy theoretic social media
+
+你支持哪一边？阴谋理论社交媒体中的内部人士分类
+Word Order Does Matter and Shuffled Language Models Know It
+
+单词顺序确实很重要，然后改组的语言模型知道
+Language Model【语言模型】
+
+语言模型【【】】
+模型结构
+
+模型结构
+ABC: Attention with Bounded-memory Control
+
+ABC：有界内存控制的注意力
+AdapLeR: Speeding up Inference by Adaptive Length Reduction
+
+Adapler：通过减少自适应长度加速推断
+AlephBERT: Language Model Pre-training and Evaluation from Sub-Word to Sentence Level
+
+Alephbert：语言模型从子字到句子级别的培训和评估
+Better Language Model with Hypernym Class Prediction
+
+具有超诺班类预测的更好的语言模型
+CAMERO: Consistency Regularized Ensemble of Perturbed Language Models with Weight Sharing
+
+Camero：一致性的扰动语言模型的一致性合奏与重量共享
+ClarET: Pre-training a Correlation-Aware Context-To-Event Transformer for Event-Centric Generation and Classification
+
+紫红色：预先培训以事件为中心的相关性上下文到事实变压器
+ClusterFormer: Neural Clustering Attention for Efficient and Effective Transformer
+
+聚类形式：神经聚类的注意力，以获得高效和有效的变压器
+Dependency-based Mixture Language Models
+
+基于依赖关系的混合语言模型
+E-LANG: Energy-Based Joint Inferencing of Super and Swift Language Models
+
+E-Lang：超级和迅速语言模型的基于能量的联合推断
+EPT-X: An Expression-Pointer Transformer model that generates eXplanations for numbers
+
+EPT-X：一种表达式销售变压器模型，生成数字的解释
+Exploring and Adapting Chinese GPT to Pinyin Input Method
+
+探索和调整中国GPT到拼音输入方法
+Few-Shot Tabular Data Enrichment Using Fine-Tuned Transformer Architectures
+
+使用微调变压器体系结构的几个射击表格数据丰富
+Fine- and Coarse-Granularity Hybrid Self-Attention for Efficient BERT
+
+精细的和粗粒状的杂种自我注意，以进行有效的BERT
+FORTAP: Using Formulas for Numerical-Reasoning-Aware Table Pretraining
+
+FORTAP：使用公式进行数值 - 理论意识桌子进行预训练
+Fully Hyperbolic Neural Networks
+
+完全双曲神经网络
+GLM: General Language Model Pretraining with Autoregressive Blank Infilling
+
+GLM：通用语言模型，以自回归空白填充进行预处理
+infty-former: Infinite Memory Transformer
+
+InftyFormer：无限内存变压器
+KinyaBERT: a Morphology-aware Kinyarwanda Language Model
+
+Kinyabert：一种形态学的Kinyarwanda语言模型
+Knowledge Neurons in Pretrained Transformers
+
+验证的变压器中的知识神经元
+LiLT: A Simple yet Effective Language-Independent Layout Transformer for Structured Document Understanding
+
+LILT：一种简单而有效的与语言无关的布局变压器，用于结构化文档理解
+Long-range Sequence Modeling with Predictable Sparse Attention
+
+远程序列建模，可预测的稀疏注意力
+Low-Rank Softmax Can Have Unargmaxable Classes in Theory but Rarely in Practice
+
+低排名的软马克斯在理论上可能具有不可忽略的类别，但在实践中很少
+Making Transformers Solve Compositional Tasks
+
+使变压器解决组成任务
+Pyramid-BERT: Reducing Complexity via Successive Core-set based Token Selection
+
+金字塔 - 伯特：通过连续的基于核心的令牌选择降低复杂性
+SkipBERT: Efficient Inference with Shallow Layer Skipping
+
+Skipbert：有效的推断浅层跳过
+Sparsifying Transformer Models with Trainable Representation Pooling
+
+具有可训练表示的稀疏变压器模型
+StableMoE: Stable Routing Strategy for Mixture of Experts
+
+Stablemoe：专家混合的稳定路由策略
+TableFormer: Robust Transformer Modeling for Table-Text Encoding
+
+表格式：表文本编码的强大变压器建模
+Transkimmer: Transformer Learns to Layer-wise Skim
+
+TransKimmer：变形金刚学会从图层略读
+训练策略
+
+训练策略
+The Trade-offs of Domain Adaptation for Neural Language Models
+
+神经语言模型的领域改编的权衡
+A Simple Hash-Based Early Exiting Approach For Language Understanding and Generation
+
+一种简单的基于哈希的早期退出方法，用于语言理解和发电
+Feeding What You Need by Understanding What You Learned
+
+通过了解您学到的知识来喂养您所需要的东西
+Distinguishing Non-natural from Natural Adversarial Samples for More Robust Pre-trained Language Model
+
+将非天然与自然对抗样品区分开以进行更强大的预训练语言模型
+Training Data is More Valuable than You Think: A Simple and Effective Method by Retrieving from Training Data
+
+培训数据比您想象的更有价值：通过从培训数据中检索的一种简单有效的方法
+ELLE: Efficient Lifelong Pre-training for Emerging Data
+
+ELLE：有效的新兴数据终身预训练
+LinkBERT: Pretraining Language Models with Document Links
+
+链接BERT：带有文档链接的培训前培训语言模型
+CoCoLM: Complex Commonsense Enhanced Language Model with Discourse Relations
+
+COCOLM：复杂的常识增强语言模型与话语关系
+Coherence boosting: When your pretrained language model is not paying enough attention
+
+增强连贯性：当您验证的语言模型没有引起足够的关注时
+Feeding What You Need by Understanding What You Learned
+
+通过了解您学到的知识来喂养您所需要的东西
+LinkBERT: Pretraining Language Models with Document Links
+
+链接BERT：带有文档链接的培训前培训语言模型
+MarkupLM: Pre-training of Text and Markup Language for Visually Rich Document Understanding
+
+Markuplm：文本和标记语言的预培训，以供视觉上丰富的文档理解
+Sparse Progressive Distillation: Resolving Overfitting under Pretrain-andFinetune Paradigm
+
+稀疏进行性蒸馏：在预处理和芬特式范式下解决过度拟合
+Token Dropping for Efficient BERT Pretraining
+
+代币掉落以进行有效的BERT预训练
+XLM-E: Cross-lingual Language Model Pre-training via ELECTRA
+
+XLM-E：通过Electra预训练的跨语性语言模型
+模型压缩
+
+模型压缩
+Compression of Generative Pre-trained Language Models via Quantization
+
+通过量化压缩生成的预训练语言模型
+BERT Learns to Teach: Knowledge Distillation with Meta Learning
+
+伯特学会教书：元学习的知识蒸馏
+Multi-Granularity Structural Knowledge Distillation for Language Model Compression
+
+语言模型压缩的多粒性结构知识蒸馏
+Structured Pruning Learns Compact and Accurate Models
+
+结构化修剪学习紧凑而准确的模型
+微调策略
+
+微调策略
+A Closer Look at How Fine-tuning Changes BERT
+
+仔细观察微调如何变化bert
+A Good Prompt Is Worth Millions of Parameters: Low-resource Promptbased Learning for Vision-Language Models
+
+一个好的提示值得数百万参数：视觉模型的低资源提示学习
+Adversarial Soft Prompt Tuning for Cross-Domain Sentiment Analysis
+
+对抗性软提示调整进行跨域情绪分析
+An Information-theoretic Approach to Prompt Engineering Without Ground Truth Labels
+
+一种信息理论方法来提示工程，而无需地面真相标签
+Are Prompt-based Models Clueless?
+
+迅速的模型是无知的吗？
+bert2BERT: Towards Reusable Pretrained Language Models
+
+Bert2bert：迈向可重复使用的验证语言模型
+CogTaskonomy: Cognitively Inspired Task Taxonomy Is Beneficial to Transfer Learning in NLP
+
+COGTASKONOMY：认知启发的任务分类法对NLP的转移学习是有益的
+Composable Sparse Fine-Tuning for Cross-Lingual Transfer
+
+可综合的稀疏微调用于跨语性转移
+ConTinTin: Continual Learning from Task Instructions
+
+contintin：从任务说明中持续学习
+Cross-Task Generalization via Natural Language Crowdsourcing Instructions
+
+通过自然语言众包说明进行跨任务概括
+Efficient Unsupervised Sentence Compression by Fine-tuning Transformers with Reinforcement Learning
+
+通过通过增强学习来微调变压器，有效的无监督句子压缩
+Enhancing Cross-lingual Natural Language Inference by Prompt-learning from Cross-lingual Templates
+
+通过跨语性模板迅速学习来增强跨语性的自然语言推断
+Fantastically Ordered Prompts and Where to Find Them: Overcoming FewShot Prompt Order Sensitivity
+
+井井有条的提示和在哪里可以找到它们：克服几乎没有的提示命令灵敏度
+Few-Shot Learning with Siamese Networks and Label Tuning
+
+使用暹罗网络和标签调整几乎没有学习
+Knowledgeable Prompt-tuning: Incorporating Knowledge into Prompt Verbalizer for Text Classification
+
+知识渊博的及时调整：将知识纳入及时的口头调查以进行文本分类
+On Continual Model Refinement in Out-of-Distribution Data Streams
+
+在分发数据流中的连续模型完善中
+Overcoming Catastrophic Forgetting beyond Continual Learning: Balanced Training for Neural Machine Translation
+
+克服灾难性的遗忘超越持续学习：神经机器翻译的平衡训练
+PPT: Pre-trained Prompt Tuning for Few-shot Learning
+
+PPT：预先训练的及时调整以进行几次学习
+Prompt-Based Rule Discovery and Boosting for Interactive WeaklySupervised Learning
+
+基于及时的规则发现和增强交互式弱监督学习
+Prompt for Extraction? PAIE: Prompting Argument Interaction for Event Argument Extraction
+
+提示提示？PAIE：提示事件参数提取的参数交互
+Prompt-free and Efficient Few-shot Learning with Language Models
+
+使用语言模型的迅速无效的几次学习
+Prototypical Verbalizer for Prompt-based Few-shot Tuning
+
+原型语言器，用于迅速的几声调整
+Turning Tables: Generating Examples from Semi-structured Tables for Endowing Language Models with Reasoning Skills
+
+转盘：从半结构表中生成示例，以赋予具有推理技能的语言模型
+UniPELT: A Unified Framework for Parameter-Efficient Language Model Tuning
+
+Unipelt：参数有效语言模型调整的统一框架
+表示学习
+
+表示学习
+A Contrastive Framework for Learning Sentence Representations from Pairwise and Triple-wise Perspective in Angular Space
+
+从角空间中成对和三个角度的学习句子表示的对比框架
+Auto-Debias: Debiasing Masked Language Models with Automated Biased Prompts
+
+自动辩论：具有自动偏见的提示的掩盖语言模型
+Compact Token Representations with Contextual Quantization for Efficient Document Re-ranking
+
+紧凑的令牌表示具有上下文量化以进行有效文档的重新排序
+Contextual Representation Learning beyond Masked Language Modeling
+
+上下文表示学习超出蒙版语言建模
+Contrastive Visual Semantic Pretraining Magnifies the Semantics of Natural Language Representations
+
+对比性视觉语义预审计，放大了自然语言表示的语义
+Cross-Lingual Contrastive Learning for Fine-Grained Entity Typing for LowResource Languages
+
+跨语性的对比度学习，用于低位分语言的细颗粒实体打字
+Cross-Modal Discrete Representation Learning
+
+跨模式离散表示学习
+Debiased Contrastive Learning of Unsupervised Sentence Representations
+
+对对比度学习无监督的句子表示
+Enhancing Chinese Pre-trained Language Model via Heterogeneous Linguistics Graph
+
+通过异质语言图来增强中国预训练的语言模型
+GL-CLeF: A Global--Local Contrastive Learning Framework for Crosslingual Spoken Language Understanding
+
+GL-CLEF：跨语言语言理解的全球 - 本地对比学习框架
+Improving Event Representation via Simultaneous Weakly Supervised Contrastive Learning and Clustering
+
+通过同时进行弱监督的对比度学习和聚类来改善事件表示
+Just Rank: Rethinking Evaluation with Word and Sentence Similarities
+
+只是等级：用单词和句子相似性重新思考评估
+Language-agnostic BERT Sentence Embedding
+
+语言不合时宜的bert句子嵌入
+Learning Disentangled Representations of Negation and Uncertainty
+
+学习解开否定和不确定性的表示
+Learning Disentangled Textual Representations via Statistical Measures of Similarity
+
+通过相似性的统计量度学习解开文本表示
+Multilingual Molecular Representation Learning via Contrastive Pre-training
+
+通过对比预训练的多语言分子表示学习
+Nibbling at the Hard Core of Word Sense Disambiguation
+
+ni在单词意义上的硬核心歧义
+Noisy Channel Language Model Prompting for Few-Shot Text Classification
+
+嘈杂的频道语言模型提示进行几次文本分类
+Rare and Zero-shot Word Sense Disambiguation using Z-Reweighting
+
+稀有和零句的单词感官歧义使用Z-剥夺
+Sentence-level Privacy for Document Embeddings
+
+文档嵌入的句子级隐私
+Softmax Bottleneck Makes Language Models Unable to Represent Multimode Word Distributions
+
+SoftMax瓶颈使语言模型无法表示多模字词分布
+SPoT: Better Frozen Model Adaptation through Soft Prompt Transfer
+
+点：通过软及时传输更好的冷冻模型适应
+Tackling Fake News Detection by Continually Improving Social Context Representations using Graph Neural Networks
+
+通过不断使用图形神经网络改善社会环境表示来解决虚假新闻检测
+The Grammar-Learning Trajectories of Neural Language Models
+
+神经语言模型的语法学习轨迹
+Using Context-to-Vector with Graph Retrofitting to Improve Word Embeddings
+
+使用上下文对向量进行图形翻新以改进单词嵌入
+Machine Learning for NLP【NLP中的机器学习】
+
+NLP【nlp的机器学习
+A Rationale-Centric Framework for Human-in-the-loop Machine Learning
+
+人类在循环机器学习中以理由为中心的框架
+Bias Mitigation in Machine Translation Quality Estimation
+
+机器翻译质量估计的偏置缓解
+Disentangled Sequence to Sequence Learning for Compositional Generalization
+
+分解序列到序列学习的组成概括
+DoCoGen: Domain Counterfactual Generation for Low Resource Domain Adaptation
+
+Docogen：低资源域适应的领域反事实生成
+Domain Adaptation in Multilingual and Multi-Domain Monolingual Settings for Complex Word Identification
+
+复杂单词识别的多语言和多域单语设置中的域适应
+Domain Knowledge Transferring for Pre-trained Language Model via Calibrated Activation Boundary Distillation
+
+通过校准激活边界蒸馏，预训练的语言模型的域知识转移
+Learning Functional Distributional Semantics with Visual Data
+
+通过视觉数据学习功能分布语义
+Leveraging Relaxed Equilibrium by Lazy Transition for Sequence Modeling
+
+通过懒惰过渡利用松弛平衡进行序列建模
+Local Languages, Third Spaces, and other High-Resource Scenarios
+
+本地语言，第三个空间和其他高资源场景
+Meta-learning via Language Model In-context Tuning
+
+通过语言模型在语言中进行元学习
+MPII: Multi-Level Mutual Promotion for Inference and Interpretation
+
+MPII：推理和解释的多级共同促进
+On the Calibration of Pre-trained Language Models using Mixup Guided by Area Under the Margin and Saliency
+
+关于使用边缘和显着性区域指导的混音进行预训练的语言模型的校准
+Overcoming a Theoretical Limitation of Self-Attention
+
+克服自我注意的理论限制
+Rethinking Negative Sampling for Handling Missing Entity Annotations
+
+重新考虑处理缺失实体注释的负面抽样
+Rethinking Self-Supervision Objectives for Generalizable Coherence Modeling
+
+重新思考可推广连贯建模的自我实现目标
+Robust Lottery Tickets for Pre-trained Language Models
+
+预先训练的语言模型的健壮彩票门票
+Sharpness-Aware Minimization Improves Language Model Generalization
+
+清晰度了解最小化改善语言模型的概括
+Skill Induction and Planning with Latent Language
+
+潜在语言的技能归纳和计划
+The Trade-offs of Domain Adaptation for Neural Language Models
+
+神经语言模型的领域改编的权衡
+Distributionally Robust Finetuning BERT for Covariate Drift in Spoken Language Understanding
+
+分配强大的Finetunting Bert，用于与口语理解中的协变量漂移
+Learning to Imagine: Integrating Counterfactual Thinking in Neural Discrete Reasoning
+
+学习想象：将反事实思维整合到神经离散推理中
+Machine Translation and Multilinguality【机器翻译与多语】
+
+机器翻译和多语言【【与】】
+翻译
+
+翻译
+Alignment-Augmented Consistent Translation for Multilingual Open Information Extraction
+
+对齐的一致翻译，用于多语言开放信息提取
+Alternative Input Signals Ease Transfer in Multilingual Machine Translation
+
+多语言机器翻译中的替代输入信号轻松传输
+BiTIIMT: A Bilingual Text-infilling Method for Interactive Machine Translation
+
+Bitiimt：一种用于交互式机器翻译的双语文本注入方法
+Bridging the Data Gap between Training and Inference for Unsupervised Neural Machine Translation
+
+弥合训练和推断无监督神经机器翻译之间的数据差距
+Can Transformer be Too Compositional? Analysing Idiom Processing in Neural Machine Translation
+
+变压器会太组成吗？分析神经机器翻译中的成语处理
+CipherDAug: Ciphertext based Data Augmentation for Neural Machine Translation
+
+Cipherdaug：基于密文的基于神经机器翻译的数据增强
+Conditional Bilingual Mutual Information Based Adaptive Training for Neural Machine Translation
+
+有条件双语相互信息的基于神经机器翻译的自适应培训
+Confidence Based Bidirectional Global Context Aware Training Framework for Neural Machine Translation
+
+基于信心的双向全球环境情境意识培训框架神经机器翻译
+DEEP: DEnoising Entity Pre-training for Neural Machine Translation
+
+深处：神经机器翻译的Denoising实体预训练
+DiBiMT: A Novel Benchmark for Measuring Word Sense Disambiguation Biases in Machine Translation
+
+dibimt：用于测量单词感官歧义偏见的新颖基准测试机器翻译
+Divide and Rule: Effective Pre-Training for Context-Aware Multi-Encoder Translation Models
+
+划分和规则：有效的上下文感知多编码器翻译模型的预训练
+EAG: Extract and Generate Multi-way Aligned Corpus for Complete Multilingual Neural Machine Translation
+
+EAG：提取和生成多路排列语料库，用于完整的多语言神经机器翻译
+Efficient Cluster-Based k-Nearest-Neighbor Machine Translation
+
+有效的基于群集的K-Nearest-Neighbor机器翻译
+Flow-Adapter Architecture for Unsupervised Machine Translation
+
+无监督的机器翻译的流程适应器体系结构
+From Simultaneous to Streaming Machine Translation by Leveraging Streaming History
+
+通过利用流历史记录，从同时到流机的翻译
+Improving Word Translation via Two-Stage Contrastive Learning
+
+通过两阶段的对比度学习改进单词翻译
+Integrating Vectorized Lexical Constraints for Neural Machine Translation
+
+整合神经机器翻译的矢量化词汇约束
+Investigating Failures of Automatic Translation in the Case of Unambiguous Gender
+
+在性别明确的情况下，调查自动翻译失败
+Learning Adaptive Segmentation Policy for End-to-End Simultaneous Translation
+
+学习端到端同时翻译的自适应细分策略
+Learning Confidence for Transformer-based Neural Machine Translation
+
+学习基于变压器的神经机器翻译的信心
+Learning to Generalize to More: Continuous Semantic Augmentation for Neural Machine Translation
+
+学习概括更多：神经机器翻译的连续语义扩展
+Learning When to Translate for Streaming Speech
+
+学习何时翻译流式语音
+Measuring and Mitigating Name Biases in Neural Machine Translation
+
+在神经机器翻译中测量和减轻名称偏见
+Modeling Dual Read/Write Paths for Simultaneous Machine Translation
+
+建模同时机器翻译的双读/编写路径
+MSP: Multi-Stage Prompting for Making Pre-trained Language Models Better Translators
+
+MSP：多阶段提示使预训练的语言模型更好地翻译器
+Multilingual Document-Level Translation Enables Zero-Shot Transfer From Sentences to Documents
+
+多语言文档级翻译可以使从句子零转移到文档
+Multilingual Mix: Example Interpolation Improves Multilingual Neural Machine Translation
+
+多语言混合：示例插值改善了多语言神经机器翻译
+Neural Machine Translation with Phrase-Level Universal Visual Representations
+
+带有短语级通用视觉表示的神经机器翻译
+On Vision Features in Multimodal Machine Translation
+
+关于多模式机器翻译中的视觉功能
+Overcoming Catastrophic Forgetting beyond Continual Learning: Balanced Training for Neural Machine Translation
+
+克服灾难性的遗忘超越持续学习：神经机器翻译的平衡训练
+Prediction Difference Regularization against Perturbation for Neural Machine Translation
+
+预测差异正规化对神经机器翻译的扰动
+Redistributing Low-Frequency Words: Making the Most of Monolingual Data in Non-Autoregressive Translation
+
+重新分发低频词：在非自动性翻译中充分利用单语言数据
+Reducing Position Bias in Simultaneous Machine Translation with Length Aware Framework
+
+减少同时机器翻译中的位置偏差，并具有长度的意识框架
+Scheduled Multi-task Learning for Neural Chat Translation
+
+安排的多任务学习用于神经聊天翻译
+The Paradox of the Compositionality of Natural Language: A Neural Machine Translation Case Study
+
+自然语言组成的悖论：神经机器翻译案例研究
+Towards Making the Most of Cross-Lingual Transfer for Zero-Shot Neural Machine Translation
+
+旨在充分利用零拍神器翻译的跨语性转移
+Understanding and Improving Sequence-to-Sequence Pretraining for Neural Machine Translation
+
+理解和改善神经机器翻译的序列预测
+Unified Speech-Text Pre-training for Speech Translation and Recognition
+
+统一的语音文本预培训，用于语音翻译和认可
+UniTE: Unified Translation Evaluation
+
+UNITE：统一翻译评估
+Universal Conditional Masked Language Pre-training for Neural Machine Translation
+
+神经机器翻译的通用有条件蒙版语言预训练
+多语
+
+多语
+AmericasNLI: Evaluating Zero-shot Natural Language Understanding of Pretrained Multilingual Models in Truly Low-resource Languages
+
+Americasnli：评估零摄像的自然语言理解对真正低资源语言的预读的多语言模型
+Cross-Lingual Ability of Multilingual Masked Language Models: A Study of Language Structure
+
+多语言蒙版语言模型的跨语性能力：语言结构的研究
+Domain Adaptation in Multilingual and Multi-Domain Monolingual Settings for Complex Word Identification
+
+复杂单词识别的多语言和多域单语设置中的域适应
+Expanding Pretrained Models to Thousands More Languages via Lexiconbased Adaptation
+
+通过基于词典的改编，将预告额的模型扩展到数千种语言
+Match the Script, Adapt if Multilingual: Analyzing the Effect of Multilingual Pretraining on Cross-lingual Transferability
+
+匹配脚本，适应多语言：分析多语言预读对跨语义转移性的影响
+mLUKE: The Power of Entity Representations in Multilingual Pretrained Language Models
+
+Mluke：多语言审慎语言模型中实体表示的力量
+Multi Task Learning For Zero Shot Performance Prediction of Multilingual Models
+
+多语言模型的零射击性能预测的多任务学习
+Multilingual Generative Language Models for Zero-Shot Cross-Lingual Event Argument Extraction
+
+零拍的多语言生成语言模型
+Multilingual Knowledge Graph Completion with Self-Supervised Adaptive Graph Alignment
+
+多语言知识图完成具有自我监督的自适应图对齐方式
+Multilingual Molecular Representation Learning via Contrastive Pre-training
+
+通过对比预训练的多语言分子表示学习
+Multilingual unsupervised sequence segmentation transfers to extremely low-resource languages
+
+多语言无监督的序列细分转移到极低的农源语言
+One Country, 700+ Languages: NLP Challenges for Underrepresented Languages and Dialects in Indonesia
+
+一种国家，700多种语言：印度尼西亚代表性不足的语言和方言的NLP挑战
+Prix-LM: Pretraining for Multilingual Knowledge Base Construction
+
+Prix-LM：用于多语言知识基础构建的训练
+Probing Structured Pruning on Multilingual Pre-trained Models: Settings, Algorithms, and Efficiency
+
+对多语言预训练模型进行探测结构化修剪：设置，算法和效率
+Question Answering【问答与理解】
+
+问题回答【问答】】
+阅读理解
+
+阅读理解
+AdaLoGN: Adaptive Logic Graph Network for Reasoning-Based Machine Reading Comprehension
+
+Adalogn：用于基于推理的机器阅读理解的自适应逻辑图网络
+Deep Inductive Logic Reasoning for Multi-Hop Reading Comprehension
+
+多跳阅读理解的深层归纳逻辑推理
+Improving Machine Reading Comprehension with Contextualized Commonsense Knowledge
+
+通过上下文化的常识知识改善机器阅读理解
+Learning Disentangled Semantic Representations for Zero-Shot CrossLingual Transfer in Multilingual Machine Reading Comprehension
+
+在多语言机器阅读理解中学习零拍传输的学习分解语义表示
+Lite Unified Modeling for Discriminative Reading Comprehension
+
+Lite统一建模用于判别阅读理解
+Modeling Temporal-Modal Entity Graph for Procedural Multimodal Machine Comprehension
+
+为程序多模式理解的颞型模型实体图
+What Makes Reading Comprehension Questions Difficult?
+
+是什么使阅读理解问题变得困难？
+MultiHiertt: Numerical Reasoning over Multi Hierarchical Tabular and Textual Data
+
+Multihiertt：多分层表格和文本数据的数值推理
+问答
+
+问答
+Answer-level Calibration for Free-form Multiple Choice Question Answering
+
+自由形式多项选择问答答案的答案级校准答案
+Answering Open-Domain Multi-Answer Questions via a Recall-then-Verify Framework
+
+通过召回然后验证框架回答开放域的多回答问题
+CQG: A Simple and Effective Controlled Generation Framework for Multihop Question Generation
+
+CQG：一个简单有效的受控生成框架，用于多台面问题生成
+Ditch the Gold Standard: Re-evaluating Conversational Question Answering
+
+抛弃黄金标准：重新评估对话问题回答
+Generated Knowledge Prompting for Commonsense Reasoning
+
+产生的知识促使常识性推理
+How Do We Answer Complex Questions: Discourse Structure of Long-form Answers
+
+我们如何回答复杂的问题：长形答案的话语结构
+Hypergraph Transformer: Weakly-Supervised Multi-hop Reasoning for Knowledge-based Visual Question Answering
+
+HyperGraph Transformer：基于知识的视觉问题的弱监督的多跳上推理
+Hyperlink-induced Pre-training for Passage Retrieval in Open-domain Question Answering
+
+超链接引起的预训练用于通过开放域中的通过检索回答
+Improving Time Sensitivity for Question Answering over Temporal Knowledge Graphs
+
+提高时间敏感性对时间知识图的回答
+It is AI’s Turn to Ask Humans a Question: Question-Answer Pair Generation for Children's Story Books
+
+该轮到人类问人类一个问题：儿童故事书的问答一对
+KaFSP: Knowledge-Aware Fuzzy Semantic Parsing for Conversational Question Answering over a Large-Scale Knowledge Base
+
+KAFSP：知识意识的模糊语义解析，以对话问题回答大规模的知识库
+KG-FiD: Infusing Knowledge Graph in Fusion-in-Decoder for Open-Domain Question Answering
+
+kg-fid：在融合中注入知识图，用于开放域问题回答
+MMCoQA: Conversational Question Answering over Text, Tables, and Images
+
+MMCOQA：对话问题回答文本，表和图像
+Modeling Multi-hop Question Answering as Single Sequence Prediction
+
+建模多跳问答作为单序列预测
+On the Robustness of Question Rewriting Systems to Questions of Varying Hardness
+
+关于问题重写系统的鲁棒性，以改变硬度的问题
+Open Domain Question Answering with A Unified Knowledge Interface
+
+开放域问题通过统一知识接口回答
+Program Transfer for Answering Complex Questions over Knowledge Bases
+
+通过知识基础回答复杂问题的程序转移
+Retrieval-guided Counterfactual Generation for QA
+
+质量保证的检索引导反事实生成
+RNG-KBQA: Generation Augmented Iterative Ranking for Knowledge Base Question Answering
+
+RNG-KBQA：知识基础问题的生成增强迭代排名回答
+Sequence-to-Sequence Knowledge Graph Completion and Question Answering
+
+序列到序列知识图的完成和问题答案
+Simulating Bandit Learning from User Feedback for Extractive Question Answering
+
+从用户反馈中模拟匪徒学习以提取问题回答
+Subgraph Retrieval Enhanced Model for Multi-hop Knowledge Base Question Answering
+
+多跳跃知识基础问题回答的子图检索增强模型
+Synthetic Question Value Estimation for Domain Adaptation of Question Answering
+
+域的综合问题价值估计，以适应问题答案
+Your Answer is Incorrect... Would you like to know why? Introducing a Bilingual Short Answer Feedback Dataset
+
+您的答案不正确...您想知道为什么吗？引入双语简短答案反馈数据集
+Resources and Evaluation【数据集与评估方法】
+
+资源和评估【数据与】】】
+数据集
+
+数据集
+A Statutory Article Retrieval Dataset in French
+
+法语的法定文章检索数据集
+CBLUE: A Chinese Biomedical Language Understanding Evaluation Benchmark
+
+CBLUE：中国生物医学理解评估基准
+Chart-to-Text: A Large-Scale Benchmark for Chart Summarization
+
+图表到文本：图表汇总的大规模基准
+CICERO: A Dataset for Contextualized Commonsense Inference in Dialogues
+
+CICERO：用于对话中的上下文定量推断的数据集
+CLUES: A Benchmark for Learning Classifiers using Natural Language Explanations
+
+线索：使用自然语言解释学习分类器的基准
+ConditionalQA: A Complex Reading Comprehension Dataset with Conditional Answers
+
+条件：有条件答案的复杂阅读理解数据集
+Cree Corpus: A Collection of nêhiyawêwin Resources
+
+Cree Corpus：Nêhiyawêwin资源的集合
+Detecting Unassimilated Borrowings in Spanish: An Annotated Corpus and Approaches to Modeling
+
+在西班牙语中检测未拟合的借款：带注释的语料库和建模方法
+DialFact: A Benchmark for Fact-Checking in Dialogue
+
+DialFact：在对话中进行事实检查的基准
+DiBiMT: A Novel Benchmark for Measuring Word Sense Disambiguation Biases in Machine Translation
+
+dibimt：用于测量单词感官歧义偏见的新颖基准测试机器翻译
+Down and Across: Introducing Crossword-Solving as a New NLP Benchmark
+
+向下和跨越：引入填字游戏作为新的NLP基准
+e-CARE: a New Dataset for Exploring Explainable Causal Reasoning
+
+电子护理：用于探索可解释的因果推理的新数据集
+EntSUM: A Data Set for Entity-Centric Extractive Summarization
+
+ententum：一个以实体为中心的提取性摘要的数据集
+ePiC: Employing Proverbs in Context as a Benchmark for Abstract Language Understanding
+
+史诗：在上下文中采用谚语作为抽象语言理解的基准
+FairLex: A Multilingual Benchmark for Evaluating Fairness in Legal Text Processing
+
+Fairlex：用于评估法律文本处理中公平性的多语言基准
+Fantastic Questions and Where to Find Them: FairytaleQA -- An Authentic Dataset for Narrative Comprehension
+
+奇妙的问题和在哪里可以找到它们：童话 - 叙事理解的真实数据集
+Few-Shot Tabular Data Enrichment Using Fine-Tuned Transformer Architectures
+
+使用微调变压器体系结构的几个射击表格数据丰富
+French CrowS-Pairs: Extending a challenge dataset for measuring social bias in masked language models to a language other than English
+
+法语乌鸦对：扩展一个挑战数据集，以测量蒙版语言模型的社交偏见到英语以外的其他语言
+From text to talk: Harnessing conversational corpora for humane and diversity-aware language technology
+
+从文字到谈话：利用对话的语言来进行人道和多样性语言技术
+HiTab: A Hierarchical Table Dataset for Question Answering and Natural Language Generation
+
+HITAB：一个分层表数据集，用于回答和自然语言生成
+IAM: A Comprehensive and Large-Scale Dataset for Integrated Argument Mining Tasks
+
+IAM：用于集成参数挖掘任务的全面大规模数据集
+Image Retrieval from Contextual Descriptions
+
+从上下文描述中检索图像
+KQA Pro: A Dataset with Explicit Compositional Programs for Complex Question Answering over Knowledge Base
+
+KQA Pro：具有明确构图程序的数据集，用于通过知识库回答复杂问题
+LexGLUE: A Benchmark Dataset for Legal Language Understanding in English
+
+Lexglue：用英语理解法律语言理解的基准数据集
+M3ED: Multi-modal Multi-scene Multi-label Emotional Dialogue Database
+
+M3ED：多模式多场景多标签情感对话数据库
+MSCTD: A Multimodal Sentiment Chat Translation Dataset
+
+MSCTD：多模式情感聊天翻译数据集
+NumGLUE: A Suite of Fundamental yet Challenging Mathematical Reasoning Tasks
+
+Numglue：一套基本但具有挑战性的数学推理任务
+QuoteR: A Benchmark of Quote Recommendation for Writing
+
+引号：报价推荐的基准写作
+Reports of personal experiences and stories in argumentation: datasets and analysis
+
+关于论证中的个人经验和故事的报告：数据集和分析
+RNSum: A Large-Scale Dataset for Automatic Release Note Generation via Commit Logs Summarization
+
+RNSUM：一个大规模数据集，用于自动发布注释通过提交日志摘要
+SciNLI: A Corpus for Natural Language Inference on Scientific Text
+
+Scinli：科学文本的自然语言推断语料库
+SummScreen: A Dataset for Abstractive Screenplay Summarization
+
+summscreen：抽象剧本摘要的数据集
+SUPERB-SG: Enhanced Speech processing Universal PERformance Benchmark for Semantic and Generative Capabilities
+
+Superb-SG：增强的语音处理通用性能基准，用于语义和生成功能
+Textomics: A Dataset for Genomics Data Summary Generation
+
+文本学：基因组学数据摘要生成的数据集
+The Moral Integrity Corpus: A Benchmark for Ethical Dialogue Systems
+
+道德完整性语料库：道德对话系统的基准
+ToxiGen: A Large-Scale Machine-Generated Dataset for Adversarial and Implicit Hate Speech Detection
+
+毒素：用于对抗和隐性仇恨言语检测的大型机器生成的数据集
+VALSE: A Task-Independent Benchmark for Vision and Language Models Centered on Linguistic Phenomena
+
+Valse：以语言现象为中心的视觉和语言模型无关的基准
+WatClaimCheck: A new Dataset for Claim Entailment and Inference
+
+WATCLAIMCHECK：一个新的数据集，用于索赔和推理
+Your Answer is Incorrect... Would you like to know why? Introducing a Bilingual Short Answer Feedback Dataset
+
+您的答案不正确...您想知道为什么吗？引入双语简短答案反馈数据集
+评估
+
+评估
+Active Evaluation: Efficient NLG Evaluation with Few Pairwise Comparisons
+
+主动评估：有效的NLG评估，少数成对比较
+AmericasNLI: Evaluating Zero-shot Natural Language Understanding of Pretrained Multilingual Models in Truly Low-resource Languages
+
+Americasnli：评估零摄像的自然语言理解对真正低资源语言的预读的多语言模型
+BenchIE: A Framework for Multi-Faceted Fact-Based Open Information Extraction Evaluation
+
+替补：基于多方面的事实开放信息提取评估的框架
+Bias Mitigation in Machine Translation Quality Estimation
+
+机器翻译质量估计的偏置缓解
+CARETS: A Consistency And Robustness Evaluative Test Suite for VQA
+
+Carets：VQA的一致性和稳健性评估套件
+ChatMatch: Evaluating Chatbots by Autonomous Chat Tournaments
+
+ChatMatch：通过自主聊天锦标赛评估聊天机器人
+CTRLEval: An Unsupervised Reference-Free Metric for Evaluating Controlled Text Generation
+
+Ctrleval：无监督的无参考度量，用于评估受控文本生成
+DEAM: Dialogue Coherence Evaluation using AMR-based Semantic Manipulations
+
+DEAM：使用基于AMR的语义操纵的对话连贯评估
+Evaluating Factuality in Text Simplification
+
+评估文本简化中的事实
+FIBER: Fill-in-the-Blanks as a Challenging Video Understanding Evaluation Framework
+
+纤维：填空作为挑战性的视频理解评估框架
+FrugalScore: Learning Cheaper, Lighter and Faster Evaluation Metrics for Automatic Text Generation
+
+FrugalScore：自动文本生成的更便宜，更轻松，更快的评估指标
+Generative Pretraining for Paraphrase Evaluation
+
+用于释义评估的生成预测
+Human Evaluation and Correlation with Automatic Metrics in Consultation Note Generation
+
+人类评估和与自动指标的相关性
+Is GPT-3 Text Indistinguishable from Human Text? Scarecrow: A Framework for Scrutinizing Machine Text
+
+GPT-3文本与人类文本没有区别吗？稻草人：审查机器文本的框架
+Just Rank: Rethinking Evaluation with Word and Sentence Similarities
+
+只是等级：用单词和句子相似性重新思考评估
+Logic Traps in Evaluating Attribution Scores
+
+评估归因分数的逻辑陷阱
+Quantified Reproducibility Assessment of NLP Results
+
+NLP结果的量化可重复性评估
+ReCLIP: A Strong Zero-Shot Baseline for Referring Expression Comprehension
+
+回路：强烈的零射基线，用于引用表达理解
+RoMe: A Robust Metric for Evaluating Natural Language Generation
+
+罗马：一个可用于评估自然语言生成的强大指标
+SRL4E – Semantic Role Labeling for Emotions: A Unified Evaluation Framework
+
+SRL4E  - 情感的语义角色标签：统一评估框架
+TruthfulQA: Measuring How Models Mimic Human Falsehoods
+
+真实性：测量模型如何模仿人类的虚假性
+Under the Morphosyntactic Lens: A Multifaceted Evaluation of Gender Bias in Speech Translation
+
+在形态句法镜头下：语音翻译中性别偏见的多方面评估
+UniTE: Unified Translation Evaluation
+
+UNITE：统一翻译评估
+Sentence-level Semantics, Textual Classification, and Other Areas【句子级语义和文本关系推理】
+
+句子级语义，文本分类和其他领域【【关系】】】
+Incorporating Hierarchy into Text Encoder: a Contrastive Learning Approach for Hierarchical Text Classification
+
+将层次结构纳入文本编码器：层次文本分类的对比度学习方法
+Adversarial Soft Prompt Tuning for Cross-Domain Sentiment Analysis
+
+对抗性软提示调整进行跨域情绪分析
+Bag-of-Words vs. Graph vs. Sequence in Text Classification: Questioning the Necessity of Text-Graphs and the Surprising Strength of a Wide MLP
+
+文字分类中的单词与图形与序列：质疑文本图纸的必要性和宽阔的MLP的令人惊讶的强度
+Cluster & Tune: Boost Cold Start Performance in Text Classification
+
+群集和调子：提高文本分类中的冷启动性能
+Discrete Opinion Tree Induction for Aspect-based Sentiment Analysis
+
+基于方面的情感分析的离散意见树归纳
+Early Stopping Based on Unlabeled Samples in Text Classification
+
+基于文本分类中未标记的样本的早期停止
+Effective Token Graph Modeling using a Novel Labeling Strategy for Structured Sentiment Analysis
+
+使用新颖的标签策略进行结构化情感分析的有效令牌图建模
+Enhanced Multi-Channel Graph Convolutional Network for Aspect Sentiment Triplet Extraction
+
+增强的多通道图卷积网络，用于情感三胞胎提取
+Entailment Graph Learning with Textual Entailment and Soft Transitivity
+
+带有文本和软传递性的学习图形学习
+Evaluating Extreme Hierarchical Multi-label Classification
+
+评估极端分层多标签分类
+FaiRR: Faithful and Robust Deductive Reasoning over Natural Language
+
+Fairr：忠实而强大的演绎推理于自然语言
+Improving Meta-learning for Low-resource Text Classification and Generation via Memory Imitation
+
+通过记忆模仿来改善低资源文本分类和生成的元学习
+Incorporating Hierarchy into Text Encoder: a Contrastive Learning Approach for Hierarchical Text Classification
+
+将层次结构纳入文本编码器：层次文本分类的对比度学习方法
+KenMeSH: Knowledge-enhanced End-to-end Biomedical Text Labelling
+
+肯梅什：知识增强的端到端生物医学文本标签
+Label Semantic Aware Pre-training for Few-shot Text Classification
+
+标签语义知识的预训练，用于几个弹头文本分类
+Learn to Adapt for Generalized Zero-Shot Text Classification
+
+学会适应广义零弹性文本分类
+Leveraging Task Transferability to Meta-learning for Clinical Section Classification with Limited Data
+
+利用有限数据的临床部分分类的任务转让性进行临床部分分类
+Measuring Fairness of Text Classifiers via Prediction Sensitivity
+
+通过预测敏感性来衡量文本分类器的公平性
+On the Robustness of Offensive Language Classifiers
+
+关于进攻性语言分类器的鲁棒性
+Toward Interpretable Semantic Textual Similarity via Optimal Transportbased Contrastive Sentence Learning
+
+通过最佳的基于运输的对比度学习来朝着可解释的语义文本相似性
+Towards Comprehensive Patent Approval Predictions:Beyond Traditional Document Classification
+
+朝着全面的专利批准预测：超越传统文档分类
+Semantics and Syntax Parsing【语义与句法解析】
+
+语义和语法解析【语义句法】】
+语义解析
+
+语义解析
+LAGr: Label Aligned Graphs for Better Systematic Generalization in Semantic Parsing
+
+lagr：标签对齐图，以在语义解析中进行更好的系统概括
+Fully-Semantic Parsing and Generation: the BabelNet Meaning Representation
+
+完全语义的解析和一代：babelnet含义表示
+Graph Pre-training for AMR Parsing and Generation
+
+AMR解析和生成的图表预训练
+LAGr: Label Aligned Graphs for Better Systematic Generalization in Semantic Parsing
+
+lagr：标签对齐图，以在语义解析中进行更好的系统概括
+Learned Incremental Representations for Parsing
+
+学会的分析增量表示
+Learning to Generate Programs for Table Fact Verification via StructureAware Semantic Parsing
+
+学习通过结构软件语义解析生成桌面事实验证的程序
+Modeling Syntactic-Semantic Dependency Correlations in Semantic Role Labeling Using Mixture Models
+
+使用混合模型建模语义角色标签中的句法语义依赖性相关性
+On The Ingredients of an Effective Zero-shot Semantic Parser
+
+在有效的零弹性语义解析器的成分上
+Semantic Composition with PSHRG for Derivation Tree Reconstruction from Graph-Based Meaning Representations
+
+带有PSHRG的语义组成，用于基于图的含义表示的衍生树重建
+Towards Robustness of Text-to-SQL Models Against Natural and Realistic Adversarial Table Perturbation
+
+针对自然和现实的对抗表扰动，文本到SQL模型的稳健性
+Word2Box: Capturing Set-Theoretic Semantics of Words using Box Embedding
+
+Word2box：使用盒子嵌入捕获单词的设定理论语义
+句法分析
+
+句法分析
+Investigating Non-local Features for Neural Constituency Parsing
+
+研究神经选区解析的非本地特征
+Bottom-Up Constituency Parsing and Nested Named Entity Recognition with Pointer Networks
+
+自下而上的选区解析和用指针网络嵌套命名的实体识别
+Compositional Generalization in Dependency Parsing
+
+依赖解析中的组成概括
+Dependency Parsing as MRC-based Span-Span Prediction
+
+依赖性解析作为基于MRC的SPAN-SPAN预测
+Headed-Span-Based Projective Dependency Parsing
+
+基于跨跨的投影依赖性解析
+Investigating Non-local Features for Neural Constituency Parsing
+
+研究神经选区解析的非本地特征
+Meta-Learning for Fast Cross-Lingual Adaptation in Dependency Parsing
+
+依赖解析中快速跨语言适应的元学习
+Phrase-aware Unsupervised Constituency Parsing
+
+短语意识无监督的选区解析
+Probing for Labeled Dependency Trees
+
+探测标记的依赖树
+Semi-supervised Domain Adaptation for Dependency Parsing with Dynamic Matching Network
+
+通过动态匹配网络进行依赖性解析的半监督域的适应
+Substructure Distribution Projection for Zero-Shot Cross-Lingual Dependency Parsing
+
+零射击跨语性依赖性解析的子结构分布投影
+TwittIrish: A Universal Dependencies Treebank of Tweets in Modern Irish
+
+twittirish：现代爱尔兰语中推文的普遍依赖树木银行
+Unsupervised Dependency Graph Network
+
+无监督的依赖图网络
+命名实体识别
+
+命名实体识别
+CONTaiNER: Few-Shot Named Entity Recognition via Contrastive Learning
+
+容器：通过对比度学习的几个命名实体识别
+De-Bias for Generative Extraction in Unified NER Task
+
+统一NER任务中生成提取的偏见
+Distantly Supervised Named Entity Recognition via Confidence-Based Multi-Class Positive and Unlabeled Learning
+
+通过基于置信的多级积极和未标记的学习，远距离监督指定的实体识别
+Few-Shot Class-Incremental Learning for Named Entity Recognition
+
+命名实体识别的几个阶段课程学习
+Few-shot Named Entity Recognition with Self-describing Networks
+
+具有自描述网络的几个命名实体识别
+Good Examples Make A Faster Learner: Simple Demonstration-based Learning for Low-resource NER
+
+好的例子使学习者更快：简单的基于演示的学习，用于低资源ner
+MELM: Data Augmentation with Masked Entity Language Modeling for LowResource NER
+
+MELM：使用蒙版实体语言建模的数据增强，用于低资源
+MINER: Improving Out-of-Vocabulary Named Entity Recognition from an Information Theoretic Perspective
+
+矿工：从信息理论的角度提高vocabulary命名实体识别
+Nested Named Entity Recognition as Latent Lexicalized Constituency Parsing
+
+嵌套命名的实体识别为潜在的词汇化选区解析
+Nested Named Entity Recognition with Span-level Graphs
+
+带有跨级图的嵌套命名实体识别
+Parallel Instance Query Network for Named Entity Recognition
+
+命名实体识别的并行实例查询网络
+指代消解
+
+指代消解
+Adapting Coreference Resolution Models through Active Learning
+
+通过主动学习来调整核心分辨率模型
+Constrained Multi-Task Learning for Bridging Resolution
+
+限制多任务学习以进行桥接解决
+实体识别，对齐与消歧
+
+实体，对齐与，对齐与
+ExtEnD: Extractive Entity Disambiguation
+
+扩展：挖掘实体歧义
+FiNER: Financial Numeric Entity Recognition for XBRL Tagging
+
+Finer：XBRL标记的财务数字实体识别
+Learning from Sibling Mentions with Scalable Graph Inference in FineGrained Entity Typing
+
+从兄弟姐妹中学习，通过细粒度实体输入中的可伸缩图推断
+An Effective and Efficient Entity Alignment Decoding Algorithm via Third-Order Tensor Isomorphism
+
+通过三阶张量异构形态的有效有效的实体对齐算法解码算法
+Divide and Denoise: Learning from Noisy Labels in Fine-Grained Entity Typing with Cluster-Wise Loss Correction
+
+分裂和denoise：从噪音标签中学习的细粒度实体键入，通过集群损失校正
+其它
+
+其它
+A Neural Network Architecture for Program Understanding Inspired by Human Behaviors
+
+一个受人为行为启发的程序理解的神经网络架构
+Bridging the Generalization Gap in Text-to-SQL Parsing with Schema Expansion
+
+通过架构扩展，弥合文本到SQL解析的概括差距
+Fair and Argumentative Language Modeling for Computational Argumentation
+
+计算论证的公平和论证语言建模
+LexSubCon: Integrating Knowledge from Lexical Resources into Contextual Embeddings for Lexical Substitution
+
+LexSubcon：将词汇资源的知识集成到词汇替代的上下文嵌入
+Make the Best of Cross-lingual Transfer: Evidence from POS Tagging with over 100 Languages
+
+充分利用跨语性转移：使用100多种语言的POS标签的证据
+Variational Graph Autoencoding as Cheap Supervision for AMR Coreference Resolution
+
+变分图自动编码作为廉价监督AMR COREFERCE分辨率
+Speech and Multimodality【语音与多模态】
+
+语音和多模式【【】】】
+多模态
+
+多模态
+Analyzing Generalization of Vision and Language Navigation to Unseen Outdoor Areas
+
+分析视力和语言导航到看不见的室外区域的概括
+CARETS: A Consistency And Robustness Evaluative Test Suite for VQA
+
+Carets：VQA的一致性和稳健性评估套件
+CLIP Models are Few-Shot Learners: Empirical Studies on VQA and Visual Entailment
+
+剪辑模型是很少的学习者：关于VQA和视觉范围的实证研究
+Contrastive Visual Semantic Pretraining Magnifies the Semantics of Natural Language Representations
+
+对比性视觉语义预审计，放大了自然语言表示的语义
+End-to-End Modeling via Information Tree for One-Shot Natural Language Spatial Video Grounding
+
+通过信息树的端到端建模一击自然语言空间视频接地
+Guided Attention Multimodal Multitask Financial Forecasting with InterCompany Relationships and Global and Local News
+
+引导注意力多模式多任务财务预测与公司间关系以及全球和本地新闻
+Image Retrieval from Contextual Descriptions
+
+从上下文描述中检索图像
+Letters From the Past: Modeling Historical Sound Change Through Diachronic Character Embeddings
+
+过去的字母：通过透性嵌入建模历史声音变化
+Leveraging Visual Knowledge in Language Tasks: An Empirical Study on Intermediate Pre-training for Cross-Modal Knowledge Transfer
+
+在语言任务中利用视觉知识：一项关于跨模式知识转移中级预训练的实证研究
+Modeling Temporal-Modal Entity Graph for Procedural Multimodal Machine Comprehension
+
+为程序多模式理解的颞型模型实体图
+Multi-Modal Sarcasm Detection via Cross-Modal Graph Convolutional Network
+
+通过跨模式图卷积网络进行多模式讽刺检测
+Multimodal Dialogue Response Generation
+
+多模式对话响应一代
+Multimodal fusion via cortical network inspired losses
+
+通过皮质网络的多模式融合启发了损失
+Multimodal Sarcasm Target Identification in Tweets
+
+推文中的多模式讽刺目标识别
+On Vision Features in Multimodal Machine Translation
+
+关于多模式机器翻译中的视觉功能
+OpenHands: Making Sign Language Recognition Accessible with Posebased Pretrained Models across Languages
+
+开放式：使跨语言的基于姿势的预处理模型获得手语识别
+Phone-ing it in: Towards Flexible Multi-Modal Language Model Training by Phonetic Representations of Data
+
+打电话给它：通过语音表示数据的灵活多模式语言模型培训
+Premise-based Multimodal Reasoning: Conditional Inference on Joint Textual and Visual Clues
+
+基于前提的多模式推理：关于联合文本和视觉线索的有条件推断
+RoCBert: Robust Chinese Bert with Multimodal Contrastive Pretraining
+
+罗克伯特：强大的中国伯特和多模式的对比预训练
+There’s a Time and Place for Reasoning Beyond the Image
+
+有时间和地点超越图像
+Things not Written in Text: Exploring Spatial Commonsense from Visual Signals
+
+未用文字写的东西：探索视觉信号的空间常识
+Understanding Multimodal Procedural Knowledge by Sequencing Multimodal Instructional Manuals
+
+通过测序多模式教学手册来了解多模式的程序知识
+UniTranSeR: A Unified Transformer Semantic Representation Framework for Multimodal Task-Oriented Dialog System
+
+Unitranser：多模式面向任务的对话框系统的统一变压器语义表示框架
+Vision-and-Language Navigation: A Survey of Tasks, Methods, and Future Directions
+
+视觉和语言导航：对任务，方法和未来方向的调查
+Vision-Language Pre-Training for Multimodal Aspect-Based Sentiment Analysis
+
+视觉语言预训练用于多模式基于方面的情感分析
+Visual-Language Navigation Pretraining via Prompt-based Environmental Self-exploration
+
+通过基于及时的环境自我探索进行视觉语言导航进行了预测
+WikiDiverse: A Multimodal Entity Linking Dataset with Diversified Contextual Topics and Entity Types
+
+Wikidiverse：一个多模式实体，将数据集链接到多元化的上下文主题和实体类型
+语音
+
+语音
+Cross-Utterance Conditioned VAE for Non-Autoregressive Text-to-Speech
+
+非自动回归文本到语音的跨牙能条件vae
+Decoding Part-of-Speech from Human EEG Signals
+
+从人类脑电图信号解码言论一部分
+Direct Speech-to-Speech Translation With Discrete Units
+
+带有离散单元的直接语音到语音翻译
+Language-Agnostic Meta-Learning for Low-Resource Text-to-Speech with Articulatory Features
+
+语言敏捷的元学习，用于低资源的文本到语音，具有关节功能
+Leveraging Unimodal Self-Supervised Learning for Multimodal Audio-Visual Speech Recognition
+
+利用单模式的单模式学习语音识别
+Requirements and Motivations of Low-Resource Speech Synthesis for Language Revitalization
+
+低资源语音综合语言振兴的要求和动机
+Revisiting Over-Smoothness in Text to Speech
+
+重新审视文本中的过度平滑度到语音
+Self-supervised Semantic-driven Phoneme Discovery for Zero-resource Speech Recognition
+
+零资源语音识别的自我监督语义驱动的音素发现
+SpeechT5: Unified-Modal Encoder-Decoder Pre-Training for Spoken Language Processing
+
+SpeechT5：口语处理的统一模式编码器训练预培训
+STEMM: Self-learning with Speech-text Manifold Mixup for Speech Translation
+
+stemm：语音文本歧管混音的自我学习用于语音翻译
+Text-Free Prosody-Aware Generative Spoken Language Modeling
+
+无文本韵律意识的生成语言建模
+Do self-supervised speech models develop human-like perception biases?
+
+自我监督的言语模型会发展出类似人类的感知偏见吗？
+Summation【摘要】
+
+总结【【】
+A Multi-Document Coverage Reward for RELAXed Multi-Document Summarization
+
+放松多文件摘要的多文件覆盖奖励奖励
+A Variational Hierarchical Model for Neural Cross-Lingual Summarization
+
+神经跨语性摘要的变分等级模型
+ASPECTNEWS: Aspect-Oriented Summarization of News Documents
+
+FactexNews：新闻文档的面向方面的摘要
+Attention Temperature Matters in Abstractive Summarization Distillation
+
+注意温度在抽象性摘要蒸馏中很重要
+BRIO: Bringing Order to Abstractive Summarization
+
+Brio：将秩序提出抽象性摘要
+Chart-to-Text: A Large-Scale Benchmark for Chart Summarization
+
+图表到文本：图表汇总的大规模基准
+Differentiable Multi-Agent Actor-Critic for Multi-Step Radiology Report Summarization
+
+多步放射学报告摘要的可区分多代理参与者评论
+Discriminative Marginalized Probabilistic Neural Method for Multi-Document Summarization of Medical Literature
+
+用于多文章的歧视性边缘化概率神经方法摘要医学文献
+DYLE: Dynamic Latent Extraction for Abstractive Long-Input Summarization
+
+Dyle：抽象长输入摘要的动态潜在提取
+Educational Question Generation of Children Storybooks via Question Type Distribution Learning and Event-centric Summarization
+
+儿童故事书的教育问题通过问题类型分发学习和以事件为中心的摘要
+EntSUM: A Data Set for Entity-Centric Extractive Summarization
+
+ententum：一个以实体为中心的提取性摘要的数据集
+Graph Enhanced Contrastive Learning for Radiology Findings Summarization
+
+用于放射学发现的增强对比度学习摘要
+Hallucinated but Factual! Inspecting the Factuality of Hallucinations in Abstractive Summarization
+
+幻觉但事实！在抽象性摘要中检查幻觉的事实
+HIBRIDS: Attention with Hierarchical Biases for Structure-aware Long Document Summarization
+
+Hibrids：引起层次偏见的关注结构感知长期文档摘要
+Learning Non-Autoregressive Models from Search for Unsupervised Sentence Summarization
+
+从搜索无监督的句子摘要中学习非自动入学模型
+Learning the Beauty in Songs: Neural Singing Voice Beautifier
+
+在歌曲中学习美丽：神经唱歌的语音美化器
+Length Control in Abstractive Summarization by Pretraining Information Selection
+
+通过预处理信息选择，抽象性摘要中的长度控制
+MemSum: Extractive Summarization of Long Documents Using Multi-Step Episodic Markov Decision Processes
+
+MEMSUM：使用多步骤Markov决策过程对长文档进行挖掘性汇总
+Neural Label Search for Zero-Shot Multi-Lingual Extractive Summarization
+
+神经标签搜索零拍的多语言提取性摘要
+Other Roles Matter! Enhancing Role-Oriented Dialogue Summarization via Role Interactions
+
+其他角色很重要！通过角色互动增强面向角色的对话摘要
+Predicting Intervention Approval in Clinical Trials through Multi-Document Summarization
+
+通过多文件摘要预测临床试验中的干预批准
+PRIMERA: Pyramid-based Masked Sentence Pre-training for Multidocument Summarization
+
+Primera：基于金字塔的蒙版句子预训练多文件摘要
+Summ^N: A Multi-Stage Summarization Framework for Long Input Dialogues and Documents
+
+sump^n：长输入对话和文档的多阶段摘要框架
+SummaReranker: A Multi-Task Mixture-of-Experts Re-ranking Framework for Abstractive Summarization
+
+Summareranker：多任务混合物的重新排列框架用于抽象摘要
+The patient is more dead than alive: exploring the current state of the multidocument summarisation of the biomedical literature
+
+该患者比活着更死：探索生物医学文献的多文章摘要的当前状态
+Towards Abstractive Grounded Summarization of Podcast Transcripts
+
+介绍播客笔录的抽象扎根汇总
+Unsupervised Extractive Opinion Summarization Using Sparse Coding
+
+使用稀疏编码的无监督提取意见摘要
+Updated Headline Generation: Creating Updated Summaries for Evolving News Stories
+
+更新的标题生成：为不断发展的新闻报道创建更新的摘要
+Knowledge Graph【知识图谱】
+
+知识图【【】】】
+CAKE: A Scalable Commonsense-Aware Framework For Multi-View Knowledge Graph Completion
+
+蛋糕：多视图知识图的可扩展常识感知框架
+Efficient Hyper-parameter Search for Knowledge Graph Embedding
+
+有效的超参数搜索知识图嵌入
+KaFSP: Knowledge-Aware Fuzzy Semantic Parsing for Conversational Question Answering over a Large-Scale Knowledge Base
+
+KAFSP：知识意识的模糊语义解析，以对话问题回答大规模的知识库
+Multilingual Knowledge Graph Completion with Self-Supervised Adaptive Graph Alignment
+
+多语言知识图完成具有自我监督的自适应图对齐方式
+Prix-LM: Pretraining for Multilingual Knowledge Base Construction
+
+Prix-LM：用于多语言知识基础构建的训练
+RotateQVS: Representing Temporal Information as Rotations in Quaternion Vector Space for Temporal Knowledge Graph Completion
+
+rotateQVS：代表时间信息作为时间知识图形完成的四个矢量空间中的旋转
+Sequence-to-Sequence Knowledge Graph Completion and Question Answering
+
+序列到序列知识图的完成和问题答案
+SimKGC: Simple Contrastive Knowledge Graph Completion with Pretrained Language Models
+
+SIMKGC：使用验证的语言模型完成简单的对比知识图
+Understanding Gender Bias in Knowledge Base Embeddings
+
+了解知识库嵌入中的性别偏见
+Special Track【特殊任务】
+
+特殊曲目【【】】
+Code Relevant
+
+代码相关
+Accelerating Code Search with Deep Hashing and Code Classification
+
+通过深度哈希和代码分类加速代码搜索
+Impact of Evaluation Methodologies on Code Summarization
+
+评估方法对代码摘要的影响
+Modeling Hierarchical Syntax Structure with Triplet Position for Source Code Summarization
+
+用三重位置对源代码摘要进行层次语法结构进行建模
+Towards Learning (Dis)-Similarity of Source Code from Program Contrasts
+
+学习（DIS） - 源代码从程序对比的类似性
+UniXcoder: Unified Cross-Modal Pre-training for Code Representation
+
+Unixcoder：代码表示的统一跨模式预训练
+ReACC: A Retrieval-Augmented Code Completion Framework
+
+reacc：检索授权的代码完成框架
+Impact of Evaluation Methodologies on Code Summarization
+
+评估方法对代码摘要的影响
+Math Problem
+
+数学问题
+Learning to Reason Deductively: Math Word Problem Solving as Complex Relation Extraction
+
+学习推理推理：数学单词问题解决作为复杂关系提取
+Continual Pre-training of Language Models for Math Problem Understanding with Syntax-Aware Memory Network
+
+通过语法感知记忆网络的数学问题理解语言模型的持续预培训
+NumGLUE: A Suite of Fundamental yet Challenging Mathematical Reasoning Tasks
+
+Numglue：一套基本但具有挑战性的数学推理任务
+Word / Sentence Segmentation
+
+单词 /句子细分
+Weakly Supervised Word Segmentation for Computational Language Documentation
+
+计算语言文档的弱监督单词细分
+Word Segmentation as Unsupervised Constituency Parsing
+
+单词分割是无监督的选区解析
+That Slepen Al the Nyght with Open Ye! Cross-era Sequence Segmentation with Switch-memory
+
+那个开放的nyght！交换机记忆的跨时代序列分割
+TopWORDS-Seg: Simultaneous Text Segmentation and Word Discovery for Open-Domain Chinese Texts via Bayesian Inference
+
+topsworks-seg：通过贝叶斯推理的开放域中文文本的同时进行文本细分和单词发现
+Others
+
+其他
+Automated Crossword Solving
+
+自动填字游戏解决
+CaMEL: Case Marker Extraction without Labels
+
+骆驼：案例标记提取没有标签
+Characterizing Idioms: Conventionality and Contingency
+
+习语表征：常规性和偶然性
+Challenges and Strategies in Cross-Cultural NLP
+
+跨文化NLP的挑战和策略
+Clickbait Spoiling via Question Answering and Passage Retrieval
+
+点击诱饵通过问答答案和通过检索
+Computational Historical Linguistics and Language Diversity in South Asia
+
+南亚的计算历史语言学和语言多样性
+Doctor Recommendation in Online Health Forums via Expertise Learning
+
+通过专业知识学习在线健康论坛中的医生建议
+Ensembling and Knowledge Distilling of Large Sequence Taggers for Grammatical Error Correction
+
+结合和知识蒸馏大型序列标记器进行语法误差校正
+Entity-based Neural Local Coherence Modeling
+
+基于实体的神经局部连贯建模
+Ethics Sheets for AI Tasks
+
+AI任务的道德表
+HOLM: Hallucinating Objects with Language Models for Referring Expression Recognition in Partially-Observed Scenes
+
+霍尔姆：用语言模型幻觉对象，用于在部分观察的场景中引用表达识别
+Identifying Chinese Opinion Expressions with Extremely-Noisy Crowdsourcing Annotations
+
+用极其辛辣的众包注释来识别中国意见表达
+Identifying Moments of Change from Longitudinal User Text
+
+从纵向用户文本中确定变化的时刻
+Identifying the Human Values behind Arguments
+
+识别参数背后的人类价值观
+Improving the Generalizability of Depression Detection by Leveraging Clinical Questionnaires
+
+通过利用临床问卷来提高抑郁症检测的普遍性
+Incorporating Stock Market Signals for Twitter Stance Detection
+
+合并Twitter立场检测的股票市场信号
+Inferring Rewards from Language in Context
+
+在上下文中从语言中推断奖励
+Large Scale Substitution-based Word Sense Induction
+
+基于大规模替代的单词感应
+Learning From Failure: Data Capture in an Australian Aboriginal Community
+
+从失败中学习：澳大利亚原住民社区中的数据捕获
+Leveraging Similar Users for Personalized Language Modeling with Limited Data
+
+利用类似的用户使用有限的数据进行个性化语言建模
+Leveraging Wikipedia article evolution for promotional tone detection
+
+利用Wikipedia文章进化进行促销音调检测
+Misinfo Reaction Frames: Reasoning about Readers' Reactions to News Headlines
+
+MISINFO反应框架：有关读者对新闻头条的反应的推理
+Multilingual Detection of Personal Employment Status on Twitter
+
+在Twitter上对个人就业状况的多语言检测
+Not always about you: Prioritizing community needs when developing endangered language technology
+
+并非总是关于您的：在开发濒危语言技术时优先考虑社区需求
+Perceiving the World: Question-guided Reinforcement Learning for Text-based Games
+
+感知世界：基于文本游戏的问题引导的加强学习
+Reinforcement Guided Multi-Task Learning Framework for Low-Resource Stereotype Detection
+
+强化指导的低资源刻板印象检测的多任务学习框架
+Searching for fingerspelled content in American Sign Language
+
+在美国手语中搜索手指的内容
+Slangvolution: A Causal Analysis of Semantic Change and Frequency Dynamics in Slang
+
+s语：语义变化和lang频动力学的因果分析
+Toward Annotator Group Bias in Crowdsourcing
+
+在众包中朝着注释群体偏见
+Towards Afrocentric NLP for African Languages: Where We Are and Where We Can Go
+
+迈向非洲语言的非洲语言NLP：我们在哪里以及可以去哪里
+Uncertainty Estimation of Transformer Predictions for Misclassification Detection
+
+变压器预测错误分类检测的不确定性估计
+VALUE: Understanding Dialect Disparity in NLU
+
+价值：了解NLU中的方言差异
+You might think about slightly revising the title: Identifying Hedges in Peertutoring Interactions
+
+您可能会考虑稍微修改标题：识别互动中的树篱
+A Functionalist Account of Vowel System Typology
+元音系统类型学的功能主义帐户

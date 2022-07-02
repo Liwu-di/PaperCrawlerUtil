@@ -1,15 +1,33 @@
+import sys
+sys.path.append("PaperCrawlerUtil")
+sys.path.append("PaperCrawlerUtil/proxypool")
+sys.path.append("PaperCrawlerUtil/proxypool/*")
+sys.path.append("proxypool/crawlers/public/*")
+sys.path.append("proxypool/crawlers/private/*")
+sys.path.append("proxypool/crawlers/*")
+sys.path.append("proxypool/exceptions/*")
+sys.path.append("proxypool/processors/*")
+sys.path.append("proxypool/schemas/*")
+sys.path.append("proxypool/storages/*")
+sys.path.append("proxypool/utils/*")
+sys.path.append("proxypool/*")
 import logging
 import os
 import random
+import threading
 import time
-from types import TracebackType
-from typing import Optional
-
 import requests
+from proxypool.setting import *
+
+from proxypool.processors.getter import Getter
+from proxypool.processors.server import app
+from proxypool.processors.tester import Tester
 
 PROXY_POOL_URL = ""
-logging.basicConfig(filename='../my.log', level=logging.WARNING)
+logging.basicConfig(filename='../../crawler_util.log', level=logging.WARNING)
 log_style = "log"
+HTTP = "http://"
+COLON_SEPARATOR = ":"
 
 EQUAL = "equal"
 NOT_EQUAL = "not equal"
@@ -32,11 +50,46 @@ def log(string):
         print(string)
 
 
-def basic_config(log_file_name="../my.log", log_level=logging.WARNING,
+class ThreadGetter(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        log("启动getter")
+        Getter().run()
+
+
+class ThreadTester(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        log("启动tester")
+        Tester().run()
+
+
+class ThreadServer(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        log("启动server")
+        app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED, use_reloader=False)
+
+
+def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
                  proxy_pool_url="",
-                 logs_style=LOG_STYLE_PRINT):
+                 logs_style=LOG_STYLE_PRINT,
+                 require_proxy_pool=False,
+                 redis_host="127.0.0.1",
+                 redis_port=6379,
+                 redis_database=0):
     """
 
+    :param redis_database: redis数据库
+    :param redis_port: redis端口号
+    :param redis_host: redis主机ip
+    :param require_proxy_pool: 是否需要启用proxy_pool项目获取代理连接
     :param log_file_name: 日志文件名称
     :param log_level: 日志等级
     :param proxy_pool_url: 代理获取地址
@@ -47,6 +100,30 @@ def basic_config(log_file_name="../my.log", log_level=logging.WARNING,
     global log_style
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
+    if require_proxy_pool and len(redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
+        try:
+            g = ThreadGetter()
+            t = ThreadTester()
+            s = ThreadServer()
+            g.start()
+            t.start()
+            s.start()
+        except Exception as e:
+            log("proxypool线程异常{}".format(e))
+        proxy_test = ""
+        api_host = API_HOST
+        api_port = str(API_PORT)
+        url = HTTP + api_host + COLON_SEPARATOR + api_port + "/random"
+        while len(proxy_test) == 0:
+            try:
+                proxy_test = requests.get(url, timeout=(20, 20)).text
+            except Exception as e:
+                log("测试proxypool项目报错:{}".format(e))
+                proxy_test = ""
+            time.sleep(2)
+        if len(PROXY_POOL_URL) == 0:
+            PROXY_POOL_URL = url
+        log("启动proxypool完成")
 
 
 def get_split(lens=20, style='='):
@@ -137,3 +214,8 @@ class NoProxyException(Exception):
 
     def __repr__(self) -> str:
         return super().__repr__()
+
+# if __name__ == "__main__":
+#     pool = ProxyPool(thread_id="001", thread_name="proxypool")
+#     pool.start()
+#     print("123")
