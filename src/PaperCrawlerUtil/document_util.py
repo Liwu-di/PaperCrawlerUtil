@@ -7,7 +7,7 @@ import pdfplumber
 from googletrans import Translator
 from pdf2docx import Converter
 
-from PaperCrawlerUtil.crawler_util import *
+from crawler_util import *
 
 
 def baidu_translate(string,
@@ -15,9 +15,11 @@ def baidu_translate(string,
                     secret_key,
                     src="auto",
                     dst="zh",
-                    sleep_time=1.2):
+                    sleep_time=1.2,
+                    need_log=True):
     """
     百度翻译
+    :param need_log: 是否需要日志
     :param string:
     :param appid:
     :param secret_key:
@@ -26,7 +28,8 @@ def baidu_translate(string,
     :param sleep_time:
     :return:
     """
-    log("时间：{}使用百度翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
+    if need_log:
+        log("时间：{}使用百度翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
     httpClient = None
     myurl = '/api/trans/vip/translate'
     fromLang = src  # 原文语种
@@ -60,10 +63,11 @@ def baidu_translate(string,
     return res
 
 
-def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.2):
+def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.2, need_log=True):
     """
     谷歌翻译
     @todo 提供一个源语言和目的语言的表
+    :param need_log: 是否需要日志
     :param string:
     :param src:
     :param dest:
@@ -74,7 +78,8 @@ def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.
     urls = ['translate.google.cn', 'translate.google.com']
     if proxies is None:
         proxies = {'http': 'http://127.0.0.1:1080'}
-    log("时间：{}使用谷歌翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
+    if need_log:
+        log("时间：{}使用谷歌翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
     try:
         translator = Translator(service_urls=urls, proxies=proxies)
         trans = translator.translate(string, src=src, dest=dest)
@@ -155,10 +160,11 @@ def text_translate(path,
     return res
 
 
-def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
+def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None, need_log=True):
     """
     转换pdf 到word文件，可以自动识别是文件夹还是单个文件，其中word_path表示的生成的word的文件夹，不论是
     单个还是文件夹批量转换，这个值都是文件夹
+    :param need_log: 是否需要日志
     :param pdf_path: pdf的路径
     :param word_path: 用于存放word的路径，必须是文件夹路径
     :param end_pages: 结束页码
@@ -170,10 +176,12 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
     count = 0
     if os.path.isfile(pdf_path) and os.path.isfile:
         file_list.append(pdf_path)
-        log("转换文件{}开始".format(pdf_path))
+        if need_log:
+            log("转换文件{}开始".format(pdf_path))
     else:
         file_list.extend(getAllFiles(pdf_path))
-        log("获取文件夹{}文件成功".format(pdf_path))
+        if need_log:
+            log("获取文件夹{}文件成功".format(pdf_path))
         file = False
     for ele in file_list:
         if ele.endswith(".pdf"):
@@ -255,10 +263,12 @@ def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
         return txt
 
 
-def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_style="===", valid_threshold=0):
+def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1),
+                      split_style="===", valid_threshold=0, need_log=True):
     """
     用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
     如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
+    :param need_log: 是否需要日志
     :param valid_threshold: decide whether paragraph digest success
     :param path: pdf path
     :param begin_tag: the tag which will begin from this position to abstract text
@@ -288,7 +298,8 @@ def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_s
             txt = txt + get_split(style=split_style) + get_split(style="\n", lens=3)
             if len(tem) > valid_threshold:
                 valid_count = valid_count + 1
-                log("有效抽取文件：{}".format(ele))
+                if need_log:
+                    log("有效抽取文件：{}".format(ele))
             else:
                 log("抽取文件疑似失败：{}".format(ele))
             sum_count = sum_count + 1

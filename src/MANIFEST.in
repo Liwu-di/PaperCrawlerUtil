@@ -1,0 +1,14 @@
+include README.md
+include LICENSE
+include requirements.txt
+exclude PaperCrawlerUtil/logs
+recursive-include PaperCrawlerUtil *.py
+recursive-include PaperCrawlerUtil/proxypool *.py
+recursive-include PaperCrawlerUtil/proxypool/crawlers *
+recursive-include PaperCrawlerUtil/proxypool/crawlers/private *
+recursive-include PaperCrawlerUtil/proxypool/crawlers/public *
+recursive-include PaperCrawlerUtil/proxypool/exceptions *
+recursive-include PaperCrawlerUtil/proxypool/processors *
+recursive-include PaperCrawlerUtil/proxypool/schemas *
+recursive-include PaperCrawlerUtil/proxypool/storages *
+recursive-include PaperCrawlerUtil/proxypool/utils *
