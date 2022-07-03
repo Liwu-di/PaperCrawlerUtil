@@ -39,17 +39,21 @@ def random_proxy_header_access(url, proxy='',
             elif (not proxy_provide) and require_proxy:
                 proxy = get_proxy()
             if require_proxy:
-                log("使用代理：{}".format(proxy))
+                if NEED_CRAWLER_LOG:
+                    log("使用代理：{}".format(proxy))
             ua = UserAgent()  # 实例化
             headers = {"User-Agent": ua.random}
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
-            log("第{}次准备爬取{}的内容".format(str(i), url))
+            if NEED_CRAWLER_LOG:
+                log("第{}次准备爬取{}的内容".format(str(i), url))
             if require_proxy:
                 if random_proxy and two_one_choose():
-                    log("随机使用代理")
+                    if NEED_CRAWLER_LOG:
+                        log("随机使用代理")
                     request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
                 elif random_proxy and not two_one_choose():
-                    log("随机不使用代理")
+                    if NEED_CRAWLER_LOG:
+                        log("随机不使用代理")
                     request = requests.get(url, headers=headers, timeout=time_out)
                 elif not random_proxy:
                     request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
@@ -58,7 +62,8 @@ def random_proxy_header_access(url, proxy='',
             else:
                 request = requests.get(url, headers=headers, timeout=time_out)
             html = request.content
-            log("爬取成功，返回内容")
+            if NEED_CRAWLER_LOG:
+                log("爬取成功，返回内容")
             time.sleep(sleep_time)
         except NoProxyException:
             raise NoProxyException
@@ -92,7 +97,8 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
     else:
         proxy_provide = True
     for i in range(max_retry):
-        log("第{}次准备抽取{}文件".format(str(i), url))
+        if NEED_CRAWLER_LOG:
+            log("第{}次准备抽取{}文件".format(str(i), url))
         try:
             if len(proxies) == 0 and require_proxy:
                 proxies = get_proxy()
@@ -113,7 +119,8 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
             urlretrieve(url, path)
-            log("文件提取成功")
+            if NEED_CRAWLER_LOG:
+                log("文件提取成功")
             success = True
             time.sleep(sleep_time)
         except NoProxyException:
@@ -160,7 +167,8 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
             time.sleep(sleep_time)
             continue
         else:
-            log("从sichub获取目标文件链接成功，等待分析提取")
+            if NEED_CRAWLER_LOG:
+                log("从sichub获取目标文件链接成功，等待分析提取")
             break
     if len(html) == 0:
         log("获取html文件达到最大次数，停止获取doi:{}".format(doi))
@@ -184,7 +192,8 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
                 path,
                 work_path, proxies=proxies, require_proxy=require_proxy, max_retry=1)
             if success:
-                log("文件{}提取成功".format(work_path))
+                if NEED_CRAWLER_LOG:
+                    log("文件{}提取成功".format(work_path))
                 break
         if not success:
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))

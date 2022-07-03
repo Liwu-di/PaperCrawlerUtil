@@ -26,7 +26,8 @@ def baidu_translate(string,
     :param sleep_time:
     :return:
     """
-    log("时间：{}使用百度翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
+    if NEED_DOCUMENT_LOG:
+        log("时间：{}使用百度翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
     httpClient = None
     myurl = '/api/trans/vip/translate'
     fromLang = src  # 原文语种
@@ -74,7 +75,8 @@ def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.
     urls = ['translate.google.cn', 'translate.google.com']
     if proxies is None:
         proxies = {'http': 'http://127.0.0.1:1080'}
-    log("时间：{}使用谷歌翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
+    if NEED_DOCUMENT_LOG:
+        log("时间：{}使用谷歌翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
     try:
         translator = Translator(service_urls=urls, proxies=proxies)
         trans = translator.translate(string, src=src, dest=dest)
@@ -170,10 +172,12 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None):
     count = 0
     if os.path.isfile(pdf_path) and os.path.isfile:
         file_list.append(pdf_path)
-        log("转换文件{}开始".format(pdf_path))
+        if NEED_DOCUMENT_LOG:
+            log("转换文件{}开始".format(pdf_path))
     else:
         file_list.extend(getAllFiles(pdf_path))
-        log("获取文件夹{}文件成功".format(pdf_path))
+        if NEED_DOCUMENT_LOG:
+            log("获取文件夹{}文件成功".format(pdf_path))
         file = False
     for ele in file_list:
         if ele.endswith(".pdf"):
@@ -288,7 +292,8 @@ def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1), split_s
             txt = txt + get_split(style=split_style) + get_split(style="\n", lens=3)
             if len(tem) > valid_threshold:
                 valid_count = valid_count + 1
-                log("有效抽取文件：{}".format(ele))
+                if NEED_DOCUMENT_LOG:
+                    log("有效抽取文件：{}".format(ele))
             else:
                 log("抽取文件疑似失败：{}".format(ele))
             sum_count = sum_count + 1

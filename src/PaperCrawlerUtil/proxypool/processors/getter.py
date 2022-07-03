@@ -1,6 +1,6 @@
 from loguru import logger
 from proxypool.storages.redis import RedisClient
-from proxypool.setting import PROXY_NUMBER_MAX, NEED_LOG
+from proxypool.setting import PROXY_NUMBER_MAX, NEED_LOG_GETTER
 from proxypool.crawlers import __all__ as crawlers_cls
 
 
@@ -33,7 +33,7 @@ class Getter(object):
         if self.is_full():
             return
         for crawler in self.crawlers:
-            if NEED_LOG:
+            if NEED_LOG_GETTER:
                 logger.info(f'crawler {crawler} to get proxy')
             for proxy in crawler.crawl():
                 self.redis.add(proxy)

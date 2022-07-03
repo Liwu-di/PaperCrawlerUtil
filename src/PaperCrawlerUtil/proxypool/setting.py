@@ -8,7 +8,10 @@ env = Env()
 env.read_env()
 
 # definition of logs
-NEED_LOG = False
+NEED_LOG_TESTER = False
+NEED_LOG_GETTER = False
+NEED_LOG_SERVER = False
+NEED_LOG_REDIS = False
 
 
 # definition of flags

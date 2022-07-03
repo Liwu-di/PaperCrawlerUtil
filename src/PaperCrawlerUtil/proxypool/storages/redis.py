@@ -2,7 +2,7 @@ import redis
 from proxypool.exceptions import PoolEmptyException
 from proxypool.schemas import Proxy
 from proxypool.setting import REDIS_CONNECTION_STRING, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY, PROXY_SCORE_MAX, PROXY_SCORE_MIN, \
-    PROXY_SCORE_INIT, NEED_LOG
+    PROXY_SCORE_INIT, NEED_LOG_REDIS
 from random import choice
 from typing import List
 from loguru import logger
@@ -43,7 +43,7 @@ class RedisClient(object):
         :return: result
         """
         if not is_valid_proxy(f'{proxy.host}:{proxy.port}'):
-            if NEED_LOG:
+            if NEED_LOG_REDIS:
                 logger.info(f'invalid proxy {proxy}, throw it')
             return
         if not self.exists(proxy):
@@ -83,10 +83,10 @@ class RedisClient(object):
         else:
             self.db.zincrby(REDIS_KEY, -1, proxy.string())
         score = self.db.zscore(REDIS_KEY, proxy.string())
-        if NEED_LOG:
+        if NEED_LOG_REDIS:
             logger.info(f'{proxy.string()} score decrease 1, current {score}')
         if score <= PROXY_SCORE_MIN:
-            if NEED_LOG:
+            if NEED_LOG_REDIS:
                 logger.info(f'{proxy.string()} current score {score}, remove')
             self.db.zrem(REDIS_KEY, proxy.string())
 
@@ -104,7 +104,7 @@ class RedisClient(object):
         :param proxy: proxy
         :return: new score
         """
-        if NEED_LOG:
+        if NEED_LOG_REDIS:
             logger.info(f'{proxy.string()} is valid, set to {PROXY_SCORE_MAX}')
         if IS_REDIS_VERSION_2:
             return self.db.zadd(REDIS_KEY, PROXY_SCORE_MAX, proxy.string())

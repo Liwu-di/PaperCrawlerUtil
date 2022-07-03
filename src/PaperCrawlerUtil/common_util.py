@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
 sys.path.append("PaperCrawlerUtil/proxypool/*")
@@ -37,6 +38,12 @@ NOT_IN = "not in"
 LOG_STYLE_LOG = "log"
 LOG_STYLE_PRINT = "print"
 LOG_STYLE_ALL = "all"
+
+NEED_CRAWLER_LOG = False
+NEED_COMMON_LOG = False
+NEED_DOCUMENT_LOG = False
+
+PROXY_POOL_CAN_RUN_FLAG = True
 
 
 def log(string):
@@ -96,11 +103,12 @@ def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
     :param logs_style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
     :return:
     """
-    global PROXY_POOL_URL
+    global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
-    if require_proxy_pool and len(redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
+    if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
+            redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
         try:
             g = ThreadGetter()
             t = ThreadTester()
@@ -121,9 +129,10 @@ def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
                 log("测试proxypool项目报错:{}".format(e))
                 proxy_test = ""
             time.sleep(2)
-        if len(PROXY_POOL_URL) == 0:
+        if len(proxy_pool_url) == 0:
             PROXY_POOL_URL = url
         log("启动proxypool完成")
+        PROXY_POOL_CAN_RUN_FLAG = False
 
 
 def get_split(lens=20, style='='):
@@ -181,7 +190,8 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
     """
     try:
         if os.path.exists(folder_name):
-            log("文件夹{}存在".format(folder_name))
+            if NEED_COMMON_LOG:
+                log("文件夹{}存在".format(folder_name))
         else:
             os.makedirs(folder_name)
     except Exception as e:
