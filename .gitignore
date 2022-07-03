@@ -5,4 +5,6 @@ PaperCrawlerUtil.egg-info/
 setup.py
 PaperCrawlerUtil/__pycache__/
 build/
-15.py
+test.py
+delete.bat
+crawler_util.log
