@@ -60,6 +60,7 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False，
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
+代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 
 ```
 

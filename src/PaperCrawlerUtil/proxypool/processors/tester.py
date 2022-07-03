@@ -24,7 +24,7 @@ class Tester(object):
     tester for testing proxies in queue
     """
     
-    def __init__(self):
+    def __init__(self, need_log=True):
         """
         init redis
         """
@@ -32,6 +32,7 @@ class Tester(object):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         self.loop = asyncio.get_event_loop()
+        self.need_log = need_log
     
     async def test(self, proxy: Proxy):
         """
@@ -41,7 +42,7 @@ class Tester(object):
         """
         async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
             try:
-                if NEED_LOG_TESTER:
+                if self.need_log:
                     logger.debug(f'testing {proxy.string()}')
                 # if TEST_ANONYMOUS is True, make sure that
                 # the proxy has the effect of hiding the real IP
@@ -59,15 +60,15 @@ class Tester(object):
                                        allow_redirects=False) as response:
                     if response.status in TEST_VALID_STATUS:
                         self.redis.max(proxy)
-                        if NEED_LOG_TESTER:
+                        if self.need_log:
                             logger.debug(f'proxy {proxy.string()} is valid, set max score')
                     else:
                         self.redis.decrease(proxy)
-                        if NEED_LOG_TESTER:
+                        if self.need_log:
                             logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
             except EXCEPTIONS:
                 self.redis.decrease(proxy)
-                if NEED_LOG_TESTER:
+                if self.need_log:
                     logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
     
     @logger.catch
@@ -79,11 +80,11 @@ class Tester(object):
         # event loop of aiohttp
         logger.info('stating tester...')
         count = self.redis.count()
-        if NEED_LOG_TESTER:
+        if self.need_log:
             logger.debug(f'{count} proxies to test')
         cursor = 0
         while True:
-            if NEED_LOG_TESTER:
+            if self.need_log:
                 logger.debug(f'testing proxies use cursor {cursor}, count {TEST_BATCH}')
             cursor, proxies = self.redis.batch(cursor, count=TEST_BATCH)
             if proxies:

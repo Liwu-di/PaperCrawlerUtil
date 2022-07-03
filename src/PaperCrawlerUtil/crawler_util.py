@@ -11,11 +11,13 @@ from common_util import *
 
 def random_proxy_header_access(url, proxy='',
                                require_proxy=False, max_retry=10, sleep_time=1.2,
-                               random_proxy=True, time_out=(10, 20)):
+                               random_proxy=True, time_out=(10, 20),
+                               need_log=True):
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
     if access the url beyond max_retry, will return a blank string
+    :param need_log: 是否需要日志
     :param url:链接
     :param proxy:提供代理
     :param require_proxy:是否需要代理，默认为真
@@ -39,20 +41,20 @@ def random_proxy_header_access(url, proxy='',
             elif (not proxy_provide) and require_proxy:
                 proxy = get_proxy()
             if require_proxy:
-                if NEED_CRAWLER_LOG:
+                if need_log:
                     log("使用代理：{}".format(proxy))
             ua = UserAgent()  # 实例化
             headers = {"User-Agent": ua.random}
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
-            if NEED_CRAWLER_LOG:
+            if need_log:
                 log("第{}次准备爬取{}的内容".format(str(i), url))
             if require_proxy:
                 if random_proxy and two_one_choose():
-                    if NEED_CRAWLER_LOG:
+                    if need_log:
                         log("随机使用代理")
                     request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
                 elif random_proxy and not two_one_choose():
-                    if NEED_CRAWLER_LOG:
+                    if need_log:
                         log("随机不使用代理")
                     request = requests.get(url, headers=headers, timeout=time_out)
                 elif not random_proxy:
@@ -62,7 +64,7 @@ def random_proxy_header_access(url, proxy='',
             else:
                 request = requests.get(url, headers=headers, timeout=time_out)
             html = request.content
-            if NEED_CRAWLER_LOG:
+            if need_log:
                 log("爬取成功，返回内容")
             time.sleep(sleep_time)
         except NoProxyException:
@@ -77,9 +79,10 @@ def random_proxy_header_access(url, proxy='',
     return html
 
 
-def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, sleep_time=1.2, random_proxy=True):
+def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, sleep_time=1.2, random_proxy=True, need_log=True):
     """
     retrieve file from provided url and save to path
+    :param need_log: 是否需要日志
     :param url: file url
     :param path: the save path
     :param proxies: proxy string, if this args not null, will always use this proxy if decide to use proxy
@@ -97,7 +100,7 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
     else:
         proxy_provide = True
     for i in range(max_retry):
-        if NEED_CRAWLER_LOG:
+        if need_log:
             log("第{}次准备抽取{}文件".format(str(i), url))
         try:
             if len(proxies) == 0 and require_proxy:
@@ -119,7 +122,7 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
             urlretrieve(url, path)
-            if NEED_CRAWLER_LOG:
+            if need_log:
                 log("文件提取成功")
             success = True
             time.sleep(sleep_time)
@@ -138,9 +141,10 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
 
 
 def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
-                       require_proxy=False, random_proxy=True, proxies=""):
+                       require_proxy=False, random_proxy=True, proxies="", need_log=True):
     """
     save file from sci_hub by doi string provided
+    :param need_log: 是否需要日志
     :param require_proxy:
     :param random_proxy:
     :param proxies:
@@ -167,7 +171,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
             time.sleep(sleep_time)
             continue
         else:
-            if NEED_CRAWLER_LOG:
+            if need_log:
                 log("从sichub获取目标文件链接成功，等待分析提取")
             break
     if len(html) == 0:
@@ -192,7 +196,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
                 path,
                 work_path, proxies=proxies, require_proxy=require_proxy, max_retry=1)
             if success:
-                if NEED_CRAWLER_LOG:
+                if need_log:
                     log("文件{}提取成功".format(work_path))
                 break
         if not success:

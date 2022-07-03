@@ -58,21 +58,23 @@ def log(string):
 
 
 class ThreadGetter(threading.Thread):
-    def __init__(self):
+    def __init__(self, need_log=True):
         threading.Thread.__init__(self)
+        self.need_log = need_log
 
     def run(self):
         log("启动getter")
-        Getter().run()
+        Getter(need_Log=self.need_log).run()
 
 
 class ThreadTester(threading.Thread):
-    def __init__(self):
+    def __init__(self, need_log=True):
         threading.Thread.__init__(self)
+        self.need_log = need_log
 
     def run(self):
         log("启动tester")
-        Tester().run()
+        Tester(need_log=self.need_log).run()
 
 
 class ThreadServer(threading.Thread):
@@ -90,9 +92,12 @@ def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
                  require_proxy_pool=False,
                  redis_host="127.0.0.1",
                  redis_port=6379,
-                 redis_database=0):
+                 redis_database=0,
+                 need_getter_log=True,
+                 need_tester_log=True):
     """
-
+    :param need_tester_log: 是否需要测试代理模块的日志信息（不影响重要信息输出）
+    :param need_getter_log: 是否需要获取代理模块的日志信息（不影响重要信息输出）
     :param redis_database: redis数据库
     :param redis_port: redis端口号
     :param redis_host: redis主机ip
@@ -104,14 +109,15 @@ def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
     :return:
     """
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
+    global NEED_CRAWLER_LOG, NEED_COMMON_LOG, NEED_DOCUMENT_LOG
     global log_style
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
             redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
         try:
-            g = ThreadGetter()
-            t = ThreadTester()
+            g = ThreadGetter(need_log=need_getter_log)
+            t = ThreadTester(need_log=need_tester_log)
             s = ThreadServer()
             g.start()
             t.start()
