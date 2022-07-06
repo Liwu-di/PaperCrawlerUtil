@@ -335,7 +335,7 @@ def getAllFiles(target_dir):
 
 class sub_func_write_pdf(threading.Thread):
 
-    def __init__(self, out_path: str, out_stream: io.BufferedWriter, out_pdf) -> None:
+    def __init__(self, out_path: str, out_stream: io.BufferedWriter, out_pdf: PdfFileWriter) -> None:
         threading.Thread.__init__(self)
         self.res = False
         self.out_path = out_path
@@ -360,6 +360,17 @@ class sub_func_write_pdf(threading.Thread):
 
 
 def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=True, timeout: float = 20) -> bool:
+    """
+        从给定的文件路径中，截取指定的页面，保存到给定输出目录中
+        :param path: 文件夹或者文件路径
+        :param page_range: 截取的范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
+        则按照列表给出的信息截取
+        :param out_path:指定输出的目录
+        :param need_log: 是否需要打印日志
+        :param timeout: 线程结束时间，防止转换过程中，线程无意义等待
+        :return: 返回布尔值，True表示成功转换
+        """
+
     if len(path) == 0:
         log("路径参数为空，返回错误")
         return False
@@ -389,7 +400,7 @@ def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=T
             return False
         elif len(page_range) == 1:
             log("使用范围截取，但只有一个参数，结束参数默认为最大值")
-            new_page_range = (page_range[0], pdf_pages_len-1)
+            new_page_range = (page_range[0], pdf_pages_len - 1)
         elif len(page_range) > 2:
             log("使用范围参数，但参数数量过多，截取两个")
             new_page_range = (page_range[0], page_range[1])
@@ -397,6 +408,8 @@ def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=T
             new_page_range = (page_range[0], page_range[1])
         iters = range(new_page_range[0], new_page_range[1])
     else:
+        # 去重
+        page_range = list(set(page_range))
         for k in page_range:
             '''@todo: 完善verify_rule()'''
             if not (0 <= k <= pdf_pages_len - 1):
@@ -423,9 +436,23 @@ def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=T
     except Exception as e:
         log("写文件出错：{}".format(e))
         return False
+    finally:
+        pdf_file.stream.close()
 
 
-def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directory="", need_log: bool=True, timeout: float=20):
+def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directory="", need_log: bool = True,
+                                    timeout: float = 20):
+    """
+    从给定的文件夹或者文件路径中，截取指定的页面，保存到给定输出目录中
+    :param path: 文件夹或者文件路径
+    :param page_range: 截取的范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
+    则按照列表给出的信息截取
+    :param out_directory:指定输出的目录
+    :param need_log: 是否需要打印日志
+    :param timeout: 线程结束时间，防止转换过程中，线程无意义等待
+    :return:
+    """
+
     count = 0
     sum = 0
     if os.path.isfile(path):
@@ -443,6 +470,123 @@ def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directo
                 count = count + 1
     if need_log:
         log("总计待截取文件：{}，成功：{}".format(str(sum), str(count)))
+
+
+def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_path: str = "",
+                          need_log: bool = True, timeout: float = -1, group_id: str = "",
+                          need_group: bool = True) -> bool:
+    output = None
+    if need_group:
+        out_path = list(out_path)
+        temp = []
+        for p in range(len(out_path) - 4):
+            temp.append(out_path[p])
+        out_path = "".join(temp)
+        out_path = (out_path + group_id + ".pdf") if len(out_path) != 0 else local_path_generate("")
+    else:
+        out_path = out_path if len(out_path) != 0 else local_path_generate("")
+    count = 0
+    try:
+        output = PdfFileWriter()
+    except Exception as e:
+        log("打开PDF写文件工具失败：{}".format(e))
+    file_readers = []
+    for file in files:
+        reader = None
+        if not file.endswith(".pdf"):
+            log("文件{}不是PDF文件，略过".format(file))
+            continue
+        try:
+            if file == out_path:
+                continue
+            reader = PdfFileReader(open(file, "rb"))
+        except Exception as e:
+            log("打开文件{}失败{}".format(file, e))
+            continue
+        pdf_pages_len = reader.getNumPages()
+        iters = None
+        if type(page_range) == tuple:
+            new_page_range = ()
+            if len(page_range) == 0:
+                if need_log:
+                    log("默认全部合并，因为范围为空")
+                new_page_range[0] = 0
+                new_page_range[1] = pdf_pages_len - 1
+            elif len(page_range) == 1:
+                if need_log:
+                    log("使用范围截取，但只有一个参数，结束参数默认为最大值")
+                new_page_range = (page_range[0], pdf_pages_len - 1)
+            elif len(page_range) > 2:
+                if need_log:
+                    log("使用范围参数，但参数数量过多，截取两个")
+                new_page_range = (page_range[0], page_range[1])
+            else:
+                new_page_range = (page_range[0], page_range[1])
+            iters = range(new_page_range[0], new_page_range[1])
+        else:
+            page_range = list(set(page_range))
+            for k in page_range:
+                try:
+                    if not (verify_rule({0: GREATER_AND_EQUAL, pdf_pages_len - 1: LESS_THAN_AND_EQUAL}, float(k))):
+                        log("范围参数有错")
+                        return False
+                except Exception as e:
+                    log("参数范围输入格式错误：{}".format(e))
+                    return False
+            iters = page_range
+        for i in iters:
+            output.addPage(reader.getPage(i))
+        file_readers.append(reader)
+        count = count + 1
+    try:
+        outputStream = open(out_path, "wb")
+    except Exception as e:
+        log("打开文件异常：{}".format(e))
+        return False
+    sub = sub_func_write_pdf(out_path, outputStream, output)
+    # sub.setDaemon(True)
+    sub.start()
+    if timeout < 0:
+        sub.join()
+    else:
+        sub.join(timeout=timeout)
+    if sub.getRes():
+        if need_log:
+            log("合并文件到{}成功，共计{}文件，合并总数{}".format(out_path, str(len(files)), str(count)))
+    else:
+        log("合并失败")
+    try:
+        sub.raiseException()
+    except Exception as e:
+        if need_log:
+            log(e)
+    for read in file_readers:
+        read.stream.close()
+
+
+def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = "",
+                 need_log: bool = True, timeout: float = 60, group_number: int = 50,
+                 need_group: bool = True):
+    if len(path) == 0:
+        log("给定路径为空，合并结束：{}".format(path))
+    elif os.path.isfile(path):
+        log("给定的是文件路径，合并结束：{}".format(path))
+    if page_range is None:
+        page_range = []
+    files = getAllFiles(path)
+    if need_group:
+        i: int = 0
+        group_id: int = 0
+        file_group = []
+        while i < len(files):
+            if (i != 0 and ((i % group_number) == 0)) or (i == len(files) - 1):
+                cooperatePdfWithLimit(file_group, page_range, out_path, need_log, timeout, str(group_id))
+                group_id = group_id + 1
+                file_group.clear()
+            file_group.append(files[i])
+            i = i + 1
+    else:
+        cooperatePdfWithLimit(files, page_range, out_path, need_log, timeout, need_group=False)
 
 
 if __name__ == "__main__":
