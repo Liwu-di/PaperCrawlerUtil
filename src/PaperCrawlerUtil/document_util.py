@@ -1,8 +1,13 @@
 import hashlib
 import http
+import io
 import json
+import threading
 import urllib
+from typing import Optional, Callable, Any, Iterable, Mapping
 
+import PyPDF2
+from PyPDF2 import PdfFileWriter, PdfFileReader
 import pdfplumber
 from googletrans import Translator
 from pdf2docx import Converter
@@ -91,7 +96,7 @@ def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.
     return ""
 
 
-def sentence_translate(string, appid, secret_key, max_retry, proxies, probability, is_google):
+def sentence_translate(string, appid, secret_key, max_retry=10, proxies=None, probability=0.5, is_google=True):
     """
     随机使用百度谷歌翻译句子
     :param string: 待翻译语句
@@ -99,7 +104,7 @@ def sentence_translate(string, appid, secret_key, max_retry, proxies, probabilit
     :param secret_key: 百度翻译密钥
     :param max_retry: 最大尝试次数
     :param proxies: 代理
-    :param probability: 两种翻译的使用概率
+    :param probability: 百度和谷歌翻译之间使用的比例，这个值趋向1则使用谷歌翻译概率大，否则使用百度翻译概率大
     :param is_google: 是否使用谷歌翻译
     :return:
     """
@@ -137,8 +142,9 @@ def text_translate(path,
     :param secret_key: 百度翻译密钥
     :param max_retry: 最大尝试次数
     :param is_google: 是否使用谷歌翻译
-    :param proxies: 代理，样例{'http': 'http://127.0.0.1:1080'}
-    :param probability:百度和谷歌翻译之间使用的比例，大于该值使用百度翻译，否则谷歌翻译
+    :param proxies: 代理，样例 proxies = {"https": SyncHTTPProxy((b'http', b'127.0.0.1', 33210, b'')),
+               "http": SyncHTTPProxy((b'http', b'127.0.0.1', 33210, b''))}
+    :param probability:百度和谷歌翻译之间使用的比例，这个值趋向1则使用谷歌翻译概率大，否则使用百度翻译概率大
     :return:
     """
     line = ""
@@ -325,6 +331,118 @@ def getAllFiles(target_dir):
         elif os.path.isfile(path):
             files.append(path)
     return files
+
+
+class sub_func_write_pdf(threading.Thread):
+
+    def __init__(self, out_path: str, out_stream: io.BufferedWriter, out_pdf) -> None:
+        threading.Thread.__init__(self)
+        self.res = False
+        self.out_path = out_path
+        self.out_stream = out_stream
+        self.output = out_pdf
+
+    def run(self) -> None:
+        super().run()
+        try:
+            self.output.write(self.out_stream)
+            self.res = True
+            self.out_stream.close()
+        except Exception as e:
+            log(threading.currentThread().getName() + "写PDF出现异常：{}".format(e))
+            self.res = False
+
+    def getRes(self):
+        return self.res
+
+    def raiseException(self):
+        raise Exception("终止线程")
+
+
+def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=True, timeout: float = 20) -> bool:
+    if len(path) == 0:
+        log("路径参数为空，返回错误")
+        return False
+    if type(page_range) != tuple and type(page_range) != list:
+        log("页码范围有误，返回错误")
+        return False
+    output = None
+    pdf_file = None
+    pdf_pages_len = None
+    try:
+        output = PdfFileWriter()
+        pdf_file = PdfFileReader(open(path, "rb"))
+        pdf_pages_len = pdf_file.getNumPages()
+    except Exception as e:
+        log("打开文件异常：{}".format(e))
+        return False
+    iters = None
+    if type(page_range) == tuple:
+        new_page_range = ()
+        for k in page_range:
+            '''@todo: 完善verify_rule()'''
+            if not (0 <= k <= pdf_pages_len - 1):
+                log("范围参数有错")
+                return False
+        if len(page_range) == 0:
+            log("页码范围不明确，返回错误")
+            return False
+        elif len(page_range) == 1:
+            log("使用范围截取，但只有一个参数，结束参数默认为最大值")
+            new_page_range = (page_range[0], pdf_pages_len-1)
+        elif len(page_range) > 2:
+            log("使用范围参数，但参数数量过多，截取两个")
+            new_page_range = (page_range[0], page_range[1])
+        else:
+            new_page_range = (page_range[0], page_range[1])
+        iters = range(new_page_range[0], new_page_range[1])
+    else:
+        for k in page_range:
+            '''@todo: 完善verify_rule()'''
+            if not (0 <= k <= pdf_pages_len - 1):
+                log("范围参数有错")
+                return False
+        iters = page_range
+    for i in iters:
+        output.addPage(pdf_file.getPage(i))
+    try:
+        outputStream = open(out_path, "wb")
+        sub = sub_func_write_pdf(out_path, outputStream, output)
+        sub.setDaemon(True)
+        sub.start()
+        sub.join(timeout=timeout)
+        success = sub.getRes()
+        try:
+            sub.raiseException()
+        except Exception as e:
+            if need_log:
+                log(e)
+        if need_log or not success:
+            log(("从文件{}截取页面到{}成功".format(path, out_path)) if success else ("从文件{}截取页面到{}失败".format(path, out_path)))
+        return True
+    except Exception as e:
+        log("写文件出错：{}".format(e))
+        return False
+
+
+def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directory="", need_log: bool=True, timeout: float=20):
+    count = 0
+    sum = 0
+    if os.path.isfile(path):
+        sum = 1
+        if getSomePagesFromOnePDF(path, local_path_generate(out_directory), page_range, need_log):
+            count = count + 1
+    else:
+        files = getAllFiles(path)
+        for k in files:
+            if not k.endswith(".pdf"):
+                log("文件{}不是PDF文件".format(k))
+                continue
+            sum = sum + 1
+            if getSomePagesFromOnePDF(k, local_path_generate(out_directory), page_range, need_log, timeout):
+                count = count + 1
+    if need_log:
+        log("总计待截取文件：{}，成功：{}".format(str(sum), str(count)))
 
 
 if __name__ == "__main__":
