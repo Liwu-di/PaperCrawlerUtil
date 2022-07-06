@@ -475,6 +475,20 @@ def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directo
 def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_path: str = "",
                           need_log: bool = True, timeout: float = -1, group_id: str = "",
                           need_group: bool = True) -> bool:
+
+    """
+    合并列表的PDF文件到指定目录
+    :param files: 文件列表
+    :param page_range: 合并的页码范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
+    则按照列表给出的信息截取
+    :param out_path: 输出文件的目录，如果不给定则默认自动生成
+    :param need_log: 是否需要日志
+    :param timeout: 线程等待时间，如果该值为-1则一直等到线程执行完毕，否则等待时间间隔之后，将结束线程，
+    未合并完成的文件则自动失败
+    :param group_id: 分组号，会自动添加在给定的文件名上，如果给定目标文件名为空，则自动生成文件名
+    :param need_group: 是否需要分组
+    :return:
+    """
     output = None
     if need_group:
         out_path = list(out_path)
@@ -550,11 +564,7 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
         sub.join()
     else:
         sub.join(timeout=timeout)
-    if sub.getRes():
-        if need_log:
-            log("合并文件到{}成功，共计{}文件，合并总数{}".format(out_path, str(len(files)), str(count)))
-    else:
-        log("合并失败")
+    flag = sub.getRes()
     try:
         sub.raiseException()
     except Exception as e:
@@ -562,11 +572,29 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
             log(e)
     for read in file_readers:
         read.stream.close()
+    if flag:
+        if need_log:
+            log("合并文件到{}成功，共计{}文件，合并总数{}".format(out_path, str(len(files)), str(count)))
+    else:
+        log("合并失败")
 
 
 def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = "",
-                 need_log: bool = True, timeout: float = 60, group_number: int = 50,
+                 need_log: bool = True, timeout: float = -1, group_number: int = 50,
                  need_group: bool = True):
+    """
+    合并文件夹中所有的PDF文件到指定目录
+    :param path: 文件夹路径
+    :param page_range: 合并的页码范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
+    则按照列表给出的信息截取
+    :param out_path: 输出文件的目录，如果不给定则默认自动生成
+    :param need_log: 是否需要日志
+    :param timeout: 线程等待时间，如果该值为-1则一直等到线程执行完毕，否则等待时间间隔之后，将结束线程，
+    未合并完成的文件则自动失败
+    :param group_number: 分组时每组的合并数量
+    :param need_group: 是否需要分组合并
+    :return:
+    """
     if len(path) == 0:
         log("给定路径为空，合并结束：{}".format(path))
     elif os.path.isfile(path):
