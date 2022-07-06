@@ -3,7 +3,7 @@ import urllib
 from urllib.request import urlretrieve
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from fake_useragent import UserAgent
 
 from common_util import *
@@ -203,7 +203,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
 
 
-def verify_rule(rule: dict, origin: float or str):
+def verify_rule(rule: dict, origin: float or str or Tag):
     """
     verify the element string. if element satisfy all rules provided by rule arg,
     return true.
@@ -216,7 +216,7 @@ def verify_rule(rule: dict, origin: float or str):
     """
     if rule is None or len(rule) == 0:
         return True
-    if origin is None or (type(origin) != str and type(origin) != float):
+    if origin is None:
         return False
     for key, value in rule.items():
         if str(value) == IN and str(key) not in str(origin):
