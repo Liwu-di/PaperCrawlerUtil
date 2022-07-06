@@ -586,7 +586,7 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
     合并文件夹中所有的PDF文件到指定目录
     :param path: 文件夹路径
     :param page_range: 合并的页码范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
-    则按照列表给出的信息截取
+    则按照列表给出的信息截取，如果此项值不给定，则默认全部合并
     :param out_path: 输出文件的目录，如果不给定则默认自动生成
     :param need_log: 是否需要日志
     :param timeout: 线程等待时间，如果该值为-1则一直等到线程执行完毕，否则等待时间间隔之后，将结束线程，

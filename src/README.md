@@ -1,15 +1,44 @@
 # PaperCrawlerUtil
 一套用来构建小爬虫的工具组，包括访问链接， 获取元素，抽取文件等等
-也有已经实现好通过scihub获取论文的小工具，还有对于pdf转doc，文本翻译,代理连接获取以及通过api获取等
+也有已经实现好通过scihub获取论文的小工具，还有对于pdf转doc，文本翻译,代理连接获取以及通过api获取代理链接，
+PDF文件合并，PDF文件截取某些页等
 A set of tools for building small crawlers, including accessing links, getting elements, extracting files, etc.
-There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition, and api acquisition, etc.
-There is an example:
+There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
+PDF file merging, PDF file intercepting certain pages, etc.
 
 ```commandline
 本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
 则需要自己提供代理或者将require_proxy置为False
 https://github.com/Python3WebSpider/ProxyPool
 感谢大佬为开源社区做出的贡献
+```
+
+```commandline
+也可以直接安装本包
+pip install PaperCrawlerUtil
+```
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+#本模块使用自己搭建的一个代理池，代码来自https://github.com/Germey/ProxyPool.git
+#也可以自己在本地搭建这样的代理服务器，然后使用如下代码更换代理池
+basic_config(proxy_pool_url="http://localhost:xxxx")
+
+#同时可以替换，其他的一些配置，如下所示，其中日志的等级只能配置一次，之后不会再生效
+basic_config(log_file_name="1.log",
+                 log_level=logging.WARNING,
+                 proxy_pool_url="http://xxx",
+                 logs_style=LOG_STYLE_LOG)
+#更新：
+#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
+#默认为http://127.0.0.1:5555/random，使用方法如下：
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False,
+            redis_host="127.0.0.1",
+            redis_port=6379,
+            redis_database=0)
+#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
+
 ```
 
 ```python
@@ -102,29 +131,6 @@ from PaperCrawlerUtil.document_util import *
 #此外也可以通过doi从sci-hub下载，示例代码如下：
 get_pdf_url_by_doi(doi="xxxx", work_path=local_path_generate("./"))
 ```
-```python
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.document_util import *
-#本模块使用自己搭建的一个代理池，代码来自https://github.com/Germey/ProxyPool.git
-#也可以自己在本地搭建这样的代理服务器，然后使用如下代码更换代理池
-basic_config(proxy_pool_url="http://localhost:xxxx")
-
-#同时可以替换，其他的一些配置，如下所示，其中日志的等级只能配置一次，之后不会再生效
-basic_config(log_file_name="1.log",
-                 log_level=logging.WARNING,
-                 proxy_pool_url="http://xxx",
-                 logs_style=LOG_STYLE_LOG)
-#更新：
-#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
-#默认为http://127.0.0.1:5555/random，使用方法如下：
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False,
-            redis_host="127.0.0.1",
-            redis_port=6379,
-            redis_database=0)
-#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
-
-```
 
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -152,11 +158,6 @@ text_translate("", appid, secret_key, is_google=True)
 
 ```
 
-```commandline
-也可以直接安装本包
-pip install PaperCrawlerUtil
-```
-
 ```python
 """
 以下是PDF文件分割的一个例子，表示将"D:\python project\PaperCrawlerUtil\EMNLP2021"文件夹下所有PDF文件
@@ -170,5 +171,17 @@ getSomePagesFromFileOrDirectory("D:\python project\PaperCrawlerUtil\EMNLP2021", 
 
 ```
 
+```python
+"""
+以下是PDF文件合并的一个例子，表示将"E:\论文阅读\论文\EMNLP\EMNLP2021_first_page"文件夹下所有PDF文件
+的第一页合并保存到目录"E:\论文阅读\论文\EMNLP\EMNLP2021_first_page\合并.pdf"中，同时默认以50个文件为分组
+生成多个文件
+"""
 
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+cooperatePdf("E:\论文阅读\论文\EMNLP\EMNLP2021_first_page", [0], "E:\论文阅读\论文\EMNLP\EMNLP2021_first_page\合并.pdf", timeout=-1)
+
+```
 
