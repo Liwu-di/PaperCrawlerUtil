@@ -5,6 +5,13 @@ A set of tools for building small crawlers, including accessing links, getting e
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition, and api acquisition, etc.
 There is an example:
 
+```commandline
+本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
+则需要自己提供代理或者将require_proxy置为False
+https://github.com/Python3WebSpider/ProxyPool
+感谢大佬为开源社区做出的贡献
+```
+
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -33,6 +40,61 @@ for times in ["2019", "2020", "2021"]:
             # retrieve_file 获取文件，可以设置是否使用代理等等
             retrieve_file("https://openaccess.thecvf.com/" + pdf_path, work_path)
 ```
+
+```python
+"""
+以下是一个新的例子，用来爬取EMNLP2021的文章，使用了内置代理池，翻译等
+"""
+from httpcore import SyncHTTPProxy
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False, need_getter_log=False)
+url = "https://aclanthology.org/events/emnlp-2021/"
+html = random_proxy_header_access(url, require_proxy=True, max_retry=100, sleep_time=0.5)
+pdf = get_attribute_of_html(html, rule={"href": IN, "pdf": IN, "main": IN, "full": NOT_IN, "emnlp": IN})
+name = get_attribute_of_html(html,
+                             rule={"href": IN, "pdf": NOT_IN, "main": IN, "full": NOT_IN, "emnlp": IN,
+                                   "align-middle": IN, "emnlp-main.": IN},
+                             attr_list=['strong'])
+names = []
+for k in name:
+    p = list(k)
+    q = []
+    flag = True
+    for m in p:
+        if m == "<":
+            flag = False
+            continue
+        if m == ">":
+            flag = True
+            continue
+        if flag:
+            q.append(m)
+    names.append("".join(q))
+pdf_url = []
+for p in pdf:
+    pdf_url.append(p.split("href=\"")[1].split(".pdf")[0] + ".pdf")
+count = 0
+proxies = {"https": SyncHTTPProxy((b'http', b'127.0.0.1', 33210, b'')),
+           "http": SyncHTTPProxy((b'http', b'127.0.0.1', 33210, b''))}
+if len(pdf_url) == len(names):
+    for k in range(len(pdf_url)):
+        if retrieve_file(url=pdf_url[k],
+                         path=local_path_generate("EMNLP2021",
+                                                  file_name=sentence_translate(string=names[k],
+                                                                               appid="20200316000399558",
+                                                                               secret_key="BK6HRAv6QJDGBwaZgr4F",
+                                                                               max_retry=10,
+                                                                               proxies=proxies,
+                                                                               probability=0.5,
+                                                                               is_google=True) + ".pdf")
+                , require_proxy=True):
+            count = count + 1
+
+log("count={}".format(str(count)))
+```
+
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -53,14 +115,14 @@ basic_config(log_file_name="1.log",
                  log_level=logging.WARNING,
                  proxy_pool_url="http://xxx",
                  logs_style=LOG_STYLE_LOG)
-更新：
-目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
-默认为http://127.0.0.1:5555/random，使用方法如下：
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False，
+#更新：
+#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
+#默认为http://127.0.0.1:5555/random，使用方法如下：
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False,
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
-代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
+#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 
 ```
 
@@ -95,10 +157,18 @@ text_translate("", appid, secret_key, is_google=True)
 pip install PaperCrawlerUtil
 ```
 
-```commandline
-本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
-则需要自己提供代理或者将require_proxy置为False
-https://github.com/Python3WebSpider/ProxyPool
-感谢大佬为开源社区做出的贡献
+```python
+"""
+以下是PDF文件分割的一个例子，表示将"D:\python project\PaperCrawlerUtil\EMNLP2021"文件夹下所有PDF文件
+截取第一页保存到目录"EMNLP2021_first_page"中，文件名自动生成
+"""
+
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+getSomePagesFromFileOrDirectory("D:\python project\PaperCrawlerUtil\EMNLP2021", [0], "EMNLP2021_first_page")
+
 ```
+
+
 
