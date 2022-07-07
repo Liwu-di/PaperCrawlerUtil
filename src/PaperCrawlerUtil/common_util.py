@@ -198,6 +198,8 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
     :param file_name: 文件名称，带后缀格式
     :return: 返回文件绝对路径
     """
+    if folder_name is None or len(folder_name) == 0:
+        folder_name = os.path.abspath(".")
     try:
         if os.path.exists(folder_name):
             if NEED_COMMON_LOG:

@@ -316,14 +316,21 @@ def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1),
     return txt
 
 
-def getAllFiles(target_dir):
+def getAllFiles(target_dir: str) -> list:
     """
     遍历文件夹
     :param target_dir: 遍历的文件夹
     :return: 所有文件的名称
     """
     files = []
-    listFiles = os.listdir(target_dir)
+    if len(target_dir) == 0:
+        log("文件路径为空")
+        return files
+    try:
+        listFiles = os.listdir(target_dir)
+    except Exception as e:
+        log("打开文件夹{}异常：{}".format(target_dir, e))
+        return files
     for i in range(0, len(listFiles)):
         path = os.path.join(target_dir, listFiles[i])
         if os.path.isdir(path):
