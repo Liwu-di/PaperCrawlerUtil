@@ -25,7 +25,7 @@ from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
 
 PROXY_POOL_URL = ""
-logging.basicConfig(filename='../../crawler_util.log', level=logging.WARNING)
+logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
 log_style = "log"
 HTTP = "http://"
 COLON_SEPARATOR = ":"
@@ -50,7 +50,7 @@ NEED_DOCUMENT_LOG = False
 PROXY_POOL_CAN_RUN_FLAG = True
 
 
-def log(string):
+def log(string: str) -> None:
     global log_style
     if log_style == LOG_STYLE_LOG:
         logging.warning(string)
@@ -62,7 +62,7 @@ def log(string):
 
 
 class ThreadGetter(threading.Thread):
-    def __init__(self, need_log=True):
+    def __init__(self, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
 
@@ -72,7 +72,7 @@ class ThreadGetter(threading.Thread):
 
 
 class ThreadTester(threading.Thread):
-    def __init__(self, need_log=True):
+    def __init__(self, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
 
@@ -90,15 +90,16 @@ class ThreadServer(threading.Thread):
         app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED, use_reloader=False)
 
 
-def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
-                 proxy_pool_url="",
-                 logs_style=LOG_STYLE_PRINT,
-                 require_proxy_pool=False,
-                 redis_host="127.0.0.1",
-                 redis_port=6379,
-                 redis_database=0,
-                 need_getter_log=True,
-                 need_tester_log=True):
+def basic_config(log_file_name: str = "crawler_util.log",
+                 log_level=logging.WARNING,
+                 proxy_pool_url: str = "",
+                 logs_style: str = LOG_STYLE_PRINT,
+                 require_proxy_pool: bool = False,
+                 redis_host: str = "127.0.0.1",
+                 redis_port: int = 6379,
+                 redis_database: int = 0,
+                 need_getter_log: bool = True,
+                 need_tester_log: bool = True) -> None:
     """
     :param need_tester_log: 是否需要测试代理模块的日志信息（不影响重要信息输出）
     :param need_getter_log: 是否需要获取代理模块的日志信息（不影响重要信息输出）
@@ -145,7 +146,7 @@ def basic_config(log_file_name="../crawler_util.log", log_level=logging.WARNING,
         PROXY_POOL_CAN_RUN_FLAG = False
 
 
-def get_split(lens=20, style='='):
+def get_split(lens: int = 20, style: str = '=') -> str:
     """
     get a series of splits,like "======"
     :param lens: the length of split string
@@ -153,12 +154,13 @@ def get_split(lens=20, style='='):
     :return: a string of split
     """
     s = ''
+    lens = max(lens, 1)
     for i in range(lens):
         s = s + style
     return s
 
 
-def get_proxy():
+def get_proxy() -> str or None:
     """
     get a proxy from proxy url which create by me to collect
     ip proxies
@@ -177,7 +179,7 @@ def get_proxy():
         return None
 
 
-def two_one_choose(p=0.5):
+def two_one_choose(p: int = 0.5) -> bool:
     """
     :parameter p:概率, 0 <= p <= 1
     :return: return a bool value which decide whether choose two choices
@@ -189,7 +191,7 @@ def two_one_choose(p=0.5):
         return False
 
 
-def local_path_generate(folder_name, file_name="", suffix=".pdf"):
+def local_path_generate(folder_name: str, file_name: str = "", suffix: str = ".pdf") -> str:
     """
     create a folder whose name is folder_name in folder which code in if folder_name
     is not exist. and then concat pdf_name to create file path.
@@ -217,7 +219,7 @@ def local_path_generate(folder_name, file_name="", suffix=".pdf"):
     return work_path
 
 
-def write_file(path, mode, string, encoding="utf-8"):
+def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> None:
     try:
         with open(path, mode=mode, encoding=encoding) as f:
             f.write(string)

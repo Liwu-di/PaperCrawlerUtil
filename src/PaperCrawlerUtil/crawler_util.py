@@ -9,10 +9,10 @@ from fake_useragent import UserAgent
 from common_util import *
 
 
-def random_proxy_header_access(url, proxy='',
-                               require_proxy=False, max_retry=10, sleep_time=1.2,
-                               random_proxy=True, time_out=(10, 20),
-                               need_log=True):
+def random_proxy_header_access(url: str, proxy: str = '',
+                               require_proxy: bool = False, max_retry: int = 10, sleep_time: float = 1.2,
+                               random_proxy: bool = True, time_out: tuple = (10, 20),
+                               need_log: bool = True) -> str:
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
@@ -79,7 +79,10 @@ def random_proxy_header_access(url, proxy='',
     return html
 
 
-def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, sleep_time=1.2, random_proxy=True, need_log=True):
+def retrieve_file(url: str, path: str, proxies: str = "",
+                  require_proxy: bool = False, max_retry: int = 10,
+                  sleep_time: float = 1.2, random_proxy: bool = True,
+                  need_log: bool = True) -> bool:
     """
     retrieve file from provided url and save to path
     :param need_log: 是否需要日志
@@ -140,8 +143,9 @@ def retrieve_file(url, path, proxies="", require_proxy=False, max_retry=10, slee
         return success
 
 
-def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
-                       require_proxy=False, random_proxy=True, proxies="", need_log=True):
+def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float=1.2, max_retry: int=10,
+                       require_proxy: bool = False, random_proxy: bool = True,
+                       proxies: bool = "", need_log: bool = True) -> None:
     """
     save file from sci_hub by doi string provided
     :param need_log: 是否需要日志
@@ -203,7 +207,7 @@ def get_pdf_url_by_doi(doi, work_path, sleep_time=1.2, max_retry=10,
             log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
 
 
-def verify_rule(rule: dict, origin: float or str or Tag):
+def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
     """
     verify the element string. if element satisfy all rules provided by rule arg,
     return true.
@@ -242,7 +246,7 @@ def verify_rule(rule: dict, origin: float or str or Tag):
     return True
 
 
-def get_attribute_of_html(html, rule=None, attr_list=None):
+def get_attribute_of_html(html: str, rule: dict = None, attr_list: list = None) -> list:
     """
     Use beautifulsoup4 to scan the html string get by urllib.get().
     And select all attribute in attr_list and then select satisfy all rules in rule
@@ -270,9 +274,9 @@ def get_attribute_of_html(html, rule=None, attr_list=None):
     return list
 
 
-def get_pdf_form_arXiv(title, folder_name, sleep_time=1.2, max_retry=10,
-                       require_proxy=False, random_proxy=True, proxies="",
-                       max_get=3):
+def get_pdf_form_arXiv(title: str, folder_name: str, sleep_time: float = 1.2,
+                       max_retry: int = 10, require_proxy: bool = False,
+                       random_proxy: bool = True, proxies: str = "", max_get: int = 3) -> None:
     """
     从arXiv获取论文，
     :param title:

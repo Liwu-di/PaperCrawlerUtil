@@ -15,13 +15,13 @@ from pdf2docx import Converter
 from crawler_util import *
 
 
-def baidu_translate(string,
-                    appid,
-                    secret_key,
-                    src="auto",
-                    dst="zh",
-                    sleep_time=1.2,
-                    need_log=True):
+def baidu_translate(string: str,
+                    appid: str,
+                    secret_key: str,
+                    src: str = "auto",
+                    dst: str = "zh",
+                    sleep_time: float = 1.2,
+                    need_log: bool = True) -> str:
     """
     百度翻译
     :param need_log: 是否需要日志
@@ -68,7 +68,8 @@ def baidu_translate(string,
     return res
 
 
-def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.2, need_log=True):
+def google_translate(string: str, src: str = 'en', dest: str = 'zh-cn',
+                     proxies: str = None, sleep_time: float = 1.2, need_log: bool = True) -> str:
     """
     谷歌翻译
     @todo 提供一个源语言和目的语言的表
@@ -96,7 +97,9 @@ def google_translate(string, src='en', dest='zh-cn', proxies=None, sleep_time=1.
     return ""
 
 
-def sentence_translate(string, appid, secret_key, max_retry=10, proxies=None, probability=0.5, is_google=True):
+def sentence_translate(string: str, appid: str, secret_key: str,
+                       max_retry: int = 10, proxies: str = None,
+                       probability: float = 0.5, is_google: bool = True) -> str:
     """
     随机使用百度谷歌翻译句子
     :param string: 待翻译语句
@@ -128,13 +131,13 @@ def sentence_translate(string, appid, secret_key, max_retry=10, proxies=None, pr
     return ""
 
 
-def text_translate(path,
-                   appid,
-                   secret_key,
-                   max_retry=10,
-                   is_google=True,
-                   probability=0.5,
-                   proxies=None):
+def text_translate(path: str,
+                   appid: str,
+                   secret_key: str,
+                   max_retry: int = 10,
+                   is_google: bool = True,
+                   probability: float = 0.5,
+                   proxies: str = None) -> str:
     """
     文本翻译，根据提供的文件地址，翻译文件内容
     :param path: 文本路径
@@ -166,7 +169,8 @@ def text_translate(path,
     return res
 
 
-def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None, need_log=True):
+def pdf2docx(pdf_path: str, word_path: str, end_pages: int = None,
+             start_pages: str = None, need_log: bool = True) -> None:
     """
     转换pdf 到word文件，可以自动识别是文件夹还是单个文件，其中word_path表示的生成的word的文件夹，不论是
     单个还是文件夹批量转换，这个值都是文件夹
@@ -209,7 +213,8 @@ def pdf2docx(pdf_path, word_path, end_pages=None, start_pages=None, need_log=Tru
                 cv.close()
 
 
-def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
+def get_para_from_one_pdf(path: str, begin_tag: list = None,
+                          end_tag: list = None, ranges: tuple = (0, 1)) -> str:
     """
         用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
         如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
@@ -269,8 +274,8 @@ def get_para_from_one_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1)):
         return txt
 
 
-def get_para_from_pdf(path, begin_tag=None, end_tag=None, ranges=(0, 1),
-                      split_style="===", valid_threshold=0, need_log=True):
+def get_para_from_pdf(path: str, begin_tag: list = None, end_tag: list = None, ranges: tuple = (0, 1),
+                      split_style: str = "===", valid_threshold: int = 0, need_log: bool = True) -> str:
     """
     用来从pdf文件中获取一些文字，可以通过设置开始或者结束标志，以及页码范围获取自己想要的内容
     如果是文件夹，则直接遍历文件夹中所有的PDF，返回所有符合的字符串，同时可以设置分隔符
@@ -366,7 +371,8 @@ class sub_func_write_pdf(threading.Thread):
         raise Exception("终止线程")
 
 
-def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=True, timeout: float = 20) -> bool:
+def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
+                           need_log: bool = True, timeout: float = 20) -> bool:
     """
         从给定的文件路径中，截取指定的页面，保存到给定输出目录中
         :param path: 文件夹或者文件路径
@@ -447,8 +453,8 @@ def getSomePagesFromOnePDF(path, out_path, page_range: tuple or list, need_log=T
         pdf_file.stream.close()
 
 
-def getSomePagesFromFileOrDirectory(path, page_range: tuple or list, out_directory="", need_log: bool = True,
-                                    timeout: float = 20):
+def getSomePagesFromFileOrDirectory(path: str, page_range: tuple or list, out_directory: str = "",
+                                    need_log: bool = True, timeout: float = 20) -> None:
     """
     从给定的文件夹或者文件路径中，截取指定的页面，保存到给定输出目录中
     :param path: 文件夹或者文件路径
@@ -582,13 +588,15 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
     if flag:
         if need_log:
             log("合并文件到{}成功，共计{}文件，合并总数{}".format(out_path, str(len(files)), str(count)))
+        return True
     else:
         log("合并失败")
+        return False
 
 
 def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = "",
                  need_log: bool = True, timeout: float = -1, group_number: int = 50,
-                 need_group: bool = True):
+                 need_group: bool = True) -> None:
     """
     合并文件夹中所有的PDF文件到指定目录
     :param path: 文件夹路径
