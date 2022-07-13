@@ -11,6 +11,14 @@ PDF file merging, PDF file intercepting certain pages, etc.
 则需要自己提供代理或者将require_proxy置为False
 https://github.com/Python3WebSpider/ProxyPool
 感谢大佬为开源社区做出的贡献
+#更新：
+#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
+#默认为http://127.0.0.1:5555/random，使用方法如下：
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
+            redis_host="127.0.0.1",
+            redis_port=6379,
+            redis_database=0)
+#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 ```
 
 ```commandline
@@ -33,7 +41,7 @@ basic_config(log_file_name="1.log",
 #更新：
 #目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
 #默认为http://127.0.0.1:5555/random，使用方法如下：
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=False,
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
