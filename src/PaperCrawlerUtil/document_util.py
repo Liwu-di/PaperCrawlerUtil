@@ -5,7 +5,7 @@ import json
 import threading
 import urllib
 from typing import Optional, Callable, Any, Iterable, Mapping
-
+from httpcore import SyncHTTPProxy
 import PyPDF2
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import pdfplumber
@@ -83,7 +83,8 @@ def google_translate(string: str, src: str = 'en', dest: str = 'zh-cn',
     """
     urls = ['translate.google.cn', 'translate.google.com']
     if proxies is None:
-        proxies = {'http': 'http://127.0.0.1:1080'}
+        proxies = {"https": SyncHTTPProxy((b'http', b'127.0.0.1', 1080, b'')),
+                   "http": SyncHTTPProxy((b'http', b'127.0.0.1', 1080, b''))}
     if need_log:
         log("时间：{}使用谷歌翻译".format(str(time.strftime("%H_%M_%S", time.localtime()))))
     try:
@@ -106,7 +107,8 @@ def sentence_translate(string: str, appid: str, secret_key: str,
     :param appid: 百度翻译appid
     :param secret_key: 百度翻译密钥
     :param max_retry: 最大尝试次数
-    :param proxies: 代理
+    :param proxies: 代理，例如：proxies = {"https": SyncHTTPProxy((b'http', b'127.0.0.1', 1080, b'')),
+                   "http": SyncHTTPProxy((b'http', b'127.0.0.1', 1080, b''))}
     :param probability: 百度和谷歌翻译之间使用的比例，这个值趋向1则使用谷歌翻译概率大，否则使用百度翻译概率大
     :param is_google: 是否使用谷歌翻译
     :return:
