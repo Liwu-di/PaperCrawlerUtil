@@ -62,23 +62,33 @@ def log(string: str) -> None:
 
 
 class ThreadGetter(threading.Thread):
-    def __init__(self, need_log: bool = True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
+        self.host = redis_host
+        self.port = redis_port
+        self.password = redis_password
+        self.database = redis_database
 
     def run(self):
         log("启动getter")
-        Getter(need_Log=self.need_log).run()
+        Getter(redis_host=self.host, redis_port=self.port,
+               redis_password=self.password, redis_database=self.database, need_log=self.need_log).run()
 
 
 class ThreadTester(threading.Thread):
-    def __init__(self, need_log: bool = True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
+        self.host = redis_host
+        self.port = redis_port
+        self.password = redis_password
+        self.database = redis_database
 
     def run(self):
         log("启动tester")
-        Tester(need_log=self.need_log).run()
+        Tester(redis_host=self.host, redis_port=self.port,
+               redis_password=self.password, redis_database=self.database, need_log=self.need_log).run()
 
 
 class ThreadServer(threading.Thread):
@@ -98,9 +108,11 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  redis_host: str = "127.0.0.1",
                  redis_port: int = 6379,
                  redis_database: int = 0,
+                 redis_password: str = "",
                  need_getter_log: bool = True,
                  need_tester_log: bool = True) -> None:
     """
+    :param redis_password: redis 密码
     :param need_tester_log: 是否需要测试代理模块的日志信息（不影响重要信息输出）
     :param need_getter_log: 是否需要获取代理模块的日志信息（不影响重要信息输出）
     :param redis_database: redis数据库
@@ -121,8 +133,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
             redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
         try:
-            g = ThreadGetter(need_log=need_getter_log)
-            t = ThreadTester(need_log=need_tester_log)
+            g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
+                             redis_database=redis_database, need_log=need_getter_log)
+            t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
+                             redis_database=redis_database, need_log=need_tester_log)
             s = ThreadServer()
             g.start()
             t.start()

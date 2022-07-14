@@ -24,11 +24,11 @@ class Tester(object):
     tester for testing proxies in queue
     """
     
-    def __init__(self, need_log=True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log=True):
         """
         init redis
         """
-        self.redis = RedisClient()
+        self.redis = RedisClient(host=redis_host, port=redis_port, password=redis_password, db=redis_database)
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         self.loop = asyncio.get_event_loop()

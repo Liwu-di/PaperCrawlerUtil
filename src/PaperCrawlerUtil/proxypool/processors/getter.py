@@ -9,14 +9,14 @@ class Getter(object):
     getter of proxypool
     """
 
-    def __init__(self, need_Log=True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log=True):
         """
         init db and crawlers
         """
-        self.redis = RedisClient()
+        self.redis = RedisClient(host=redis_host, port=redis_port, password=redis_password, db=redis_database)
         self.crawlers_cls = crawlers_cls
         self.crawlers = [crawler_cls() for crawler_cls in self.crawlers_cls]
-        self.need_log = need_Log
+        self.need_log = need_log
 
     def is_full(self):
         """
