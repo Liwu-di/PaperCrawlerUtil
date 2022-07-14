@@ -19,7 +19,7 @@ import threading
 import time
 import requests
 from proxypool.setting import *
-
+from requests.cookies import RequestsCookieJar
 from proxypool.processors.getter import Getter
 from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
@@ -241,6 +241,39 @@ def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> No
         log("写入文件{}成功".format(path))
     except Exception as e:
         log("写入文件{}失败：{}".format(path, e))
+
+
+def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
+    """
+    将字符串形式的cookie转成RequestsCookieJar
+    :param cookie: 待转换的cookie字符串
+    :return: RequestsCookieJar 对象
+    """
+    if len(cookie) == 0:
+        log("cookie为空，返回空值")
+        return RequestsCookieJar()
+    cookie = cookie.replace(" ", "")
+    cookies = cookie.split(";")
+    cookie_dict = {}
+    for c in cookies:
+        cookie_list = list(c)
+        name = ""
+        value = ""
+        flag = True
+        for item in cookie_list:
+            if item == "=" and flag:
+                flag = False
+                continue
+            if flag:
+                name = name + item
+            else:
+                value = value + item
+        if len(name) != 0 and len(value) != 0:
+            cookie_dict[name] = value
+    cookie_jar = RequestsCookieJar()
+    for item in cookie_dict.items():
+        cookie_jar.set(item[0], item[1])
+    return cookie_jar
 
 
 class NoProxyException(Exception):

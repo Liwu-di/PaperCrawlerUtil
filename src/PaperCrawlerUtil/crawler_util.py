@@ -1,7 +1,7 @@
 import time
 import urllib
 from urllib.request import urlretrieve
-
+from requests.cookies import RequestsCookieJar
 import requests
 from bs4 import BeautifulSoup, Tag
 from fake_useragent import UserAgent
@@ -12,11 +12,13 @@ from common_util import *
 def random_proxy_header_access(url: str, proxy: str = '',
                                require_proxy: bool = False, max_retry: int = 10, sleep_time: float = 1.2,
                                random_proxy: bool = True, time_out: tuple = (10, 20),
-                               need_log: bool = True) -> str:
+                               need_log: bool = True, cookie: str = "", if_bytes_encoding: str = "utf-8") -> str:
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
     if access the url beyond max_retry, will return a blank string
+    :param if_bytes_encoding: 如果爬取到的是字节，需要通过什么字符集转换
+    :param cookie: 对于需要cookie即登录才能访问的网站，需要提供cookie
     :param need_log: 是否需要日志
     :param url:链接
     :param proxy:提供代理
@@ -29,6 +31,9 @@ def random_proxy_header_access(url: str, proxy: str = '',
                     如果是整数，则两者值设为一样
     """
     proxy_provide = False
+    cookie_jar = RequestsCookieJar()
+    if len(cookie) != 0:
+        cookie_jar = cookieString2CookieJar(cookie)
     if len(proxy) == 0:
         proxy_provide = False
     else:
@@ -52,17 +57,17 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 if random_proxy and two_one_choose():
                     if need_log:
                         log("随机使用代理")
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
                 elif random_proxy and not two_one_choose():
                     if need_log:
                         log("随机不使用代理")
-                    request = requests.get(url, headers=headers, timeout=time_out)
+                    request = requests.get(url, headers=headers, timeout=time_out, cookies=cookie_jar)
                 elif not random_proxy:
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
                 else:
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out)
+                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
             else:
-                request = requests.get(url, headers=headers, timeout=time_out)
+                request = requests.get(url, headers=headers, timeout=time_out, cookies=cookie_jar)
             html = request.content
             if need_log:
                 log("爬取成功，返回内容")
@@ -74,7 +79,12 @@ def random_proxy_header_access(url: str, proxy: str = '',
             log("尝试重连")
             time.sleep(sleep_time)
         if len(html) != 0:
-            log(get_split())
+            log(get_split(lens=100))
+            if type(html) == bytes:
+                try:
+                    html = str(html, encoding=if_bytes_encoding)
+                except Exception as e:
+                    log("字节转字符串错误：{}".format(e))
             return html
     return html
 
