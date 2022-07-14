@@ -48,7 +48,18 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
 #代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 
 ```
-
+```python
+"""
+更新，增加cookie的访问
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+cookie = "axxxx=c9IxxxxxdK"
+html = random_proxy_header_access(
+    url="https://s.taobao.com/search?q=iphone5",
+    require_proxy=False, cookie=cookie)
+```
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
