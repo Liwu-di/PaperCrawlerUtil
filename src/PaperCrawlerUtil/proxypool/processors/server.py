@@ -1,7 +1,11 @@
 from flask import Flask, g
-from proxypool.storages.redis import RedisClient
-from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV
 
+import global_val
+from proxypool.storages.redis import RedisClient
+from global_val import *
+from storages.proxy_dict import ProxyDict
+
+IS_DEV = True
 
 __all__ = ['app']
 
@@ -15,9 +19,13 @@ def get_conn():
     get redis client object
     :return:
     """
-    if not hasattr(g, 'redis'):
-        g.redis = RedisClient()
-    return g.redis
+    if not hasattr(g, 'conn'):
+        if global_val.get_value("storage") == "redis":
+            redis_conf = global_val.get_value("REDIS")
+            g.conn = RedisClient(host=redis_conf[0], port=redis_conf[1], password=redis_conf[2], db=redis_conf[3])
+        else:
+            g.conn = ProxyDict()
+    return g.conn
 
 
 @app.route('/')
@@ -64,6 +72,23 @@ def get_count():
     conn = get_conn()
     return str(conn.count())
 
+@app.route("/test")
+def testDict():
+    """
+    用来测试dict方式，redis模式启动时，无意义
+    :return:
+    """
+    if global_val.get_value("storage") == "redis":
+        return "redis"
+    else:
+        s = ""
+        for i in get_conn().dict.items():
+            s = s + i[0]
+        return s
 
-if __name__ == '__main__':
-    app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED)
+
+# if __name__ == '__main__':
+#     API_HOST = global_val.get_value("API_HOST")
+#     API_PORT = global_val.get_value("API_PORT")
+#     API_THREADED = global_val.get_value("API_THREADED")
+#     app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED)

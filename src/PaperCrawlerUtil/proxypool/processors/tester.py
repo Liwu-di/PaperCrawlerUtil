@@ -1,4 +1,6 @@
 import asyncio
+import time
+
 import aiohttp
 from loguru import logger
 from proxypool.schemas import Proxy
@@ -7,6 +9,7 @@ from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STA
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
 
+from storages.proxy_dict import ProxyDict
 
 EXCEPTIONS = (
     ClientProxyConnectionError,
@@ -24,11 +27,14 @@ class Tester(object):
     tester for testing proxies in queue
     """
     
-    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log=True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, storage="redis", need_log=True):
         """
         init redis
         """
-        self.redis = RedisClient(host=redis_host, port=redis_port, password=redis_password, db=redis_database)
+        if storage == "redis":
+            self.conn = RedisClient(host=redis_host, port=redis_port, password=redis_password, db=redis_database)
+        else:
+            self.conn = ProxyDict()
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         self.loop = asyncio.get_event_loop()
@@ -59,15 +65,15 @@ class Tester(object):
                 async with session.get(TEST_URL, proxy=f'http://{proxy.string()}', timeout=TEST_TIMEOUT,
                                        allow_redirects=False) as response:
                     if response.status in TEST_VALID_STATUS:
-                        self.redis.max(proxy)
+                        self.conn.max(proxy)
                         if self.need_log:
                             logger.debug(f'proxy {proxy.string()} is valid, set max score')
                     else:
-                        self.redis.decrease(proxy)
+                        self.conn.decrease(proxy)
                         if self.need_log:
                             logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
             except EXCEPTIONS:
-                self.redis.decrease(proxy)
+                self.conn.decrease(proxy)
                 if self.need_log:
                     logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
     
@@ -79,19 +85,20 @@ class Tester(object):
         """
         # event loop of aiohttp
         logger.info('stating tester...')
-        count = self.redis.count()
+        count = self.conn.count()
         if self.need_log:
             logger.debug(f'{count} proxies to test')
         cursor = 0
         while True:
             if self.need_log:
                 logger.debug(f'testing proxies use cursor {cursor}, count {TEST_BATCH}')
-            cursor, proxies = self.redis.batch(cursor, count=TEST_BATCH)
+            cursor, proxies = self.conn.batch(cursor, count=TEST_BATCH)
             if proxies:
                 tasks = [self.test(proxy) for proxy in proxies]
                 self.loop.run_until_complete(asyncio.wait(tasks))
             if not cursor:
-                break
+                logger.error("目前代理池无代理连接， 等待五秒再次测试")
+                time.sleep(5)
 
 
 def run_tester():
