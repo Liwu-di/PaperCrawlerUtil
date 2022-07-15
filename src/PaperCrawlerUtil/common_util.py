@@ -62,42 +62,49 @@ def log(string: str) -> None:
 
 
 class ThreadGetter(threading.Thread):
-    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log: bool = True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
         self.host = redis_host
         self.port = redis_port
         self.password = redis_password
         self.database = redis_database
+        self.storage = storage
 
     def run(self):
         log("启动getter")
         Getter(redis_host=self.host, redis_port=self.port,
-               redis_password=self.password, redis_database=self.database, need_log=self.need_log).run()
+               redis_password=self.password, redis_database=self.database,
+               need_log=self.need_log, storage=self.storage).run()
 
 
 class ThreadTester(threading.Thread):
-    def __init__(self, redis_host, redis_port, redis_password, redis_database, need_log: bool = True):
+    def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
         self.host = redis_host
         self.port = redis_port
         self.password = redis_password
         self.database = redis_database
+        self.storage = storage
 
     def run(self):
         log("启动tester")
         Tester(redis_host=self.host, redis_port=self.port,
-               redis_password=self.password, redis_database=self.database, need_log=self.need_log).run()
+               redis_password=self.password, redis_database=self.database,
+               need_log=self.need_log, storage=self.storage).run()
 
 
 class ThreadServer(threading.Thread):
-    def __init__(self):
+    def __init__(self, host, port, threaded):
         threading.Thread.__init__(self)
+        self.host = host
+        self.port = port
+        self.threaded = threaded
 
     def run(self):
         log("启动server")
-        app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED, use_reloader=False)
+        app.run(host=self.host, port=self.port, threaded=self.threaded, use_reloader=False)
 
 
 def basic_config(log_file_name: str = "crawler_util.log",
