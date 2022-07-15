@@ -167,10 +167,12 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  redis_password: str = "",
                  need_getter_log: bool = True,
                  need_tester_log: bool = True,
+                 need_storage_log: bool = True,
                  api_host: str = "127.0.0.1",
                  api_port: int = 5555,
                  proxypool_storage: str = "redis") -> None:
     """
+    :param need_storage_log: 是否需要存储模块（redis)等的日志信息（不影响重要信息输出）
     :param proxypool_storage:代理池的存储方式，可以选择redis或者dict
     :param api_port: FLASK端口
     :param api_host: FLASK地址
@@ -191,7 +193,9 @@ def basic_config(log_file_name: str = "crawler_util.log",
     global NEED_CRAWLER_LOG, NEED_COMMON_LOG, NEED_DOCUMENT_LOG
     global log_style
     set_cross_file_variable([("REDIS", (redis_host, redis_port, redis_password, redis_database)),
-                             ("storage", proxypool_storage), ("global_dict", {})])
+                             ("storage", proxypool_storage), ("global_dict", {}),
+                             ("storage_log", need_storage_log), ("getter_log", need_getter_log),
+                             ("tester_log", need_tester_log)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(

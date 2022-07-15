@@ -27,6 +27,7 @@ class ProxyDict(object):
         init redis dict
         """
         self.dict = global_val.get_value("global_dict")
+        self.need_storage_log = global_val.get_value("storage_log")
 
     def add(self, proxy: Proxy, score=PROXY_SCORE_INIT) -> int:
         """
@@ -36,7 +37,7 @@ class ProxyDict(object):
         :return: result
         """
         if not is_valid_proxy(f'{proxy.host}:{proxy.port}'):
-            if NEED_LOG_REDIS:
+            if self.need_storage_log:
                 logger.info(f'invalid proxy {proxy}, throw it')
             return
         if not self.exists(proxy):
@@ -44,7 +45,7 @@ class ProxyDict(object):
                 self.dict[proxy.string()] = score
                 return 0
             except Exception as e:
-                if NEED_LOG_REDIS:
+                if self.need_storage_log:
                     logger.info("添加字典失败：{}".format(e))
                 return -1
 
@@ -81,10 +82,10 @@ class ProxyDict(object):
         """
         self.dict[proxy.string()] = self.dict[proxy.string()] - 1
         score = self.dict[proxy.string()]
-        if NEED_LOG_REDIS:
+        if self.need_storage_log:
             logger.info(f'{proxy.string()} score decrease 1, current {score}')
         if score <= PROXY_SCORE_MIN:
-            if NEED_LOG_REDIS:
+            if self.need_storage_log:
                 logger.info(f'{proxy.string()} current score {score}, remove')
             self.dict.pop(proxy.string())
 
@@ -102,7 +103,7 @@ class ProxyDict(object):
         :param proxy: proxy
         :return: new score
         """
-        if NEED_LOG_REDIS:
+        if self.need_storage_log:
             logger.info(f'{proxy.string()} is valid, set to {PROXY_SCORE_MAX}')
         try:
             self.dict[proxy.string()] = PROXY_SCORE_MAX

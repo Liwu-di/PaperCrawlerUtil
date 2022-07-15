@@ -1,6 +1,8 @@
 from retrying import RetryError, retry
 import requests
 from loguru import logger
+
+import global_val
 from proxypool.setting import GET_TIMEOUT, NEED_LOG_GETTER
 from fake_headers import Headers
 import time
@@ -28,7 +30,8 @@ class BaseCrawler(object):
         used for parse html
         """
         for proxy in self.parse(html):
-            if NEED_LOG_GETTER:
+            crawler_log = global_val.get_value("getter_log")
+            if crawler_log:
                 logger.info(f'fetched proxy {proxy.string()} from {url}')
             yield proxy
 
@@ -36,9 +39,10 @@ class BaseCrawler(object):
         """
         crawl main method
         """
+        crawler_log = global_val.get_value("getter_log")
         try:
             for url in self.urls:
-                if NEED_LOG_GETTER:
+                if crawler_log:
                     logger.info(f'fetching {url}')
                 html = self.fetch(url)
                 if not html:
