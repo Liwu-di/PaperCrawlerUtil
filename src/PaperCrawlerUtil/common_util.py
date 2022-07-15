@@ -1,5 +1,7 @@
 import sys
 
+import global_val
+
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
 sys.path.append("PaperCrawlerUtil/proxypool/*")
@@ -23,6 +25,7 @@ from requests.cookies import RequestsCookieJar
 from proxypool.processors.getter import Getter
 from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
+from global_val import *
 
 PROXY_POOL_URL = ""
 logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
@@ -117,8 +120,14 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  redis_database: int = 0,
                  redis_password: str = "",
                  need_getter_log: bool = True,
-                 need_tester_log: bool = True) -> None:
+                 need_tester_log: bool = True,
+                 api_host: str = "127.0.0.1",
+                 api_port: int = 5555,
+                 proxypool_storage: str = "redis") -> None:
     """
+    :param proxypool_storage:代理池的存储方式，可以选择redis或者dict
+    :param api_port: FLASK端口
+    :param api_host: FLASK地址
     :param redis_password: redis 密码
     :param need_tester_log: 是否需要测试代理模块的日志信息（不影响重要信息输出）
     :param need_getter_log: 是否需要获取代理模块的日志信息（不影响重要信息输出）
@@ -135,16 +144,25 @@ def basic_config(log_file_name: str = "crawler_util.log",
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global NEED_CRAWLER_LOG, NEED_COMMON_LOG, NEED_DOCUMENT_LOG
     global log_style
+    if len(api_host) <= 0 or (api_port > 65535 or api_port < 0):
+        log("FLASK配置错误")
+    if len(redis_host) <= 0 or (redis_port > 65535 or redis_port < 0) or redis_database < 0:
+        log("Redis配置错误")
+    global_val._init()
+    global_val.set_value("REDIS", (redis_host, redis_port, redis_password, redis_database))
+    global_val.set_value("storage", proxypool_storage)
+    if proxypool_storage == "dict":
+        global_val.set_value("global_dict", {})
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
             redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
         try:
             g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_getter_log)
+                             redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage)
             t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_tester_log)
-            s = ThreadServer()
+                             redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage)
+            s = ThreadServer(host=api_host, port=api_port, threaded=True)
             g.start()
             t.start()
             s.start()
@@ -154,9 +172,16 @@ def basic_config(log_file_name: str = "crawler_util.log",
         api_host = API_HOST
         api_port = str(API_PORT)
         url = HTTP + api_host + COLON_SEPARATOR + api_port + "/random"
-        while len(proxy_test) == 0:
+        flag = True
+        while len(proxy_test) == 0 or flag:
             try:
                 proxy_test = requests.get(url, timeout=(20, 20)).text
+                for i in list(proxy_test):
+                    if i != ":" and i != "." and not i.isdigit():
+                        flag = True
+                        break
+                    if i == list(proxy_test)[len(proxy_test) - 1]:
+                        flag = False
             except Exception as e:
                 log("测试proxypool项目报错:{}".format(e))
                 proxy_test = ""
