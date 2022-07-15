@@ -3,7 +3,7 @@ from flask import Flask, g
 import global_val
 from proxypool.storages.redis import RedisClient
 from global_val import *
-from storages.proxy_dict import ProxyDict
+from proxypool.storages.proxy_dict import ProxyDict
 
 IS_DEV = True
 

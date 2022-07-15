@@ -9,7 +9,7 @@ from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STA
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
 
-from storages.proxy_dict import ProxyDict
+from proxypool.storages.proxy_dict import ProxyDict
 
 EXCEPTIONS = (
     ClientProxyConnectionError,
