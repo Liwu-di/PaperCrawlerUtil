@@ -1,7 +1,7 @@
 from flask import Flask, g
 
 import global_val
-from exceptions import PoolEmptyException
+from proxypool.exceptions import PoolEmptyException
 from proxypool.storages.redis import RedisClient
 from global_val import *
 from proxypool.storages.proxy_dict import ProxyDict

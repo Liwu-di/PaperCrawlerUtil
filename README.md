@@ -21,6 +21,9 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
 #代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 #也可以不使用Redis，直接使用python dict代替，方法如下：
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
+#其中日志信息比较多，也可以在basic_config中取消日志输出例如：
+basic_config(require_proxy_pool=True, need_tester_log=False,
+                 need_getter_log=False, need_storage_log=False)
 ```
 
 ```commandline
