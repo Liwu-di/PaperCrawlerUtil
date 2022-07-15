@@ -169,9 +169,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
         except Exception as e:
             log("proxypool线程异常{}".format(e))
         proxy_test = ""
-        api_host = API_HOST
-        api_port = str(API_PORT)
-        url = HTTP + api_host + COLON_SEPARATOR + api_port + "/random"
+        url = HTTP + api_host + COLON_SEPARATOR + str(api_port) + "/random"
         flag = True
         while len(proxy_test) == 0 or flag:
             try:
