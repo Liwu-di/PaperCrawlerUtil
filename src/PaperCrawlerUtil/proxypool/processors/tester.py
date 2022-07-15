@@ -96,8 +96,8 @@ class Tester(object):
             if proxies:
                 tasks = [self.test(proxy) for proxy in proxies]
                 self.loop.run_until_complete(asyncio.wait(tasks))
-            if not cursor:
-                logger.error("目前代理池无代理连接， 等待五秒再次测试")
+            if len(proxies) == 0:
+                print("目前代理池无代理连接， 等待五秒再次测试")
                 time.sleep(5)
 
 

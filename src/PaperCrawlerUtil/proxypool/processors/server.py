@@ -1,6 +1,7 @@
 from flask import Flask, g
 
 import global_val
+from exceptions import PoolEmptyException
 from proxypool.storages.redis import RedisClient
 from global_val import *
 from proxypool.storages.proxy_dict import ProxyDict
@@ -44,14 +45,23 @@ def get_proxy():
     :return: get a random proxy
     """
     conn = get_conn()
-    return conn.random().string()
+    try:
+        res = conn.random().string()
+        return res
+    except PoolEmptyException as e:
+        print("代理池无代理，等待......")
+        return ""
+    except Exception as e:
+        return ""
+        raise e
+
 
 
 @app.route('/all')
 def get_proxy_all():
     """
-    get a random proxy
-    :return: get a random proxy
+    get all proxy
+    :return: all proxy list
     """
     conn = get_conn()
     proxies = conn.all()

@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 import global_val
 
@@ -110,6 +111,51 @@ class ThreadServer(threading.Thread):
         app.run(host=self.host, port=self.port, threaded=self.threaded, use_reloader=False)
 
 
+def set_cross_file_variable(key_val: List[tuple]) -> bool:
+    """
+    设置全局跨文件变量，根据给出的tuple列表
+    :param key_val: 列表，其中元素为tuple，第一个元素为key，第二为value
+    :return:
+    """
+    if type(key_val) != list:
+        log("全局变量设置错误，请提供List类型并且保证所有元素都是tuple")
+        return False
+    for k_v in key_val:
+        if type(k_v) != tuple:
+            log("全局变量设置错误，请提供List类型并且保证所有元素都是tuple")
+            return False
+    global_val._init()
+    for k_v in key_val:
+        try:
+            global_val.set_value(k_v[0], k_v[1])
+        except Exception as e:
+            log("设置全局跨文件变量{}错误：{}".format(k_v, e))
+            return False
+    return True
+
+
+def is_ip(proxy_test: str = "") -> bool:
+    """
+    测试字符串是否是一个ip地址
+    :param proxy_test: 待测试字符串
+    :return:是则返回True
+    """
+    flag = False
+    if type(proxy_test) != str:
+        log("参数{}不是字符串".format(proxy_test))
+        return False
+    if len(proxy_test) == 0:
+        return flag
+    for i in list(proxy_test):
+        if i != ":" and i != "." and not i.isdigit() and i != "h" and i != "h" and (
+                i != "t") and i != "p" and i != "s" and i != "/":
+            flag = False
+            break
+        if i == list(proxy_test)[len(proxy_test) - 1]:
+            flag = True
+    return flag
+
+
 def basic_config(log_file_name: str = "crawler_util.log",
                  log_level=logging.WARNING,
                  proxy_pool_url: str = "",
@@ -144,19 +190,13 @@ def basic_config(log_file_name: str = "crawler_util.log",
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global NEED_CRAWLER_LOG, NEED_COMMON_LOG, NEED_DOCUMENT_LOG
     global log_style
-    if len(api_host) <= 0 or (api_port > 65535 or api_port < 0):
-        log("FLASK配置错误")
-    if len(redis_host) <= 0 or (redis_port > 65535 or redis_port < 0) or redis_database < 0:
-        log("Redis配置错误")
-    global_val._init()
-    global_val.set_value("REDIS", (redis_host, redis_port, redis_password, redis_database))
-    global_val.set_value("storage", proxypool_storage)
-    if proxypool_storage == "dict":
-        global_val.set_value("global_dict", {})
+    set_cross_file_variable([("REDIS", (redis_host, redis_port, redis_password, redis_database)),
+                             ("storage", proxypool_storage), ("global_dict", {})])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
-            redis_host) > 0 and 0 <= redis_database <= 65535 and 0 <= redis_port <= 65535:
+            redis_host) > 0 and 0 <= redis_database <= 65535 and (
+            0 <= redis_port <= 65535) and len(api_host) > 0 and (65535 >= api_port >= 0):
         try:
             g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
                              redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage)
@@ -170,16 +210,12 @@ def basic_config(log_file_name: str = "crawler_util.log",
             log("proxypool线程异常{}".format(e))
         proxy_test = ""
         url = HTTP + api_host + COLON_SEPARATOR + str(api_port) + "/random"
-        flag = True
-        while len(proxy_test) == 0 or flag:
+        is_ip_flag = False
+        log("所有线程启动，测试是否已经有代理.......")
+        while len(proxy_test) == 0 or (not is_ip_flag):
             try:
                 proxy_test = requests.get(url, timeout=(20, 20)).text
-                for i in list(proxy_test):
-                    if i != ":" and i != "." and not i.isdigit():
-                        flag = True
-                        break
-                    if i == list(proxy_test)[len(proxy_test) - 1]:
-                        flag = False
+                is_ip_flag = is_ip(proxy_test)
             except Exception as e:
                 log("测试proxypool项目报错:{}".format(e))
                 proxy_test = ""
@@ -188,6 +224,9 @@ def basic_config(log_file_name: str = "crawler_util.log",
             PROXY_POOL_URL = url
         log("启动proxypool完成")
         PROXY_POOL_CAN_RUN_FLAG = False
+    else:
+        if require_proxy_pool:
+            log("redis或者Flask配置错误")
 
 
 def get_split(lens: int = 20, style: str = '=') -> str:
