@@ -19,6 +19,7 @@ PROXY_SCORE_MIN = "min_score"
 PROXY_SCORE_INIT = "init_score"
 POOL_MAX = "pool_max"
 POOL_MIN = "pool_min"
+DICT_STORE_PATH = "dict_store_path"
 
 """
 存储方式定义

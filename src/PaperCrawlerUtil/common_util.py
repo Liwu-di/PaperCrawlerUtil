@@ -200,15 +200,14 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  need_storage_log: bool = True,
                  api_host: str = "127.0.0.1",
                  api_port: int = 5555,
-                 proxypool_storage: str = "redis",
+                 proxypool_storage: str = STORAGE_REDIS,
                  set_daemon: bool = True,
                  proxy_score_max: int = 100,
                  proxy_score_min: int = 0,
                  proxy_score_init: int = 10,
                  proxy_number_max: int = 50000,
-                 proxy_number_min: int = 0) -> tuple:
-                 dict_store_path: str = "dict.db",
-                 set_daemon: bool = True) -> tuple:
+                 proxy_number_min: int = 0,
+                 dict_store_path: str = "dict.db") -> tuple:
     """
     :param dict_store_path: 选择字典方式存储时，最后文件保存的地址（同时也是加载地址）
     :param proxy_number_min: 最小池容量
@@ -241,7 +240,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
                              (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
                              (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
                              (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
-                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min), ("dict_store_path", dict_store_path)])
+                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min),
+                             (DICT_STORE_PATH, dict_store_path)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
