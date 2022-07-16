@@ -370,7 +370,7 @@ class sub_func_write_pdf(threading.Thread):
         return self.res
 
     def raiseException(self):
-        raise Exception("终止线程")
+        raise ThreadStopException()
 
 
 def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
@@ -582,9 +582,9 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
     flag = sub.getRes()
     try:
         sub.raiseException()
-    except Exception as e:
+    except ThreadStopException as e:
         if need_log:
-            log(e)
+            log("结束线程")
     for read in file_readers:
         read.stream.close()
     if flag:

@@ -65,7 +65,16 @@ def log(string: str) -> None:
         print(string)
 
 
-class ThreadGetter(threading.Thread):
+class CanStopThread(threading.Thread):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def stop(self):
+        raise ThreadStopException()
+
+
+class ThreadGetter(CanStopThread):
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
@@ -154,6 +163,19 @@ def is_ip(proxy_test: str = "") -> bool:
         if i == list(proxy_test)[len(proxy_test) - 1]:
             flag = True
     return flag
+
+
+def stop_thread(thread_list: List[CanStopThread] = []) -> int:
+    count = 0
+    for t in thread_list:
+        try:
+            t.stop()
+        except ThreadStopException as e:
+            log("线程{}结束".format(t.name))
+            count = count + 1
+        except Exception as e:
+            log("结束线程{}错误{}".format(t.name, e))
+    return count
 
 
 def basic_config(log_file_name: str = "crawler_util.log",
@@ -359,7 +381,29 @@ class NoProxyException(Exception):
     def __repr__(self) -> str:
         return super().__repr__()
 
+
+class ThreadStopException(Exception):
+
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+    def __str__(self) -> str:
+        return repr("停止线程")
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
+
 # if __name__ == "__main__":
-#     pool = ProxyPool(thread_id="001", thread_name="proxypool")
-#     pool.start()
-#     print("123")
+#     a = CanStopThread()
+#     basic_config(logs_style=LOG_STYLE_PRINT)
+#     try:
+#         a.stop()
+#     except ThreadStopException as e:
+#         log("线程{}结束".format(a.name))
+#     except Exception as e:
+#         log("结束线程{}错误{}".format(a.name, e))
+#     except BaseException as e:
+#         log(e)
+
+
