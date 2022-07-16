@@ -6,14 +6,17 @@ A set of tools for building small crawlers, including accessing links, getting e
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
 PDF file merging, PDF file intercepting certain pages, etc.
 
-```commandline
+```python
+"""
 本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
 则需要自己提供代理或者将require_proxy置为False
 https://github.com/Python3WebSpider/ProxyPool
 感谢大佬为开源社区做出的贡献
-#更新：
-#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
-#默认为http://127.0.0.1:5555/random，使用方法如下：
+更新：
+目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
+默认为http://127.0.0.1:5555/random，使用方法如下：
+"""
+
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
@@ -21,14 +24,20 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
-#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
-#也可以不使用Redis，直接使用python dict代替，方法如下：
+"""
+代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
+也可以不使用Redis，直接使用python dict代替，方法如下：
+"""
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
-#其中日志信息比较多，也可以在basic_config中取消日志输出例如：
+"""
+其中日志信息比较多，也可以在basic_config中取消日志输出例如：
+"""
 basic_config(require_proxy_pool=True, need_tester_log=False,
                  need_getter_log=False, need_storage_log=False)
-#也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
-#其中set_daemon必须为False，否则主线程结束之后，子线程也结束了
+"""
+也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
+其中set_daemon必须为False，否则主线程结束之后，子线程也结束了
+"""
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
                      need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
                      api_port=5556, set_daemon=False)
