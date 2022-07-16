@@ -8,7 +8,7 @@ from proxypool.storages.redis import RedisClient
 from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STATUS, TEST_ANONYMOUS, NEED_LOG_TESTER
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
-
+from constant import *
 from proxypool.storages.proxy_dict import ProxyDict
 
 EXCEPTIONS = (
@@ -31,7 +31,7 @@ class Tester(object):
         """
         init redis
         """
-        if storage == "redis":
+        if storage == STORAGE_REDIS:
             self.conn = RedisClient(host=redis_host, port=redis_port, password=redis_password, db=redis_database)
         else:
             self.conn = ProxyDict()

@@ -5,6 +5,7 @@ from proxypool.exceptions import PoolEmptyException
 from proxypool.storages.redis import RedisClient
 from global_val import *
 from proxypool.storages.proxy_dict import ProxyDict
+from constant import *
 
 IS_DEV = True
 
@@ -21,8 +22,8 @@ def get_conn():
     :return:
     """
     if not hasattr(g, 'conn'):
-        if global_val.get_value("storage") == "redis":
-            redis_conf = global_val.get_value("REDIS")
+        if global_val.get_value(STORAGE_CONF) == STORAGE_REDIS:
+            redis_conf = global_val.get_value(REDIS_CONF)
             g.conn = RedisClient(host=redis_conf[0], port=redis_conf[1], password=redis_conf[2], db=redis_conf[3])
         else:
             g.conn = ProxyDict()
@@ -88,8 +89,8 @@ def testDict():
     用来测试dict方式，redis模式启动时，无意义
     :return:
     """
-    if global_val.get_value("storage") == "redis":
-        return "redis"
+    if global_val.get_value(STORAGE_CONF) == STORAGE_REDIS:
+        return STORAGE_REDIS
     else:
         s = ""
         for i in get_conn().dict.items():

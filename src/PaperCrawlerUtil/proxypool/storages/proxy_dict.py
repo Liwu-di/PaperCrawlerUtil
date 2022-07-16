@@ -8,13 +8,13 @@ import random
 
 from proxypool.exceptions import PoolEmptyException
 from proxypool.schemas import Proxy
-from proxypool.setting import PROXY_SCORE_MAX, PROXY_SCORE_MIN, PROXY_SCORE_INIT, NEED_LOG_REDIS
 from random import choice
 from typing import List
 from loguru import logger
 from proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
 from global_val import *
 import global_val
+from constant import *
 
 
 class ProxyDict(object):
@@ -26,16 +26,20 @@ class ProxyDict(object):
         """
         init redis dict
         """
-        self.dict = global_val.get_value("global_dict")
-        self.need_storage_log = global_val.get_value("storage_log")
+        self.dict = global_val.get_value(CROSS_FILE_GLOBAL_DICT_CONF)
+        self.need_storage_log = global_val.get_value(STORAGE_LOG_CONF)
+        self.init_score = global_val.get_value(PROXY_SCORE_INIT)
+        self.max_score = global_val.get_value(PROXY_SCORE_MAX)
+        self.min_score = global_val.get_value(PROXY_SCORE_MIN)
 
-    def add(self, proxy: Proxy, score=PROXY_SCORE_INIT) -> int:
+    def add(self, proxy: Proxy) -> int:
         """
         add proxy and set it to init score
         :param proxy: proxy, ip:port, like 8.8.8.8:88
         :param score: int score
         :return: result
         """
+        score = self.init_score
         if not is_valid_proxy(f'{proxy.host}:{proxy.port}'):
             if self.need_storage_log:
                 logger.info(f'invalid proxy {proxy}, throw it')
@@ -60,14 +64,14 @@ class ProxyDict(object):
         # try to get proxy with max score
         proxies = []
         for k in sorted(self.dict.items(), key=lambda kv: (kv[1], kv[0]), reverse=True):
-            if k[1] == PROXY_SCORE_MAX:
+            if k[1] == self.max_score:
                 proxies.append(k[0])
         if len(proxies):
             return convert_proxy_or_proxies(choice(proxies))
         # else get proxy by rank
         proxies = []
         for k in sorted(self.dict.items(), key=lambda kv: (kv[1], kv[0]), reverse=True):
-            if PROXY_SCORE_MIN <= k[1] <= PROXY_SCORE_MAX:
+            if self.min_score <= k[1] <= self.max_score:
                 proxies.append(k[0])
         if len(proxies):
             return convert_proxy_or_proxies(choice(proxies))
@@ -84,7 +88,7 @@ class ProxyDict(object):
         score = self.dict[proxy.string()]
         if self.need_storage_log:
             logger.info(f'{proxy.string()} score decrease 1, current {score}')
-        if score <= PROXY_SCORE_MIN:
+        if score <= self.min_score:
             if self.need_storage_log:
                 logger.info(f'{proxy.string()} current score {score}, remove')
             self.dict.pop(proxy.string())
@@ -104,9 +108,9 @@ class ProxyDict(object):
         :return: new score
         """
         if self.need_storage_log:
-            logger.info(f'{proxy.string()} is valid, set to {PROXY_SCORE_MAX}')
+            logger.info(f'{proxy.string()} is valid, set to {self.max_score}')
         try:
-            self.dict[proxy.string()] = PROXY_SCORE_MAX
+            self.dict[proxy.string()] = self.max_score
             return 0
         except Exception as e:
             logger.info("更新字典分数失败：{}".format(e))
@@ -126,7 +130,7 @@ class ProxyDict(object):
         """
         proxy_list = []
         for item in self.dict.items():
-            if PROXY_SCORE_MIN <= item[1] <= PROXY_SCORE_MAX:
+            if self.min_score <= item[1] <= self.max_score:
                 p = Proxy(item[0].split(":")[0], item[0].split(":")[1])
                 proxy_list.append(p)
         return proxy_list

@@ -27,25 +27,12 @@ from proxypool.processors.getter import Getter
 from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
 from global_val import *
+from constant import *
+
 
 PROXY_POOL_URL = ""
 logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
-log_style = "log"
-HTTP = "http://"
-COLON_SEPARATOR = ":"
-
-EQUAL = "equal"
-NOT_EQUAL = "not equal"
-IN = "in"
-NOT_IN = "not in"
-LESS_THAN = "less than"
-MORE_THAN = "more than"
-GREATER_AND_EQUAL = "greater and equal"
-LESS_THAN_AND_EQUAL = "less than and equal"
-
-LOG_STYLE_LOG = "log"
-LOG_STYLE_PRINT = "print"
-LOG_STYLE_ALL = "all"
+log_style = LOG_STYLE_PRINT
 
 PROXY_POOL_CAN_RUN_FLAG = True
 
@@ -221,10 +208,12 @@ def basic_config(log_file_name: str = "crawler_util.log",
     """
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
-    set_cross_file_variable([("REDIS", (redis_host, redis_port, redis_password, redis_database)),
-                             ("storage", proxypool_storage), ("global_dict", {}),
-                             ("storage_log", need_storage_log), ("getter_log", need_getter_log),
-                             ("tester_log", need_tester_log)])
+    set_cross_file_variable([(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database)),
+                             (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
+                             (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
+                             (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
+                             (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
+                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(

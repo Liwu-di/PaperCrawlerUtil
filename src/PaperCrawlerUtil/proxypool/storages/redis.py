@@ -3,12 +3,12 @@ import redis
 import global_val
 from proxypool.exceptions import PoolEmptyException
 from proxypool.schemas import Proxy
-from proxypool.setting import REDIS_CONNECTION_STRING, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY, PROXY_SCORE_MAX, PROXY_SCORE_MIN, \
-    PROXY_SCORE_INIT, NEED_LOG_REDIS
+from proxypool.setting import REDIS_CONNECTION_STRING, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY
 from random import choice
 from typing import List
 from loguru import logger
 from proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
+from constant import *
 
 
 REDIS_CLIENT_VERSION = redis.__version__
@@ -36,15 +36,19 @@ class RedisClient(object):
         else:
             self.db = redis.StrictRedis(
                 host=host, port=port, password=password, db=db, decode_responses=True, **kwargs)
-        self.need_storage_log = global_val.get_value("storage_log")
+        self.need_storage_log = global_val.get_value(STORAGE_LOG_CONF)
+        self.init_score = global_val.get_value(PROXY_SCORE_INIT)
+        self.max_score = global_val.get_value(PROXY_SCORE_MAX)
+        self.min_score = global_val.get_value(PROXY_SCORE_MIN)
 
-    def add(self, proxy: Proxy, score=PROXY_SCORE_INIT) -> int:
+    def add(self, proxy: Proxy) -> int:
         """
         add proxy and set it to init score
         :param proxy: proxy, ip:port, like 8.8.8.8:88
         :param score: int score
         :return: result
         """
+        score = self.init_score
         if not is_valid_proxy(f'{proxy.host}:{proxy.port}'):
             if self.need_storage_log:
                 logger.info(f'invalid proxy {proxy}, throw it')
@@ -64,12 +68,12 @@ class RedisClient(object):
         """
         # try to get proxy with max score
         proxies = self.db.zrangebyscore(
-            REDIS_KEY, PROXY_SCORE_MAX, PROXY_SCORE_MAX)
+            REDIS_KEY, self.max_score, self.max_score)
         if len(proxies):
             return convert_proxy_or_proxies(choice(proxies))
         # else get proxy by rank
         proxies = self.db.zrevrange(
-            REDIS_KEY, PROXY_SCORE_MIN, PROXY_SCORE_MAX)
+            REDIS_KEY, self.min_score, self.max_score)
         if len(proxies):
             return convert_proxy_or_proxies(choice(proxies))
         # else raise error
@@ -88,7 +92,7 @@ class RedisClient(object):
         score = self.db.zscore(REDIS_KEY, proxy.string())
         if self.need_storage_log:
             logger.info(f'{proxy.string()} score decrease 1, current {score}')
-        if score <= PROXY_SCORE_MIN:
+        if score <= self.min_score:
             if self.need_storage_log:
                 logger.info(f'{proxy.string()} current score {score}, remove')
             self.db.zrem(REDIS_KEY, proxy.string())
@@ -108,10 +112,10 @@ class RedisClient(object):
         :return: new score
         """
         if self.need_storage_log:
-            logger.info(f'{proxy.string()} is valid, set to {PROXY_SCORE_MAX}')
+            logger.info(f'{proxy.string()} is valid, set to {self.max_score}')
         if IS_REDIS_VERSION_2:
-            return self.db.zadd(REDIS_KEY, PROXY_SCORE_MAX, proxy.string())
-        return self.db.zadd(REDIS_KEY, {proxy.string(): PROXY_SCORE_MAX})
+            return self.db.zadd(REDIS_KEY, self.max_score, proxy.string())
+        return self.db.zadd(REDIS_KEY, {proxy.string(): self.max_score})
 
     def count(self) -> int:
         """
@@ -125,7 +129,7 @@ class RedisClient(object):
         get all proxies
         :return: list of proxies
         """
-        return convert_proxy_or_proxies(self.db.zrangebyscore(REDIS_KEY, PROXY_SCORE_MIN, PROXY_SCORE_MAX))
+        return convert_proxy_or_proxies(self.db.zrangebyscore(REDIS_KEY, self.min_score, self.max_score))
 
     def batch(self, cursor, count) -> List[Proxy]:
         """
