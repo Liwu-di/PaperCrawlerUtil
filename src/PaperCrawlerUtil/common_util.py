@@ -2,6 +2,7 @@ import sys
 from typing import List, Optional, Callable, Any, Iterable, Mapping
 
 import global_val
+from storages.proxy_dict import ProxyDict
 
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
@@ -86,6 +87,14 @@ class ThreadGetter(CanStopThread):
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
 
+    def save_dict(self):
+        if self.storage == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
+
 
 class ThreadTester(CanStopThread):
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
@@ -103,6 +112,14 @@ class ThreadTester(CanStopThread):
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
 
+    def save_dict(self):
+        if self.storage == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
+
 
 class ThreadServer(CanStopThread):
     def __init__(self, host, port, threaded):
@@ -114,6 +131,14 @@ class ThreadServer(CanStopThread):
     def run(self):
         log("启动server")
         app.run(host=self.host, port=self.port, threaded=self.threaded, use_reloader=False)
+
+    def save_dict(self):
+        if global_val.get_value("storage") == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
 
 
 def set_cross_file_variable(key_val: List[tuple]) -> bool:
@@ -189,8 +214,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  api_host: str = "127.0.0.1",
                  api_port: int = 5555,
                  proxypool_storage: str = "redis",
+                 dict_store_path: str = "dict.db",
                  set_daemon: bool = True) -> tuple:
     """
+    :param dict_store_path: 选择字典方式存储时，最后文件保存的地址（同时也是加载地址）
     :param set_daemon: 设置是否需要守护线程，即主线程结束，子线程也结束
     :param need_storage_log: 是否需要存储模块（redis)等的日志信息（不影响重要信息输出）
     :param proxypool_storage:代理池的存储方式，可以选择redis或者dict
@@ -214,7 +241,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
     set_cross_file_variable([("REDIS", (redis_host, redis_port, redis_password, redis_database)),
                              ("storage", proxypool_storage), ("global_dict", {}),
                              ("storage_log", need_storage_log), ("getter_log", need_getter_log),
-                             ("tester_log", need_tester_log)])
+                             ("tester_log", need_tester_log), ("dict_store_path", dict_store_path)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
