@@ -1,5 +1,5 @@
 import sys
-from typing import List
+from typing import List, Optional, Callable, Any, Iterable, Mapping
 
 import global_val
 
@@ -47,10 +47,6 @@ LOG_STYLE_LOG = "log"
 LOG_STYLE_PRINT = "print"
 LOG_STYLE_ALL = "all"
 
-NEED_CRAWLER_LOG = False
-NEED_COMMON_LOG = False
-NEED_DOCUMENT_LOG = False
-
 PROXY_POOL_CAN_RUN_FLAG = True
 
 
@@ -91,7 +87,7 @@ class ThreadGetter(CanStopThread):
                need_log=self.need_log, storage=self.storage).run()
 
 
-class ThreadTester(threading.Thread):
+class ThreadTester(CanStopThread):
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
         threading.Thread.__init__(self)
         self.need_log = need_log
@@ -108,7 +104,7 @@ class ThreadTester(threading.Thread):
                need_log=self.need_log, storage=self.storage).run()
 
 
-class ThreadServer(threading.Thread):
+class ThreadServer(CanStopThread):
     def __init__(self, host, port, threaded):
         threading.Thread.__init__(self)
         self.host = host
@@ -192,8 +188,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  need_storage_log: bool = True,
                  api_host: str = "127.0.0.1",
                  api_port: int = 5555,
-                 proxypool_storage: str = "redis") -> None:
+                 proxypool_storage: str = "redis",
+                 set_daemon: bool = True) -> tuple:
     """
+    :param set_daemon: 设置是否需要守护线程，即主线程结束，子线程也结束
     :param need_storage_log: 是否需要存储模块（redis)等的日志信息（不影响重要信息输出）
     :param proxypool_storage:代理池的存储方式，可以选择redis或者dict
     :param api_port: FLASK端口
@@ -212,7 +210,6 @@ def basic_config(log_file_name: str = "crawler_util.log",
     :return:
     """
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
-    global NEED_CRAWLER_LOG, NEED_COMMON_LOG, NEED_DOCUMENT_LOG
     global log_style
     set_cross_file_variable([("REDIS", (redis_host, redis_port, redis_password, redis_database)),
                              ("storage", proxypool_storage), ("global_dict", {}),
@@ -223,12 +220,18 @@ def basic_config(log_file_name: str = "crawler_util.log",
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
             redis_host) > 0 and 0 <= redis_database <= 65535 and (
             0 <= redis_port <= 65535) and len(api_host) > 0 and (65535 >= api_port >= 0):
+        s = None
+        t = None
+        g = None
         try:
             g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
                              redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage)
             t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
                              redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage)
             s = ThreadServer(host=api_host, port=api_port, threaded=True)
+            g.setDaemon(set_daemon)
+            t.setDaemon(set_daemon)
+            s.setDaemon(set_daemon)
             g.start()
             t.start()
             s.start()
@@ -250,9 +253,17 @@ def basic_config(log_file_name: str = "crawler_util.log",
             PROXY_POOL_URL = url
         log("启动proxypool完成")
         PROXY_POOL_CAN_RUN_FLAG = False
+        return s, g, t
     else:
-        if require_proxy_pool:
+        if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG:
             log("redis或者Flask配置错误")
+            return ()
+        elif require_proxy_pool and not PROXY_POOL_CAN_RUN_FLAG:
+            log("无法重复启动proxypool")
+            return ()
+        elif not require_proxy_pool:
+            return ()
+        return ()
 
 
 def get_split(lens: int = 20, style: str = '=') -> str:
@@ -300,10 +311,12 @@ def two_one_choose(p: int = 0.5) -> bool:
         return False
 
 
-def local_path_generate(folder_name: str, file_name: str = "", suffix: str = ".pdf") -> str:
+def local_path_generate(folder_name: str, file_name: str = "",
+                        suffix: str = ".pdf", need_log: bool = True) -> str:
     """
     create a folder whose name is folder_name in folder which code in if folder_name
     is not exist. and then concat pdf_name to create file path.
+    :param need_log: 是否需要日志，不影响重要信息输出
     :param suffix: 自动命名时文件后缀
     :param folder_name: 待创建的文件夹名称
     :param file_name: 文件名称，带后缀格式
@@ -313,7 +326,7 @@ def local_path_generate(folder_name: str, file_name: str = "", suffix: str = ".p
         folder_name = os.path.abspath(".")
     try:
         if os.path.exists(folder_name):
-            if NEED_COMMON_LOG:
+            if need_log:
                 log("文件夹{}存在".format(folder_name))
         else:
             os.makedirs(folder_name)

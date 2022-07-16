@@ -72,8 +72,8 @@ def random_proxy_header_access(url: str, proxy: str = '',
             if need_log:
                 log("爬取成功，返回内容")
             time.sleep(sleep_time)
-        except NoProxyException:
-            raise NoProxyException
+        except NoProxyException as e:
+            raise e
         except Exception as result:
             log("错误信息:%s" % result)
             log("尝试重连")
@@ -139,8 +139,8 @@ def retrieve_file(url: str, path: str, proxies: str = "",
                 log("文件提取成功")
             success = True
             time.sleep(sleep_time)
-        except NoProxyException:
-            raise NoProxyException
+        except NoProxyException as e:
+            raise e
         except Exception as e:
             log("抽取失败:{}".format(e))
             time.sleep(sleep_time)
