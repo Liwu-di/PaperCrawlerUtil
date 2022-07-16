@@ -24,16 +24,35 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
+
 """
 代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
 也可以不使用Redis，直接使用python dict代替，方法如下：
 """
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
+
+"""
+使用dict时，也可以像redis一样，保存数据到硬盘，下次启动再加载，默认保存在dict.db，
+可以通过dict_store_path修改路径，如下：
+basic_config会返回三个对象，依次为flask server，getter，tester，
+这三个对象都有方法save_dict()保存字典
+
+"""
+
+s, g, t = basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
+                           need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
+                           api_port=5556, set_daemon=True)
+time.sleep(10)
+t.save_dict()
+s.save_dict()
+g.save_dict()
+
 """
 其中日志信息比较多，也可以在basic_config中取消日志输出例如：
 """
 basic_config(require_proxy_pool=True, need_tester_log=False,
                  need_getter_log=False, need_storage_log=False)
+
 """
 也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
 其中set_daemon必须为False，否则主线程结束之后，子线程也结束了
