@@ -189,8 +189,18 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  api_host: str = "127.0.0.1",
                  api_port: int = 5555,
                  proxypool_storage: str = "redis",
-                 set_daemon: bool = True) -> tuple:
+                 set_daemon: bool = True,
+                 proxy_score_max: int = 100,
+                 proxy_score_min: int = 0,
+                 proxy_score_init: int = 10,
+                 proxy_number_max: int = 50000,
+                 proxy_number_min: int = 0) -> tuple:
     """
+    :param proxy_number_min: 最小池容量
+    :param proxy_number_max: 最大池容量
+    :param proxy_score_init: proxy评分的初始值，添加的时候自动赋值为该值
+    :param proxy_score_min: proxy评分的最小值，小于此值时，丢弃
+    :param proxy_score_max: proxy评分的最大值，测试可用时，赋值为该值
     :param set_daemon: 设置是否需要守护线程，即主线程结束，子线程也结束
     :param need_storage_log: 是否需要存储模块（redis)等的日志信息（不影响重要信息输出）
     :param proxypool_storage:代理池的存储方式，可以选择redis或者dict
