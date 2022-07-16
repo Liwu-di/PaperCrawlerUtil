@@ -4,7 +4,11 @@
 # @FileName: proxy_dict.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
+import os
+import pickle
 import random
+
+import numpy
 
 from proxypool.exceptions import PoolEmptyException
 from proxypool.schemas import Proxy
@@ -27,6 +31,9 @@ class ProxyDict(object):
         init redis dict
         """
         self.dict = global_val.get_value("global_dict")
+        self.dict_path = global_val.get_value("dict_store_path")
+        if len(self.dict_path) != 0 and os.path.isfile(self.dict_path) and os.path.getsize(self.dict_path) > 0:
+            self.dict = self.load()
         self.need_storage_log = global_val.get_value("storage_log")
 
     def add(self, proxy: Proxy, score=PROXY_SCORE_INIT) -> int:
@@ -152,6 +159,27 @@ class ProxyDict(object):
                 p = Proxy(proxy_tuple_list[i][0].split(":")[0], proxy_tuple_list[i][0].split(":")[1])
                 res.append(p)
         return cursor + count, res
+
+    def save(self) -> bool:
+        try:
+            with open(self.dict_path, mode="wb") as f:
+                pickle.dump(self.dict, f, pickle.HIGHEST_PROTOCOL)
+            f.close()
+            return True
+        except Exception as e:
+            print("保存dict错误：{}".format(e))
+            return False
+
+    def load(self) -> dict:
+        res = None
+        try:
+            with open(self.dict_path, mode="rb") as f:
+                res = pickle.load(f)
+            f.close()
+            return res if (res is not None and len(res) != 0) else {}
+        except Exception as e:
+            print("加载字典错误：{}".format(e))
+            return {}
 
 
 # if __name__ == '__main__':
