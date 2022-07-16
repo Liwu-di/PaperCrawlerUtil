@@ -141,6 +141,12 @@ class RedisClient(object):
         cursor, proxies = self.db.zscan(REDIS_KEY, cursor, count=count)
         return cursor, convert_proxy_or_proxies([i[0] for i in proxies])
 
+    def save(self) -> bool:
+        print("redis方式不需要保存")
+
+    def load(self) -> dict:
+        print("redis方式不需要加载")
+
 
 if __name__ == '__main__':
     conn = RedisClient()

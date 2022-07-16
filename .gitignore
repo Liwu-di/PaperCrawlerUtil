@@ -10,3 +10,4 @@ build/
 test.py
 delete.bat
 crawler_util.log
+*.db

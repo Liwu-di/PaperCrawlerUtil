@@ -2,6 +2,7 @@ import sys
 from typing import List, Optional, Callable, Any, Iterable, Mapping
 
 import global_val
+from storages.proxy_dict import ProxyDict
 
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
@@ -73,6 +74,14 @@ class ThreadGetter(CanStopThread):
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
 
+    def save_dict(self):
+        if self.storage == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
+
 
 class ThreadTester(CanStopThread):
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
@@ -90,6 +99,14 @@ class ThreadTester(CanStopThread):
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
 
+    def save_dict(self):
+        if self.storage == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
+
 
 class ThreadServer(CanStopThread):
     def __init__(self, host, port, threaded):
@@ -101,6 +118,14 @@ class ThreadServer(CanStopThread):
     def run(self):
         log("启动server")
         app.run(host=self.host, port=self.port, threaded=self.threaded, use_reloader=False)
+
+    def save_dict(self):
+        if global_val.get_value("storage") == "redis":
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            d.save()
 
 
 def set_cross_file_variable(key_val: List[tuple]) -> bool:
@@ -182,7 +207,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  proxy_score_init: int = 10,
                  proxy_number_max: int = 50000,
                  proxy_number_min: int = 0) -> tuple:
+                 dict_store_path: str = "dict.db",
+                 set_daemon: bool = True) -> tuple:
     """
+    :param dict_store_path: 选择字典方式存储时，最后文件保存的地址（同时也是加载地址）
     :param proxy_number_min: 最小池容量
     :param proxy_number_max: 最大池容量
     :param proxy_score_init: proxy评分的初始值，添加的时候自动赋值为该值
@@ -213,7 +241,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
                              (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
                              (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
                              (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
-                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min)])
+                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min), ("dict_store_path", dict_store_path)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
