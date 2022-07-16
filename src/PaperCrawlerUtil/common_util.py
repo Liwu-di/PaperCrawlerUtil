@@ -57,6 +57,14 @@ class CanStopThread(threading.Thread):
     def stop(self):
         raise ThreadStopException()
 
+    def save_dict(self) -> bool:
+        if global_val.get_value(STORAGE_CONF) == STORAGE_REDIS:
+            return True
+        else:
+            log("保存dict")
+            d = ProxyDict()
+            return d.save()
+
 
 class ThreadGetter(CanStopThread):
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
@@ -73,14 +81,6 @@ class ThreadGetter(CanStopThread):
         Getter(redis_host=self.host, redis_port=self.port,
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
-
-    def save_dict(self):
-        if self.storage == "redis":
-            return True
-        else:
-            log("保存dict")
-            d = ProxyDict()
-            d.save()
 
 
 class ThreadTester(CanStopThread):
@@ -99,14 +99,6 @@ class ThreadTester(CanStopThread):
                redis_password=self.password, redis_database=self.database,
                need_log=self.need_log, storage=self.storage).run()
 
-    def save_dict(self):
-        if self.storage == "redis":
-            return True
-        else:
-            log("保存dict")
-            d = ProxyDict()
-            d.save()
-
 
 class ThreadServer(CanStopThread):
     def __init__(self, host, port, threaded):
@@ -118,14 +110,6 @@ class ThreadServer(CanStopThread):
     def run(self):
         log("启动server")
         app.run(host=self.host, port=self.port, threaded=self.threaded, use_reloader=False)
-
-    def save_dict(self):
-        if global_val.get_value("storage") == "redis":
-            return True
-        else:
-            log("保存dict")
-            d = ProxyDict()
-            d.save()
 
 
 def set_cross_file_variable(key_val: List[tuple]) -> bool:
