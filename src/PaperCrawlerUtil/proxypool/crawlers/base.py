@@ -3,7 +3,6 @@ import requests
 from loguru import logger
 from constant import *
 import global_val
-from proxypool.setting import GET_TIMEOUT, NEED_LOG_GETTER
 from fake_headers import Headers
 import time
 
@@ -15,7 +14,7 @@ class BaseCrawler(object):
     def fetch(self, url, **kwargs):
         try:
             headers = Headers(headers=True).generate()
-            kwargs.setdefault('timeout', GET_TIMEOUT)
+            kwargs.setdefault('timeout', global_val.get_value(GETTER_TIMEOUT))
             kwargs.setdefault('verify', False)
             kwargs.setdefault('headers', headers)
             response = requests.get(url, **kwargs)

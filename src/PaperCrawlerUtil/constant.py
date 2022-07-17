@@ -20,9 +20,15 @@ PROXY_SCORE_INIT = "init_score"
 POOL_MAX = "pool_max"
 POOL_MIN = "pool_min"
 DICT_STORE_PATH = "dict_store_path"
-TEST_BATCH_NUM = 20
+TEST_BATCH_NUM = "test_batch_num"
 TESTER_CYCLE = "tester cycle"
 GETTER_CYCLE = "getter cycle"
+TESTER_TIMEOUT = "test_timeout"
+GETTER_TIMEOUT = "getter_timeout"
+TESTER_URL = "tester url"
+API_HOST = "api host"
+API_PORT = "api port"
+
 
 """
 存储方式定义
@@ -54,3 +60,4 @@ LOG_STYLE_ALL = "all"
 """
 HTTP = "http://"
 COLON_SEPARATOR = ":"
+BAIDU = "http://www.baidu.com"

@@ -39,32 +39,6 @@ APP_PROD_METHOD_TORNADO = 'tornado'
 APP_PROD_METHOD_MEINHELD = 'meinheld'
 APP_PROD_METHOD = env.str('APP_PROD_METHOD', APP_PROD_METHOD_GEVENT).lower()
 
-# redis host
-REDIS_HOST = env.str('PROXYPOOL_REDIS_HOST',
-                     env.str('REDIS_HOST', '127.0.0.1'))
-# redis port
-REDIS_PORT = env.int('PROXYPOOL_REDIS_PORT', env.int('REDIS_PORT', 6379))
-# redis password, if no password, set it to None
-REDIS_PASSWORD = env.str('PROXYPOOL_REDIS_PASSWORD',
-                         env.str('REDIS_PASSWORD', None))
-# redis db, if no choice, set it to 0
-REDIS_DB = env.int('PROXYPOOL_REDIS_DB', env.int('REDIS_DB', 0))
-# redis connection string, like redis://[password]@host:port or rediss://[password]@host:port/0,
-# please refer to https://redis-py.readthedocs.io/en/stable/connections.html#redis.client.Redis.from_url
-REDIS_CONNECTION_STRING = env.str(
-    'PROXYPOOL_REDIS_CONNECTION_STRING', env.str('REDIS_CONNECTION_STRING', None))
-
-# redis hash table key name
-REDIS_KEY = env.str('PROXYPOOL_REDIS_KEY', env.str(
-    'REDIS_KEY', 'proxies:universal'))
-
-
-GET_TIMEOUT = env.int('GET_TIMEOUT', 10)
-
-# definition of tester
-TEST_URL = env.str('TEST_URL', 'http://www.baidu.com')
-TEST_TIMEOUT = env.int('TEST_TIMEOUT', 10)
-
 # only save anonymous proxy
 TEST_ANONYMOUS = env.bool('TEST_ANONYMOUS', True)
 # TEST_HEADERS = env.json('TEST_HEADERS', {
@@ -73,8 +47,6 @@ TEST_ANONYMOUS = env.bool('TEST_ANONYMOUS', True)
 TEST_VALID_STATUS = env.list('TEST_VALID_STATUS', [200, 206, 302])
 
 # definition of api
-API_HOST = env.str('API_HOST', '0.0.0.0')
-API_PORT = env.int('API_PORT', 5555)
 API_THREADED = env.bool('API_THREADED', True)
 
 # flags of enable

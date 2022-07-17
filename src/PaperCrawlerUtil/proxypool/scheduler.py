@@ -8,8 +8,8 @@ sys.path.append("../../PaperCrawlerUtil")
 from proxypool.processors.server import app
 from proxypool.processors.getter import Getter
 from proxypool.processors.tester import Tester
-from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_HOST, \
-    API_THREADED, API_PORT, ENABLE_SERVER, IS_PROD, APP_PROD_METHOD, \
+from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_THREADED, \
+    ENABLE_SERVER, IS_PROD, APP_PROD_METHOD, \
     ENABLE_GETTER, ENABLE_TESTER, IS_WINDOWS
 from loguru import logger
 from constant import *
@@ -70,7 +70,8 @@ class Scheduler():
                 except ImportError as e:
                     logger.exception(e)
                 else:
-                    http_server = WSGIServer((API_HOST, API_PORT), app)
+                    http_server = WSGIServer((global_val.get_value(API_HOST),
+                                              global_val.get_value(API_PORT)), app)
                     http_server.serve_forever()
 
             elif APP_PROD_METHOD == APP_PROD_METHOD_TORNADO:
@@ -82,7 +83,7 @@ class Scheduler():
                     logger.exception(e)
                 else:
                     http_server = HTTPServer(WSGIContainer(app))
-                    http_server.listen(API_PORT)
+                    http_server.listen(global_val.get_value(API_PORT))
                     IOLoop.instance().start()
 
             elif APP_PROD_METHOD == APP_PROD_METHOD_MEINHELD:
@@ -91,14 +92,16 @@ class Scheduler():
                 except ImportError as e:
                     logger.exception(e)
                 else:
-                    meinheld.listen((API_HOST, API_PORT))
+                    meinheld.listen((global_val.get_value(API_HOST),
+                                     global_val.get_value(API_PORT)))
                     meinheld.run(app)
 
             else:
                 logger.error("unsupported APP_PROD_METHOD")
                 return
         else:
-            app.run(host=API_HOST, port=API_PORT, threaded=API_THREADED)
+            app.run(host=global_val.get_value(API_HOST),
+                    port=global_val.get_value(API_PORT), threaded=API_THREADED)
 
     def run(self):
         global tester_process, getter_process, server_process

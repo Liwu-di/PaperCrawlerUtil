@@ -196,6 +196,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  redis_port: int = 6379,
                  redis_database: int = 0,
                  redis_password: str = "",
+                 redis_key: str = "proxies:universal",
+                 redis_string: str = "",
                  need_getter_log: bool = True,
                  need_tester_log: bool = True,
                  need_storage_log: bool = True,
@@ -211,8 +213,16 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  dict_store_path: str = "dict.db",
                  tester_cycle: float = 20,
                  getter_cycle: float = 100,
-                 test_batch: int = 20) -> tuple:
+                 test_batch: int = 20,
+                 getter_timeout: int = 10,
+                 tester_timeout: int = 10,
+                 tester_url: str = BAIDU) -> tuple:
     """
+    :param tester_url: 代理链接的测试目的url
+    :param tester_timeout: 测试代理时，访问测试链接tester_url的超时时间
+    :param getter_timeout: 爬虫的超时时间
+    :param redis_string: redis链接信息，优先使用这个参数
+    :param redis_key: redis键值
     :param test_batch: 每次测试的链接数量
     :param getter_cycle: 每轮爬虫线程获取代理连接之间的间隔，单位为秒
     :param tester_cycle: 每轮测试线程获取代理连接之间的间隔，单位为秒
@@ -242,13 +252,16 @@ def basic_config(log_file_name: str = "crawler_util.log",
     """
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
-    set_cross_file_variable([(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database)),
+    set_cross_file_variable([(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key,
+                                           redis_string)),
                              (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
                              (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
                              (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
                              (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
                              (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min),
-                             (DICT_STORE_PATH, dict_store_path), (TEST_BATCH_NUM, test_batch)])
+                             (DICT_STORE_PATH, dict_store_path), (TEST_BATCH_NUM, test_batch),
+                             (API_HOST, api_host), (API_PORT, api_port), (TESTER_TIMEOUT, tester_timeout),
+                             (GETTER_TIMEOUT, getter_timeout), (TESTER_URL, tester_url)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
