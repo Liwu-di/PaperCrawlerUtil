@@ -150,8 +150,6 @@ class ProxyDict(object):
         proxy_tuple_list = list(self.dict.items())
         res = []
         counts = 0
-        if cursor >= len(proxy_tuple_list):
-            cursor = 0
         for i in range(len(proxy_tuple_list)):
             flag = False
             if i >= cursor:
@@ -160,7 +158,7 @@ class ProxyDict(object):
                 counts = counts + 1
                 p = Proxy(proxy_tuple_list[i][0].split(":")[0], proxy_tuple_list[i][0].split(":")[1])
                 res.append(p)
-        return cursor + count, res
+        return cursor + counts, res
 
     def save(self) -> bool:
         try:

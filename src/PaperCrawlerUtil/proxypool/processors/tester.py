@@ -3,9 +3,11 @@ import time
 
 import aiohttp
 from loguru import logger
+
+import global_val
 from proxypool.schemas import Proxy
 from proxypool.storages.redis import RedisClient
-from proxypool.setting import TEST_TIMEOUT, TEST_BATCH, TEST_URL, TEST_VALID_STATUS, TEST_ANONYMOUS, NEED_LOG_TESTER
+from proxypool.setting import TEST_TIMEOUT, TEST_URL, TEST_VALID_STATUS, TEST_ANONYMOUS, NEED_LOG_TESTER
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
 from constant import *
@@ -39,6 +41,7 @@ class Tester(object):
         asyncio.set_event_loop(loop)
         self.loop = asyncio.get_event_loop()
         self.need_log = need_log
+        self.test_batch = global_val.get_value(TEST_BATCH_NUM)
     
     async def test(self, proxy: Proxy):
         """
@@ -91,14 +94,19 @@ class Tester(object):
         cursor = 0
         while True:
             if self.need_log:
-                logger.debug(f'testing proxies use cursor {cursor}, count {TEST_BATCH}')
-            cursor, proxies = self.conn.batch(cursor, count=TEST_BATCH)
+                logger.debug(f'testing proxies use cursor {cursor}, count {self.test_batch}')
+            cursor, proxies = self.conn.batch(cursor, count=self.test_batch)
             if proxies:
                 tasks = [self.test(proxy) for proxy in proxies]
                 self.loop.run_until_complete(asyncio.wait(tasks))
-            if len(proxies) == 0:
-                print("目前代理池无代理连接， 等待五秒再次测试")
-                time.sleep(5)
+            if len(proxies) == 0 and cursor == 0:
+                if self.need_log:
+                    print("代理池无连接，等待再次测试")
+                break
+            if len(proxies) == 0 and cursor > 0:
+                if self.need_log:
+                    print("测试完代理池所有连接， 等待再次测试")
+                break
 
 
 def run_tester():

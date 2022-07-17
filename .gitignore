@@ -3,7 +3,7 @@ my.log
 dist/
 PaperCrawlerUtil.egg-info/
 setup.py
-src/__pycache__/
+__pycache__/
 build/
 15.py
 *.log

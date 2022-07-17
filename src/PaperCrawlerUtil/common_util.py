@@ -30,7 +30,6 @@ from proxypool.processors.tester import Tester
 from global_val import *
 from constant import *
 
-
 PROXY_POOL_URL = ""
 logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
 log_style = LOG_STYLE_PRINT
@@ -67,7 +66,8 @@ class CanStopThread(threading.Thread):
 
 
 class ThreadGetter(CanStopThread):
-    def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
+    def __init__(self, redis_host: str, redis_port: int, redis_password: str, redis_database: str,
+                 storage: str, need_log: bool = True, getter_cycle: float = 100):
         threading.Thread.__init__(self)
         self.need_log = need_log
         self.host = redis_host
@@ -75,16 +75,25 @@ class ThreadGetter(CanStopThread):
         self.password = redis_password
         self.database = redis_database
         self.storage = storage
+        self.getter_cycle = getter_cycle
 
     def run(self):
         log("启动getter")
-        Getter(redis_host=self.host, redis_port=self.port,
-               redis_password=self.password, redis_database=self.database,
-               need_log=self.need_log, storage=self.storage).run()
+        g = Getter(redis_host=self.host, redis_port=self.port,
+                   redis_password=self.password, redis_database=self.database,
+                   need_log=self.need_log, storage=self.storage)
+        loop = 0
+        while True:
+            if self.need_log:
+                log(f'getter loop {loop} start...')
+            g.run()
+            loop += 1
+            time.sleep(self.getter_cycle)
 
 
 class ThreadTester(CanStopThread):
-    def __init__(self, redis_host, redis_port, redis_password, redis_database, storage, need_log: bool = True):
+    def __init__(self, redis_host: str, redis_port: int, redis_password: str, redis_database: int,
+                 storage: str, need_log: bool = True, tester_cycle: float = 20):
         threading.Thread.__init__(self)
         self.need_log = need_log
         self.host = redis_host
@@ -92,12 +101,20 @@ class ThreadTester(CanStopThread):
         self.password = redis_password
         self.database = redis_database
         self.storage = storage
+        self.tester_cycle = tester_cycle
 
     def run(self):
         log("启动tester")
-        Tester(redis_host=self.host, redis_port=self.port,
-               redis_password=self.password, redis_database=self.database,
-               need_log=self.need_log, storage=self.storage).run()
+        t = Tester(redis_host=self.host, redis_port=self.port,
+                   redis_password=self.password, redis_database=self.database,
+                   need_log=self.need_log, storage=self.storage)
+        loop = 0
+        while True:
+            if self.need_log:
+                logger.debug(f'tester loop {loop} start...')
+            t.run()
+            loop += 1
+            time.sleep(self.tester_cycle)
 
 
 class ThreadServer(CanStopThread):
@@ -191,8 +208,14 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  proxy_score_init: int = 10,
                  proxy_number_max: int = 50000,
                  proxy_number_min: int = 0,
-                 dict_store_path: str = "dict.db") -> tuple:
+                 dict_store_path: str = "dict.db",
+                 tester_cycle: float = 20,
+                 getter_cycle: float = 100,
+                 test_batch: int = 20) -> tuple:
     """
+    :param test_batch: 每次测试的链接数量
+    :param getter_cycle: 每轮爬虫线程获取代理连接之间的间隔，单位为秒
+    :param tester_cycle: 每轮测试线程获取代理连接之间的间隔，单位为秒
     :param dict_store_path: 选择字典方式存储时，最后文件保存的地址（同时也是加载地址）
     :param proxy_number_min: 最小池容量
     :param proxy_number_max: 最大池容量
@@ -225,7 +248,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
                              (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
                              (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
                              (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min),
-                             (DICT_STORE_PATH, dict_store_path)])
+                             (DICT_STORE_PATH, dict_store_path), (TEST_BATCH_NUM, test_batch)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -236,9 +259,11 @@ def basic_config(log_file_name: str = "crawler_util.log",
         g = None
         try:
             g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage)
+                             redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage,
+                             getter_cycle=getter_cycle)
             t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage)
+                             redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage,
+                             tester_cycle=tester_cycle)
             s = ThreadServer(host=api_host, port=api_port, threaded=True)
             g.setDaemon(set_daemon)
             t.setDaemon(set_daemon)
@@ -417,7 +442,6 @@ class ThreadStopException(Exception):
     def __repr__(self) -> str:
         return super().__repr__()
 
-
 # if __name__ == "__main__":
 #     a = CanStopThread()
 #     basic_config(logs_style=LOG_STYLE_PRINT)
@@ -429,5 +453,3 @@ class ThreadStopException(Exception):
 #         log("结束线程{}错误{}".format(a.name, e))
 #     except BaseException as e:
 #         log(e)
-
-

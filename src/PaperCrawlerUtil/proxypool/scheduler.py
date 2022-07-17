@@ -1,14 +1,18 @@
 import time
 import multiprocessing
 import sys
+
+import global_val
+
 sys.path.append("../../PaperCrawlerUtil")
 from proxypool.processors.server import app
 from proxypool.processors.getter import Getter
 from proxypool.processors.tester import Tester
-from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, CYCLE_GETTER, CYCLE_TESTER, API_HOST, \
+from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_HOST, \
     API_THREADED, API_PORT, ENABLE_SERVER, IS_PROD, APP_PROD_METHOD, \
     ENABLE_GETTER, ENABLE_TESTER, IS_WINDOWS
 from loguru import logger
+from constant import *
 
 
 if IS_WINDOWS:
@@ -22,7 +26,7 @@ class Scheduler():
     scheduler
     """
 
-    def run_tester(self, cycle=CYCLE_TESTER):
+    def run_tester(self, cycle=global_val.get_value(TESTER_CYCLE)):
         """
         run tester
         """
@@ -37,7 +41,7 @@ class Scheduler():
             loop += 1
             time.sleep(cycle)
 
-    def run_getter(self, cycle=CYCLE_GETTER):
+    def run_getter(self, cycle=global_val.get_value(GETTER_CYCLE)):
         """
         run getter
         """

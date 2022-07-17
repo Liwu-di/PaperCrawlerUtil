@@ -94,7 +94,7 @@ def testDict():
     else:
         s = ""
         for i in get_conn().dict.items():
-            s = s + i[0]
+            s = s + i[0] + "  :  " + str(i[1]) + "\n"
         return s
 
 

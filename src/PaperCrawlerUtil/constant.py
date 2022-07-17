@@ -20,6 +20,9 @@ PROXY_SCORE_INIT = "init_score"
 POOL_MAX = "pool_max"
 POOL_MIN = "pool_min"
 DICT_STORE_PATH = "dict_store_path"
+TEST_BATCH_NUM = 20
+TESTER_CYCLE = "tester cycle"
+GETTER_CYCLE = "getter cycle"
 
 """
 存储方式定义
