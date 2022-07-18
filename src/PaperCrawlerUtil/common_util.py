@@ -2,7 +2,7 @@ import sys
 from typing import List, Optional, Callable, Any, Iterable, Mapping
 
 import global_val
-from storages.proxy_dict import ProxyDict
+from proxypool.storages.proxy_dict import ProxyDict
 
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
@@ -231,7 +231,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
     :param getter_timeout: 爬虫的超时时间
     :param redis_string: redis链接信息，优先使用这个参数
     :param redis_key: redis键值
-    :param test_batch: 每次测试的链接数量
+    :param test_batch: 每次测试的链接数量，由于windows系统和linux系统均对最大文件打开数量
+    有限制（windows：509， linux：1024）所以，该值推荐在500以内
     :param getter_cycle: 每轮爬虫线程获取代理连接之间的间隔，单位为秒
     :param tester_cycle: 每轮测试线程获取代理连接之间的间隔，单位为秒
     :param dict_store_path: 选择字典方式存储时，最后文件保存的地址（同时也是加载地址）
