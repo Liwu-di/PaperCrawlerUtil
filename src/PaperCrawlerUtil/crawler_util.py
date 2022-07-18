@@ -35,8 +35,8 @@ def random_proxy_header_access(url: str, proxy: str = '',
     :param sleep_time:每次爬取睡眠时间
     :return:返回爬取的网页或者最大尝试次数之后返回空
     :param random_proxy:随机使用代理，默认为真，随机使用真实地址而不使用代理
-    :param time_out: 一个元组或者整数，元组前者表示连接超时阈值，后者表示获取内容超时阈值、
-                    如果是整数，则两者值设为一样
+    :param time_out: 一个元组或者浮点数，元组前者表示连接超时阈值，后者表示获取内容超时阈值、
+                    如果是浮点数，则两者值设为一样
     """
     proxy_provide = False
     cookie_jar = RequestsCookieJar()
@@ -110,9 +110,13 @@ def random_proxy_header_access(url: str, proxy: str = '',
 def retrieve_file(url: str, path: str, proxies: str = "",
                   require_proxy: bool = False, max_retry: int = 10,
                   sleep_time: float = 1.2, random_proxy: bool = True,
-                  need_log: bool = True) -> bool:
+                  need_log: bool = True, reporthook: Callable[[], None] = None,
+                  data: str = None) -> bool:
     """
     retrieve file from provided url and save to path
+    :param data: 使用url encode的参数
+    :param reporthook: 用来在获取url链接信息之后调用的函数,例如函数def test(a: int, b: int, c: int) -> None,
+    三个参数分别表示，当前下载第几块，每块的大小，文件的总大小
     :param need_log: 是否需要日志
     :param url: file url
     :param path: the save path
@@ -152,7 +156,7 @@ def retrieve_file(url: str, path: str, proxies: str = "",
             else:
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
-            urlretrieve(url, path)
+            urlretrieve(url=url, filename=path, reporthook=reporthook, data=data)
             if need_log:
                 log("文件提取成功")
             success = True

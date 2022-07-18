@@ -29,12 +29,20 @@ from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
 from global_val import *
 from constant import *
+from tqdm import tqdm
+
 
 PROXY_POOL_URL = ""
 logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
 log_style = LOG_STYLE_PRINT
 
 PROXY_POOL_CAN_RUN_FLAG = True
+
+
+def process_bar(current: float, sum: float) -> None:
+    pbar = tqdm(total=sum)
+    pbar.update(current)
+    pbar.close()
 
 
 def log(string: str) -> None:
