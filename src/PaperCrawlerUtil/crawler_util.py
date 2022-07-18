@@ -12,11 +12,19 @@ from common_util import *
 def random_proxy_header_access(url: str, proxy: str = '',
                                require_proxy: bool = False, max_retry: int = 10, sleep_time: float = 1.2,
                                random_proxy: bool = True, time_out: tuple = (10, 20),
-                               need_log: bool = True, cookie: str = "", if_bytes_encoding: str = "utf-8") -> str:
+                               need_log: bool = True, cookie: str = "", if_bytes_encoding: str = "utf-8",
+                               method: str = GET, get_params: List[tuple] or dict or bytes = None,
+                               post_data: dict or List[tuple] or bytes = None,
+                               json=None, allow_redirects: bool = True) -> str:
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
     if access the url beyond max_retry, will return a blank string
+    :param allow_redirects: 是否启用重定向
+    :param json: 请求体json序列化对象
+    :param method: 请求方法
+    :param post_data: POST方式的请求体数据
+    :param get_params: URL参数
     :param if_bytes_encoding: 如果爬取到的是字节，需要通过什么字符集转换
     :param cookie: 对于需要cookie即登录才能访问的网站，需要提供cookie
     :param need_log: 是否需要日志
@@ -57,17 +65,27 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 if random_proxy and two_one_choose():
                     if need_log:
                         log("随机使用代理")
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
+                    request = requests.request(method=method, url=url, headers=headers, proxies=proxies,
+                                               timeout=time_out, cookies=cookie_jar, allow_redirects=allow_redirects,
+                                               json=json, data=post_data, params=get_params)
                 elif random_proxy and not two_one_choose():
                     if need_log:
                         log("随机不使用代理")
-                    request = requests.get(url, headers=headers, timeout=time_out, cookies=cookie_jar)
+                    request = requests.request(method=method, url=url, headers=headers, timeout=time_out,
+                                               cookies=cookie_jar, allow_redirects=allow_redirects,
+                                               json=json, data=post_data, params=get_params)
                 elif not random_proxy:
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
+                    request = requests.request(method=method, url=url, headers=headers, proxies=proxies,
+                                               timeout=time_out, cookies=cookie_jar, allow_redirects=allow_redirects,
+                                               json=json, data=post_data, params=get_params)
                 else:
-                    request = requests.get(url, headers=headers, proxies=proxies, timeout=time_out, cookies=cookie_jar)
+                    request = requests.request(method=method, url=url, headers=headers, proxies=proxies,
+                                               timeout=time_out, cookies=cookie_jar, allow_redirects=allow_redirects,
+                                               json=json, data=post_data, params=get_params)
             else:
-                request = requests.get(url, headers=headers, timeout=time_out, cookies=cookie_jar)
+                request = requests.request(method=method, url=url, headers=headers, timeout=time_out, cookies=cookie_jar
+                                           , allow_redirects=allow_redirects, json=json, data=post_data,
+                                           params=get_params)
             html = request.content
             if need_log:
                 log("爬取成功，返回内容")
@@ -153,7 +171,7 @@ def retrieve_file(url: str, path: str, proxies: str = "",
         return success
 
 
-def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float=1.2, max_retry: int=10,
+def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_retry: int = 10,
                        require_proxy: bool = False, random_proxy: bool = True,
                        proxies: bool = "", need_log: bool = True) -> None:
     """
@@ -241,7 +259,8 @@ def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
             return False
         elif str(value) == NOT_EQUAL and str(key) == str(origin):
             return False
-        elif str(value) == LESS_THAN or str(value) == LESS_THAN or str(value) == LESS_THAN_AND_EQUAL or str(value) == MORE_THAN or str(value) == GREATER_AND_EQUAL:
+        elif str(value) == LESS_THAN or str(value) == LESS_THAN or str(value) == LESS_THAN_AND_EQUAL or str(
+                value) == MORE_THAN or str(value) == GREATER_AND_EQUAL:
             if type(origin) != float:
                 return False
             else:

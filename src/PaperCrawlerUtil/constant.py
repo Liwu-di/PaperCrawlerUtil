@@ -61,3 +61,15 @@ LOG_STYLE_ALL = "all"
 HTTP = "http://"
 COLON_SEPARATOR = ":"
 BAIDU = "http://www.baidu.com"
+
+"""
+HTTP 访问方式
+"""
+
+POST = "POST"
+GET = "GET"
+DELETE = "DELETE"
+OPTIONS = "OPTIONS"
+HEAD = "HEAD"
+PUT = "PUT"
+PATCH = "PATCH"
