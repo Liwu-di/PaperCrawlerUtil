@@ -38,11 +38,104 @@ log_style = LOG_STYLE_PRINT
 
 PROXY_POOL_CAN_RUN_FLAG = True
 
+p_bar = None
 
-def process_bar(current: float, sum: float) -> None:
-    pbar = tqdm(total=sum)
-    pbar.update(current)
-    pbar.close()
+
+class process_bar(object):
+    """
+    封装进度条类tdqm，实现retrieve_file进度条显示，
+    其他也可以使用，保证每次调用process时，必须传入三个参数，
+    当前完成到第几块，块的大小，总的大小
+    """
+    def __init__(self, iterable=None, desc=None, total=-1, leave=True, file=None,
+                 ncols=None, mininterval=0.1, maxinterval=10.0, miniters=None,
+                 ascii=None, disable=False, unit='it', unit_scale=False,
+                 dynamic_ncols=False, smoothing=0.3, bar_format=None, initial=0,
+                 position=None, postfix=None, unit_divisor=1000, write_bytes=None,
+                 lock_args=None, nrows=None, colour=None, delay=0, gui=False):
+        """
+
+        :param iterable:
+        :param desc:
+        :param total:
+        :param leave:
+        :param file:
+        :param ncols:
+        :param mininterval:
+        :param maxinterval:
+        :param miniters:
+        :param ascii:
+        :param disable:
+        :param unit:
+        :param unit_scale:
+        :param dynamic_ncols:
+        :param smoothing:
+        :param bar_format:
+        :param initial:
+        :param position:
+        :param postfix:
+        :param unit_divisor:
+        :param write_bytes:
+        :param lock_args:
+        :param nrows:
+        :param colour:
+        :param delay:
+        :param gui:
+        """
+        self.batch = -1
+        self.bar = None
+        self.current = 0
+        self.iterable = iterable
+        self.desc = desc
+        self.total = total
+        self.leave = leave
+        self.file = file
+        self.ncols = ncols
+        self.mininterval = mininterval
+        self.maxinterval = maxinterval
+        self.miniters = miniters
+        self.ascii = ascii
+        self.disable = disable
+        self.unit = unit
+        self.unit_scale = unit_scale
+        self.dynamic_ncols = dynamic_ncols
+        self.smoothing = smoothing
+        self.bar_format = bar_format
+        self.initial = initial
+        self.position = position
+        self.postfix = postfix
+        self.unit_divisor = unit_divisor
+        self.write_bytes = write_bytes
+        self.lock_args = lock_args
+        self.nrows = nrows
+        self.colour = colour
+        self.delay = delay
+        self.gui = gui
+
+    def process(self, *args):
+        if self.total == -1:
+            self.total = args[2]
+        if self.bar is None:
+            self.bar = tqdm(iterable=self.iterable, desc=self.desc, total=self.total, leave=self.leave,
+                            file=self.file, ncols=self.ncols, maxinterval=self.maxinterval,
+                            mininterval=self.mininterval, miniters=self.miniters, ascii=self.ascii, disable=self.disable
+                            , unit=self.unit, unit_scale=self.unit_scale, dynamic_ncols=self.dynamic_ncols,
+                            smoothing=self.smoothing, bar_format=self.bar_format, initial=self.initial,
+                            position=self.position, postfix=self.postfix, unit_divisor=self.unit_divisor,
+                            write_bytes=self.write_bytes, lock_args=self.lock_args, nrows=self.nrows, colour=self.colour
+                            , delay=self.delay, gui=self.gui)
+            self.bar.set_description("文件下载进度：")
+        else:
+            self.batch = args[1]
+            if self.current + self.batch > self.total:
+                self.bar.update(self.total - self.current)
+                self.current = self.total
+            else:
+                self.bar.update(self.batch)
+                self.current = self.current + self.batch
+
+    def __del__(self):
+        self.bar.close()
 
 
 def log(string: str) -> None:
@@ -363,7 +456,7 @@ def two_one_choose(p: int = 0.5) -> bool:
     :return: return a bool value which decide whether choose two choices
     """
     k = random.randint(0, 10)
-    if k >= p * 10:
+    if k > p * 10:
         return True
     else:
         return False

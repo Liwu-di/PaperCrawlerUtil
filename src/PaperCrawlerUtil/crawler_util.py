@@ -156,6 +156,12 @@ def retrieve_file(url: str, path: str, proxies: str = "",
             else:
                 opener.addheaders = [('User-Agent', ua.random)]
             urllib.request.install_opener(opener)
+            bar = None
+            if reporthook:
+                reporthook = reporthook
+            else:
+                bar = process_bar()
+                reporthook = bar.process
             urlretrieve(url=url, filename=path, reporthook=reporthook, data=data)
             if need_log:
                 log("文件提取成功")
