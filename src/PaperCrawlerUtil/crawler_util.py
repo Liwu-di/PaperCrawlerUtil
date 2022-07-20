@@ -1,5 +1,6 @@
 import time
 import urllib
+from typing import Callable
 from urllib.request import urlretrieve
 from requests.cookies import RequestsCookieJar
 import requests

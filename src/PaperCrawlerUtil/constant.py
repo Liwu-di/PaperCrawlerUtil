@@ -28,7 +28,9 @@ GETTER_TIMEOUT = "getter_timeout"
 TESTER_URL = "tester url"
 API_HOST = "api host"
 API_PORT = "api port"
-
+ENABLE_TESTER = 'ENABLE_TESTER'
+ENABLE_GETTER = 'ENABLE_GETTER'
+ENABLE_SERVER = 'ENABLE_SERVER'
 
 """
 存储方式定义

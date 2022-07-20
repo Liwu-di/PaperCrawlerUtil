@@ -7,13 +7,6 @@ from loguru import logger
 env = Env()
 env.read_env()
 
-# definition of logs
-NEED_LOG_TESTER = False
-NEED_LOG_GETTER = False
-NEED_LOG_SERVER = False
-NEED_LOG_REDIS = False
-
-
 # definition of flags
 IS_WINDOWS = platform.system().lower() == 'windows'
 
@@ -48,11 +41,6 @@ TEST_VALID_STATUS = env.list('TEST_VALID_STATUS', [200, 206, 302])
 
 # definition of api
 API_THREADED = env.bool('API_THREADED', True)
-
-# flags of enable
-ENABLE_TESTER = env.bool('ENABLE_TESTER', True)
-ENABLE_GETTER = env.bool('ENABLE_GETTER', True)
-ENABLE_SERVER = env.bool('ENABLE_SERVER', True)
 
 
 ENABLE_LOG_FILE = env.bool('ENABLE_LOG_FILE', True)

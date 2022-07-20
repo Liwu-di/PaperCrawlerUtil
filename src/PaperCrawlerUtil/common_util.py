@@ -1,5 +1,5 @@
 import sys
-from typing import List, Optional, Callable, Any, Iterable, Mapping
+from typing import List
 
 import global_val
 from proxypool.storages.proxy_dict import ProxyDict
@@ -27,10 +27,8 @@ from requests.cookies import RequestsCookieJar
 from proxypool.processors.getter import Getter
 from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
-from global_val import *
 from constant import *
 from tqdm import tqdm
-
 
 PROXY_POOL_URL = ""
 logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
@@ -47,6 +45,7 @@ class process_bar(object):
     其他也可以使用，保证每次调用process时，必须传入三个参数，
     当前完成到第几块，块的大小，总的大小
     """
+
     def __init__(self, final_prompt="", iterable=None, desc=None, total=-1, leave=True, file=None,
                  ncols=None, mininterval=0.1, maxinterval=10.0, miniters=None,
                  ascii=None, disable=False, unit='byte', unit_scale=False,
@@ -342,8 +341,14 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  test_batch: int = 20,
                  getter_timeout: int = 10,
                  tester_timeout: int = 10,
-                 tester_url: str = BAIDU) -> tuple:
+                 tester_url: str = BAIDU,
+                 enable_tester: bool = True,
+                 enable_getter: bool = True,
+                 enable_server: bool = True) -> tuple:
     """
+    :param enable_server: 是否启动flask server线程
+    :param enable_getter: 是否启动代理爬虫线程
+    :param enable_tester: 是否启动测试代理线程
     :param tester_url: 代理链接的测试目的url
     :param tester_timeout: 测试代理时，访问测试链接tester_url的超时时间
     :param getter_timeout: 爬虫的超时时间
@@ -379,16 +384,18 @@ def basic_config(log_file_name: str = "crawler_util.log",
     """
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
-    set_cross_file_variable([(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key,
-                                           redis_string)),
-                             (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
-                             (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
-                             (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
-                             (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
-                             (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min),
-                             (DICT_STORE_PATH, dict_store_path), (TEST_BATCH_NUM, test_batch),
-                             (API_HOST, api_host), (API_PORT, api_port), (TESTER_TIMEOUT, tester_timeout),
-                             (GETTER_TIMEOUT, getter_timeout), (TESTER_URL, tester_url)])
+    set_cross_file_variable(
+        [(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key, redis_string)),
+         (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
+         (STORAGE_LOG_CONF, need_storage_log), (GETTER_LOG_CONF, need_getter_log),
+         (TESTER_LOG_CONF, need_tester_log), (PROXY_SCORE_MAX, proxy_score_max),
+         (PROXY_SCORE_MIN, proxy_score_min), (PROXY_SCORE_INIT, proxy_score_init),
+         (POOL_MAX, proxy_number_max), (POOL_MIN, proxy_number_min),
+         (DICT_STORE_PATH, dict_store_path), (TEST_BATCH_NUM, test_batch),
+         (API_HOST, api_host), (API_PORT, api_port), (TESTER_TIMEOUT, tester_timeout),
+         (GETTER_TIMEOUT, getter_timeout), (TESTER_URL, tester_url),
+         (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
+         (ENABLE_SERVER, enable_server)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -398,35 +405,39 @@ def basic_config(log_file_name: str = "crawler_util.log",
         t = None
         g = None
         try:
-            g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage,
-                             getter_cycle=getter_cycle)
-            t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
-                             redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage,
-                             tester_cycle=tester_cycle)
-            s = ThreadServer(host=api_host, port=api_port, threaded=True)
-            g.setDaemon(set_daemon)
-            t.setDaemon(set_daemon)
-            s.setDaemon(set_daemon)
-            g.start()
-            t.start()
-            s.start()
+            if enable_tester:
+                t = ThreadTester(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
+                                 redis_database=redis_database, need_log=need_tester_log, storage=proxypool_storage,
+                                 tester_cycle=tester_cycle)
+                t.setDaemon(set_daemon)
+                t.start()
+            if enable_getter:
+                g = ThreadGetter(redis_host=redis_host, redis_port=redis_port, redis_password=redis_password,
+                                 redis_database=redis_database, need_log=need_getter_log, storage=proxypool_storage,
+                                 getter_cycle=getter_cycle)
+                g.setDaemon(set_daemon)
+                g.start()
+            if enable_server:
+                s = ThreadServer(host=api_host, port=api_port, threaded=True)
+                s.setDaemon(set_daemon)
+                s.start()
         except Exception as e:
             log("proxypool线程异常{}".format(e))
         proxy_test = ""
         url = HTTP + api_host + COLON_SEPARATOR + str(api_port) + "/random"
         is_ip_flag = False
         log("所有线程启动，测试是否已经有代理.......")
-        while len(proxy_test) == 0 or (not is_ip_flag):
-            try:
-                proxy_test = requests.get(url, timeout=(20, 20)).text
-                is_ip_flag = is_ip(proxy_test)
-            except Exception as e:
-                log("测试proxypool项目报错:{}".format(e))
-                proxy_test = ""
-            time.sleep(2)
-        if len(proxy_pool_url) == 0:
-            PROXY_POOL_URL = url
+        if enable_server and enable_getter:
+            while len(proxy_test) == 0 or (not is_ip_flag):
+                try:
+                    proxy_test = requests.get(url, timeout=(20, 20)).text
+                    is_ip_flag = is_ip(proxy_test)
+                except Exception as e:
+                    log("测试proxypool项目报错:{}".format(e))
+                    proxy_test = ""
+                time.sleep(2)
+            if len(proxy_pool_url) == 0:
+                PROXY_POOL_URL = url
         log("启动proxypool完成")
         PROXY_POOL_CAN_RUN_FLAG = False
         return s, g, t

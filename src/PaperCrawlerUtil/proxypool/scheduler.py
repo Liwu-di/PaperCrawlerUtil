@@ -9,8 +9,7 @@ from proxypool.processors.server import app
 from proxypool.processors.getter import Getter
 from proxypool.processors.tester import Tester
 from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_THREADED, \
-    ENABLE_SERVER, IS_PROD, APP_PROD_METHOD, \
-    ENABLE_GETTER, ENABLE_TESTER, IS_WINDOWS
+    IS_PROD, APP_PROD_METHOD, IS_WINDOWS
 from loguru import logger
 from constant import *
 
@@ -30,7 +29,8 @@ class Scheduler():
         """
         run tester
         """
-        if not ENABLE_TESTER:
+
+        if not global_val.get_value(ENABLE_TESTER):
             logger.info('tester not enabled, exit')
             return
         tester = Tester()
@@ -45,7 +45,7 @@ class Scheduler():
         """
         run getter
         """
-        if not ENABLE_GETTER:
+        if not global_val.get_value(ENABLE_GETTER):
             logger.info('getter not enabled, exit')
             return
         getter = Getter()
@@ -60,7 +60,7 @@ class Scheduler():
         """
         run server for api
         """
-        if not ENABLE_SERVER:
+        if not global_val.get_value(ENABLE_SERVER):
             logger.info('server not enabled, exit')
             return
         if IS_PROD:
@@ -107,19 +107,19 @@ class Scheduler():
         global tester_process, getter_process, server_process
         try:
             logger.info('starting proxypool...')
-            if ENABLE_TESTER:
+            if global_val.get_value(ENABLE_TESTER):
                 tester_process = multiprocessing.Process(
                     target=self.run_tester)
                 logger.info(f'starting tester, pid {tester_process.pid}...')
                 tester_process.start()
 
-            if ENABLE_GETTER:
+            if global_val.get_value(ENABLE_GETTER):
                 getter_process = multiprocessing.Process(
                     target=self.run_getter)
                 logger.info(f'starting getter, pid {getter_process.pid}...')
                 getter_process.start()
 
-            if ENABLE_SERVER:
+            if global_val.get_value(ENABLE_SERVER):
                 server_process = multiprocessing.Process(
                     target=self.run_server)
                 logger.info(f'starting server, pid {server_process.pid}...')
