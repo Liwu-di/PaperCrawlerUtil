@@ -49,38 +49,60 @@ class process_bar(object):
     """
     def __init__(self, iterable=None, desc=None, total=-1, leave=True, file=None,
                  ncols=None, mininterval=0.1, maxinterval=10.0, miniters=None,
-                 ascii=None, disable=False, unit='it', unit_scale=False,
+                 ascii=None, disable=False, unit='byte', unit_scale=False,
                  dynamic_ncols=False, smoothing=0.3, bar_format=None, initial=0,
                  position=None, postfix=None, unit_divisor=1000, write_bytes=None,
                  lock_args=None, nrows=None, colour=None, delay=0, gui=False):
         """
 
-        :param iterable:
-        :param desc:
-        :param total:
-        :param leave:
-        :param file:
-        :param ncols:
-        :param mininterval:
-        :param maxinterval:
-        :param miniters:
-        :param ascii:
-        :param disable:
-        :param unit:
-        :param unit_scale:
-        :param dynamic_ncols:
-        :param smoothing:
-        :param bar_format:
-        :param initial:
-        :param position:
-        :param postfix:
-        :param unit_divisor:
-        :param write_bytes:
-        :param lock_args:
-        :param nrows:
-        :param colour:
-        :param delay:
-        :param gui:
+        :param iterable: 迭代对象，可选，用来包装在进度条对象中，手动更新进度条
+        :param desc: 前缀描述信息，字符串，可选参数
+        :param total: 进度条表示的最大值，即任务总量
+        :param leave: 是否需要在完成后保留进度条，默认为True
+        :param file: `io.TextIOWrapper` or `io.StringIO`，可选参数，指定输出的位置，默认使用sys.stderr，编码参数见write_bytes
+        :param ncols: 整个输出消息的宽度，可选参数，如果指定，则动态调整消息条的宽度，
+        如果没有指定，则尝试使用环境中的宽度，默认是10的单位的宽度并且计数器没有限制，如果为0，
+        将不会输出除了状态stat之外的所有数据
+        :param mininterval:浮点数，默认为0.1，表示进度条更新的最小时间间隔
+        :param maxinterval:浮点数，默认为10，在长时间更新滞后之后，自动调整参数miniters，
+        当且仅当一个监控线程启动
+        :param miniters:整数或者浮点数，可选参数，最小进度显示更新间隔，以迭代为单位。如果该值为0，并且dynamic_miniters参数为真，
+        将自动调整与mininterval一致，CPU更有效并且适合于紧密循环。如果该值大于0.将跳过指定数量的迭代，配合mininterval可以得到更有效的循环
+        如果进度在快速和慢速迭代都不稳定，如网络等，该值应该设置为1
+        :param ascii:布尔值或者字符串，可选参数。如果未指定或者指定为false，将使用Unicode（平滑块）去填充
+        :param disable: 可选布尔值，是否禁用整个进度条包装器，默认为False
+        :param unit: 可选字符串值，字符串将被用来定义迭代单元，默认值为it
+        :param unit_scale:可选布尔值或者整数或者浮点值，如果为1或者真，迭代的数量将会自动缩放，
+        并且将添加一个国际单位如（千，兆）等，默认为False。如果该值大于0，将会缩放total和n
+        :param dynamic_ncols:可选布尔值， 如果设置，将持续改变ncols和nrows，允许调整窗口，默认为False
+        :param smoothing: 可选浮点数，速度估计的指数移动平滑因子，在GUI模式中忽略，范围为【0（平均速度）,1（当前或者瞬时速度）】，默认0.3
+        :param bar_format: 可选字符串，指定一个定制的进度条样式字串，可能或改变表现，默认为'{l_bar}{bar}{r_bar}']，其中
+         l_bar='{desc}: {percentage:3.0f}%|' 以及 r_bar='| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, '
+         '{rate_fmt}{postfix}]'
+         可能的变量有：l_bar, bar, r_bar, n, n_fmt, total, total_fmt,
+              percentage, elapsed, elapsed_s, ncols, nrows, desc, unit,
+              rate, rate_fmt, rate_noinv, rate_noinv_fmt,
+              rate_inv, rate_inv_fmt, postfix, unit_divisor,
+              remaining, remaining_s, eta.
+        注意：{desc} 之后会自动删除结尾的“:” 如果后者为空。
+        :param initial:可选整数或者浮点数，定义初始计数器值。重新启动进度时很有用。bar[默认值：0]。 如果使用浮点数，请考虑指定 `{n:.3f}`
+             或 `bar_format` 中的类似内容，或指定 `unit_scale`。
+        :param position: 可选整数，指定偏移多少行进行输出，从0开始。如果不指定则自动选择。
+        在管理多个进度条时很有用，比如多线程
+        :param postfix:字典或者其他值，可选，指定附加性状态在进度条末尾显示。
+        如果可能请调用set_postfix(**postfix)
+        :param unit_divisor:可选浮点数，默认为1000， 除非unit_scale为真，否则忽略
+        :param write_bytes: 可选布尔值，如果默认为None并且没有指定file，将会使用python2输出字节，
+        如果为真也输出字节bytes，其他情况输出unicode
+        :param lock_args:可选元组，传递给 `refresh` 以获取中间输出（初始化、迭代和更新）。
+        :param nrows:可选整数，指定屏幕高度，如果指定，则隐藏此之外的嵌套条边界。
+        如果未指定，则尝试使用环境高度。后备是 20。
+        :param colour: 可选字符串，进度条颜色，例如'green'，'#00ff00'
+        :param delay:可选浮点数，不显示直到【默认0】秒过去之后
+        :param gui:可选布尔值，
+        警告：内部参数 - 不要使用。
+             使用 tqdm.gui.tqdm(...) 代替。 如果设置，将尝试使用
+             用于图形输出的 matplotlib 动画 [默认值：False]。
         """
         self.batch = -1
         self.bar = None

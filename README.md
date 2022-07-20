@@ -245,3 +245,20 @@ cooperatePdf("E:\论文阅读\论文\EMNLP\EMNLP2021_first_page", [0], "E:\论�
 
 ```
 
+```python
+"""
+以下是使用进度条的一个例子，可以在retrieve_file函数中找到
+在urlretrieve中，每次下载一个block的文件，就会调用 reporthook函数，并且传入三个值，
+当前块号，块的大小，总量
+在其他地方使用时，也可以在函数中增加一个callable 参数，并且传入类似的3个值，再初始化
+common_util.process_bar对象，使用对象的process方法进行传参，从而实现进度条的包装
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+bar = None
+bar = process_bar()
+reporthook = bar.process
+urlretrieve(url="", filename="", reporthook=reporthook, data="")
+```
+
