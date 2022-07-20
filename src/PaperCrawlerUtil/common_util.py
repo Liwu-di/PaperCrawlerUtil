@@ -47,14 +47,14 @@ class process_bar(object):
     其他也可以使用，保证每次调用process时，必须传入三个参数，
     当前完成到第几块，块的大小，总的大小
     """
-    def __init__(self, iterable=None, desc=None, total=-1, leave=True, file=None,
+    def __init__(self, final_prompt="", iterable=None, desc=None, total=-1, leave=True, file=None,
                  ncols=None, mininterval=0.1, maxinterval=10.0, miniters=None,
                  ascii=None, disable=False, unit='byte', unit_scale=False,
                  dynamic_ncols=False, smoothing=0.3, bar_format=None, initial=0,
                  position=None, postfix=None, unit_divisor=1000, write_bytes=None,
                  lock_args=None, nrows=None, colour=None, delay=0, gui=False):
         """
-
+        :param final_prompt: 任务完成时候的提示信息，显示在进度条结尾
         :param iterable: 迭代对象，可选，用来包装在进度条对象中，手动更新进度条
         :param desc: 前缀描述信息，字符串，可选参数
         :param total: 进度条表示的最大值，即任务总量
@@ -104,6 +104,7 @@ class process_bar(object):
              使用 tqdm.gui.tqdm(...) 代替。 如果设置，将尝试使用
              用于图形输出的 matplotlib 动画 [默认值：False]。
         """
+        self.final_prompt = final_prompt
         self.batch = -1
         self.bar = None
         self.current = 0
@@ -152,6 +153,7 @@ class process_bar(object):
             if self.current + self.batch > self.total:
                 self.bar.update(self.total - self.current)
                 self.current = self.total
+                self.bar.set_postfix_str(self.final_prompt)
             else:
                 self.bar.update(self.batch)
                 self.current = self.current + self.batch
@@ -160,15 +162,16 @@ class process_bar(object):
         self.bar.close()
 
 
-def log(string: str) -> None:
+def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
+        print_flush: bool = None) -> None:
     global log_style
     if log_style == LOG_STYLE_LOG:
         logging.warning(string)
     elif log_style == LOG_STYLE_PRINT:
-        print(string)
+        print(string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
     elif log_style == LOG_STYLE_ALL:
         logging.warning(string)
-        print(string)
+        print(string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
 
 
 class CanStopThread(threading.Thread):
