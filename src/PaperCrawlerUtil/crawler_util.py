@@ -160,11 +160,11 @@ def retrieve_file(url: str, path: str, proxies: str = "",
             if reporthook:
                 reporthook = reporthook
             else:
-                bar = process_bar()
+                bar = process_bar(final_prompt="文件下载完成")
                 reporthook = bar.process
             urlretrieve(url=url, filename=path, reporthook=reporthook, data=data)
-            if need_log:
-                log("文件提取成功")
+            # if need_log:
+            #     log("文件提取成功")
             success = True
             time.sleep(sleep_time)
         except NoProxyException as e:
