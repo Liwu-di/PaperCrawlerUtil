@@ -7,7 +7,6 @@ from loguru import logger
 import global_val
 from proxypool.schemas import Proxy
 from proxypool.storages.redis import RedisClient
-from proxypool.setting import TEST_VALID_STATUS, TEST_ANONYMOUS
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
 from constant import *
@@ -55,7 +54,7 @@ class Tester(object):
                     logger.debug(f'testing {proxy.string()}')
                 # if TEST_ANONYMOUS is True, make sure that
                 # the proxy has the effect of hiding the real IP
-                if TEST_ANONYMOUS:
+                if global_val.get_value(TEST_ANONYMOUS):
                     url = 'https://httpbin.org/ip'
                     async with session.get(url, timeout=global_val.get_value(TESTER_TIMEOUT)) as response:
                         resp_json = await response.json()
@@ -69,7 +68,7 @@ class Tester(object):
                 async with session.get(global_val.get_value(TESTER_URL), proxy=f'http://{proxy.string()}',
                                        timeout=global_val.get_value(TESTER_TIMEOUT),
                                        allow_redirects=False) as response:
-                    if response.status in TEST_VALID_STATUS:
+                    if response.status in global_val.get_value(TEST_VALID_STATUS):
                         self.conn.max(proxy)
                         if self.need_log:
                             logger.debug(f'proxy {proxy.string()} is valid, set max score')

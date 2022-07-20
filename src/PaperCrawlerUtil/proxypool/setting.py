@@ -32,16 +32,6 @@ APP_PROD_METHOD_TORNADO = 'tornado'
 APP_PROD_METHOD_MEINHELD = 'meinheld'
 APP_PROD_METHOD = env.str('APP_PROD_METHOD', APP_PROD_METHOD_GEVENT).lower()
 
-# only save anonymous proxy
-TEST_ANONYMOUS = env.bool('TEST_ANONYMOUS', True)
-# TEST_HEADERS = env.json('TEST_HEADERS', {
-#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36',
-# })
-TEST_VALID_STATUS = env.list('TEST_VALID_STATUS', [200, 206, 302])
-
-# definition of api
-API_THREADED = env.bool('API_THREADED', True)
-
 
 ENABLE_LOG_FILE = env.bool('ENABLE_LOG_FILE', True)
 ENABLE_LOG_RUNTIME_FILE = env.bool('ENABLE_LOG_RUNTIME_FILE', True)

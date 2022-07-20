@@ -344,8 +344,14 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  tester_url: str = BAIDU,
                  enable_tester: bool = True,
                  enable_getter: bool = True,
-                 enable_server: bool = True) -> tuple:
+                 enable_server: bool = True,
+                 test_valid_stats: List[int] = [200, 206, 302],
+                 api_threaded: bool = True,
+                 test_anonymous: bool = True) -> tuple:
     """
+    :param test_anonymous: 是否仅获取匿名代理，默认为True
+    :param api_threaded:
+    :param test_valid_stats: 测试代理时，指定什么状态为代理可以使用
     :param enable_server: 是否启动flask server线程
     :param enable_getter: 是否启动代理爬虫线程
     :param enable_tester: 是否启动测试代理线程
@@ -395,7 +401,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
          (API_HOST, api_host), (API_PORT, api_port), (TESTER_TIMEOUT, tester_timeout),
          (GETTER_TIMEOUT, getter_timeout), (TESTER_URL, tester_url),
          (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
-         (ENABLE_SERVER, enable_server)])
+         (ENABLE_SERVER, enable_server), (TEST_VALID_STATUS, test_valid_stats), (TEST_ANONYMOUS, test_anonymous),
+         (API_THREADED, api_threaded)])
     PROXY_POOL_URL = proxy_pool_url
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -418,7 +425,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
                 g.setDaemon(set_daemon)
                 g.start()
             if enable_server:
-                s = ThreadServer(host=api_host, port=api_port, threaded=True)
+                s = ThreadServer(host=api_host, port=api_port, threaded=api_threaded)
                 s.setDaemon(set_daemon)
                 s.start()
         except Exception as e:
