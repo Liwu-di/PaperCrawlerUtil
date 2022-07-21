@@ -1,3 +1,5 @@
+import struct
+import sys
 import time
 import urllib
 from typing import Callable
@@ -94,7 +96,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
         except NoProxyException as e:
             raise e
         except Exception as result:
-            log("错误信息:%s" % result)
+            log(string="错误信息:%s" % result, print_file=sys.stderr)
             log("尝试重连")
             time.sleep(sleep_time)
         if len(html) != 0:
@@ -103,7 +105,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 try:
                     html = str(html, encoding=if_bytes_encoding)
                 except Exception as e:
-                    log("字节转字符串错误：{}".format(e))
+                    log(string="字节转字符串错误：{}".format(e), print_file=sys.stderr)
             return html
     return html
 
@@ -171,13 +173,13 @@ def retrieve_file(url: str, path: str, proxies: str = "",
         except NoProxyException as e:
             raise e
         except Exception as e:
-            log("抽取失败:{}".format(e))
+            log(string="抽取失败:{}".format(e), print_file=sys.stderr)
             time.sleep(sleep_time)
         if success:
             return success
             time.sleep(sleep_time)
     if not success:
-        log("{}提取失败".format(url))
+        log(string="{}提取失败".format(url), print_file=sys.stderr)
         time.sleep(sleep_time)
         return success
 
@@ -206,11 +208,11 @@ def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_re
                                           random_proxy=random_proxy,
                                           require_proxy=require_proxy)
         if len(html) == 0:
-            log("爬取失败，字符串长度为0")
+            log(string="爬取失败，字符串长度为0", print_file=sys.stderr)
             time.sleep(sleep_time)
             continue
         elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
-            log("爬取失败，无法从字符串中提取需要的元素")
+            log(string="爬取失败，无法从字符串中提取需要的元素", print_file=sys.stderr)
             time.sleep(sleep_time)
             continue
         else:
@@ -218,7 +220,7 @@ def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_re
                 log("从sichub获取目标文件链接成功，等待分析提取")
             break
     if len(html) == 0:
-        log("获取html文件达到最大次数，停止获取doi:{}".format(doi))
+        log(string="获取html文件达到最大次数，停止获取doi:{}".format(doi), print_file=sys.stderr)
         return
     attr_list = get_attribute_of_html(html, {"href=": "in"}, ["button"])
     for paths in attr_list:
@@ -226,7 +228,7 @@ def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_re
         try:
             path = paths.split("href=")[1].split("?download")[0]
         except Exception as e:
-            log("链接{}截取错误:{}".format(paths, e))
+            log(string="链接{}截取错误:{}".format(paths, e), print_file=sys.stderr)
             continue
         time.sleep(sleep_time)
         for i in range(max_retry):
@@ -243,7 +245,7 @@ def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_re
                     log("文件{}提取成功".format(work_path))
                 break
         if not success:
-            log("抽取文件达到最大次数，停止获取doi:{}".format(doi))
+            log(string="抽取文件达到最大次数，停止获取doi:{}".format(doi), print_file=sys.stderr)
 
 
 def verify_rule(rule: dict, origin: float or str or Tag) -> bool:

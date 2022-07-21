@@ -167,10 +167,12 @@ def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: ob
     if log_style == LOG_STYLE_LOG:
         logging.warning(string)
     elif log_style == LOG_STYLE_PRINT:
-        print(string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
+        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + get_split(lens=3, style=" ")
+              + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
     elif log_style == LOG_STYLE_ALL:
         logging.warning(string)
-        print(string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
+        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + get_split(lens=3, style=" ")
+              + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
 
 
 class CanStopThread(threading.Thread):
@@ -261,18 +263,18 @@ def set_cross_file_variable(key_val: List[tuple]) -> bool:
     :return:
     """
     if type(key_val) != list:
-        log("全局变量设置错误，请提供List类型并且保证所有元素都是tuple")
+        log(string="全局变量设置错误，请提供List类型并且保证所有元素都是tuple", print_file=sys.stderr)
         return False
     for k_v in key_val:
         if type(k_v) != tuple:
-            log("全局变量设置错误，请提供List类型并且保证所有元素都是tuple")
+            log(string="全局变量设置错误，请提供List类型并且保证所有元素都是tuple", print_file=sys.stderr)
             return False
     global_val._init()
     for k_v in key_val:
         try:
             global_val.set_value(k_v[0], k_v[1])
         except Exception as e:
-            log("设置全局跨文件变量{}错误：{}".format(k_v, e))
+            log(string="设置全局跨文件变量{}错误：{}".format(k_v, e), print_file=sys.stderr)
             return False
     return True
 
@@ -285,7 +287,7 @@ def is_ip(proxy_test: str = "") -> bool:
     """
     flag = False
     if type(proxy_test) != str:
-        log("参数{}不是字符串".format(proxy_test))
+        log(string="参数{}不是字符串".format(proxy_test), print_file=sys.stderr)
         return False
     if len(proxy_test) == 0:
         return flag
@@ -305,10 +307,10 @@ def stop_thread(thread_list: List[CanStopThread] = []) -> int:
         try:
             t.stop()
         except ThreadStopException as e:
-            log("线程{}结束".format(t.name))
+            log(string="线程{}结束".format(t.name), print_file=sys.stderr)
             count = count + 1
         except Exception as e:
-            log("结束线程{}错误{}".format(t.name, e))
+            log(string="结束线程{}错误{}".format(t.name, e), print_file=sys.stderr)
     return count
 
 
@@ -429,7 +431,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
                 s.setDaemon(set_daemon)
                 s.start()
         except Exception as e:
-            log("proxypool线程异常{}".format(e))
+            log(string="proxypool线程异常{}".format(e), print_file=sys.stderr)
         proxy_test = ""
         url = HTTP + api_host + COLON_SEPARATOR + str(api_port) + "/random"
         is_ip_flag = False
@@ -440,7 +442,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
                     proxy_test = requests.get(url, timeout=(20, 20)).text
                     is_ip_flag = is_ip(proxy_test)
                 except Exception as e:
-                    log("测试proxypool项目报错:{}".format(e))
+                    log(string="测试proxypool项目报错:{}".format(e), print_file=sys.stderr)
                     proxy_test = ""
                 time.sleep(2)
             if len(proxy_pool_url) == 0:
@@ -450,10 +452,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
         return s, g, t
     else:
         if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG:
-            log("redis或者Flask配置错误")
+            log(string="redis或者Flask配置错误", print_file=sys.stderr)
             return ()
         elif require_proxy_pool and not PROXY_POOL_CAN_RUN_FLAG:
-            log("无法重复启动proxypool")
+            log(string="无法重复启动proxypool", print_file=sys.stderr)
             return ()
         elif not require_proxy_pool:
             return ()
@@ -481,15 +483,15 @@ def get_proxy() -> str or None:
     :return:
     """
     if len(PROXY_POOL_URL) <= 0:
-        log("使用了代理（require_proxy=Ture）,但是没有设置代理连接")
-        log("请使用basic_config(proxy_pool_url=\"\")设置")
+        log(string="使用了代理（require_proxy=Ture）,但是没有设置代理连接", print_file=sys.stderr)
+        log(string="请使用basic_config(proxy_pool_url=\"\")设置", print_file=sys.stderr)
         raise Exception("无法获取代理连接")
     try:
         response = requests.get(PROXY_POOL_URL)
         if response.status_code == 200:
             return response.text
     except ConnectionError as e:
-        log(e)
+        log(string=e, print_file=sys.stderr)
         return None
 
 
@@ -525,7 +527,7 @@ def local_path_generate(folder_name: str, file_name: str = "",
         else:
             os.makedirs(folder_name)
     except Exception as e:
-        log("创建文件夹{}失败".format(e))
+        log(string="创建文件夹{}失败".format(e), print_file=sys.stderr)
     if len(file_name) == 0:
         file_name = str(time.strftime("%H_%M_%S", time.localtime()))
         file_name = file_name + str(random.randint(10000, 99999))
@@ -542,7 +544,7 @@ def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> No
         f.close()
         log("写入文件{}成功".format(path))
     except Exception as e:
-        log("写入文件{}失败：{}".format(path, e))
+        log(string="写入文件{}失败：{}".format(path, e), print_file=sys.stderr)
 
 
 def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
