@@ -4,6 +4,12 @@
 # @FileName: global_val.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
+import threading
+
+
+modify_lock = threading.Lock()
+
+
 def _init():  # 初始化
     global _global_dict
     _global_dict = {}
@@ -11,7 +17,9 @@ def _init():  # 初始化
 
 def set_value(key, value):
     """定义一个全局变量"""
+    modify_lock.acquire()
     _global_dict[key] = value
+    modify_lock.release()
 
 
 def get_value(key):

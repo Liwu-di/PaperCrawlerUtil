@@ -163,7 +163,7 @@ def retrieve_file(url: str, path: str, proxies: str = "",
             if reporthook:
                 reporthook = reporthook
             else:
-                bar = process_bar(final_prompt="文件下载完成")
+                bar = process_bar(final_prompt="文件下载完成", desc="文件下载进度：")
                 reporthook = bar.process
             urlretrieve(url=url, filename=path, reporthook=reporthook, data=data)
             # if need_log:

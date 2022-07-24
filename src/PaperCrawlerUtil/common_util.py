@@ -31,12 +31,10 @@ from constant import *
 from tqdm import tqdm
 
 PROXY_POOL_URL = ""
-logging.basicConfig(filename='crawler_util.log', level=logging.WARNING)
+
 log_style = LOG_STYLE_PRINT
 
 PROXY_POOL_CAN_RUN_FLAG = True
-
-p_bar = None
 
 
 class process_bar(object):
@@ -146,7 +144,6 @@ class process_bar(object):
                             position=self.position, postfix=self.postfix, unit_divisor=self.unit_divisor,
                             write_bytes=self.write_bytes, lock_args=self.lock_args, nrows=self.nrows, colour=self.colour
                             , delay=self.delay, gui=self.gui)
-            self.bar.set_description("文件下载进度：")
         else:
             self.batch = args[1]
             if self.current + self.batch > self.total:
@@ -161,17 +158,28 @@ class process_bar(object):
         self.bar.close()
 
 
+def get_timestamp() -> str:
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+
+def write_log(string: str = "", print_file: object = sys.stdout):
+    if print_file == sys.stdout:
+        logging.warning(string)
+    else:
+        logging.error(string)
+
+
 def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
         print_flush: bool = None) -> None:
     global log_style
     if log_style == LOG_STYLE_LOG:
-        logging.warning(string)
+        write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
-        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + get_split(lens=3, style=" ")
+        print(get_timestamp() + get_split(lens=3, style=" ")
               + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
     elif log_style == LOG_STYLE_ALL:
-        logging.warning(string)
-        print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + get_split(lens=3, style=" ")
+        write_log(string, print_file)
+        print(get_timestamp() + get_split(lens=3, style=" ")
               + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
 
 
@@ -390,6 +398,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
     :param logs_style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
     :return:
     """
+    if len(log_file_name) != 0 and log_level != 0:
+        logging.basicConfig(filename=log_file_name, level=log_level, force=True)
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
     set_cross_file_variable(
@@ -405,7 +415,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
          (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
          (ENABLE_SERVER, enable_server), (TEST_VALID_STATUS, test_valid_stats), (TEST_ANONYMOUS, test_anonymous),
          (API_THREADED, api_threaded)])
-    PROXY_POOL_URL = proxy_pool_url
+    PROXY_POOL_URL = proxy_pool_url if len(proxy_pool_url) != 0 else PROXY_POOL_URL
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
             redis_host) > 0 and 0 <= redis_database <= 65535 and (
@@ -455,7 +465,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
             log(string="redis或者Flask配置错误", print_file=sys.stderr)
             return ()
         elif require_proxy_pool and not PROXY_POOL_CAN_RUN_FLAG:
-            log(string="无法重复启动proxypool", print_file=sys.stderr)
+            log(string="无法重复启动proxypool")
             return ()
         elif not require_proxy_pool:
             return ()
