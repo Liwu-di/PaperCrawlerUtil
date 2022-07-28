@@ -31,10 +31,10 @@ from constant import *
 from tqdm import tqdm
 
 PROXY_POOL_URL = ""
-
 log_style = LOG_STYLE_PRINT
-
 PROXY_POOL_CAN_RUN_FLAG = True
+
+logging.basicConfig(filename="crawler_util.log", level=logging.WARNING)
 
 
 class process_bar(object):
