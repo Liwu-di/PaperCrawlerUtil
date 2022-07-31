@@ -6,6 +6,9 @@ A set of tools for building small crawlers, including accessing links, getting e
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
 PDF file merging, PDF file intercepting certain pages, etc.
 
+@[toc]
+
+## 基本使用
 ```python
 """
 本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
@@ -101,6 +104,8 @@ html = random_proxy_header_access(
     url="https://s.taobao.com/search?q=iphone5",
     require_proxy=False, cookie=cookie)
 ```
+
+## 爬取CVPR文章
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -129,7 +134,7 @@ for times in ["2019", "2020", "2021"]:
             # retrieve_file 获取文件，可以设置是否使用代理等等
             retrieve_file("https://openaccess.thecvf.com/" + pdf_path, work_path)
 ```
-
+## 爬取EMNLP文章
 ```python
 """
 以下是一个新的例子，用来爬取EMNLP2021的文章，使用了内置代理池，翻译等
@@ -184,6 +189,7 @@ if len(pdf_url) == len(names):
 log("count={}".format(str(count)))
 ```
 
+## 根据doi从sci-hub下载（测试较少，不一定好用）
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -192,6 +198,9 @@ from PaperCrawlerUtil.document_util import *
 get_pdf_url_by_doi(doi="xxxx", work_path=local_path_generate("./"))
 ```
 
+## PDF处理
+### 截取某些页中PDF文字（比如在前两页中1.introduction之前的所有文字）
+这个因为截取出来的文字，如果是左右分栏的，仍然按一栏处理，所以会有混乱，以及图表的注释，效果并不是很好
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -204,20 +213,7 @@ write_file(path=local_path_generate("E:\\git-code\\paper-crawler\\CVPR\\CVPR_202
                mode="w+", string=title_and_abstract)
 ```
 
-```python
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.document_util import *
-basic_config(logs_style=LOG_STYLE_PRINT)
-# 通过百度翻译api平台申请获得
-appid = "20200316xxxx99558"
-secret_key = "BK6xxxxxDGBwaZgr4F"
-# 实现文本翻译， 可以结合上一块代码获取PDF中的文字翻译，注意的是使用了百度
-# 和谷歌翻译，因此如果使用谷歌翻译，则需要提供代理，默认会尝试http://127.0.01:1080 这个地址
-text_translate("", appid, secret_key, is_google=True)
-
-```
-
+### PDF截取某些页保存为PDF
 ```python
 """
 以下是PDF文件分割的一个例子，表示将"D:\python project\PaperCrawlerUtil\EMNLP2021"文件夹下所有PDF文件
@@ -230,7 +226,7 @@ from PaperCrawlerUtil.document_util import *
 getSomePagesFromFileOrDirectory("D:\python project\PaperCrawlerUtil\EMNLP2021", [0], "EMNLP2021_first_page")
 
 ```
-
+### PDF文件合并为一个大文件
 ```python
 """
 以下是PDF文件合并的一个例子，表示将"E:\论文阅读\论文\EMNLP\EMNLP2021_first_page"文件夹下所有PDF文件
@@ -245,24 +241,23 @@ cooperatePdf("E:\论文阅读\论文\EMNLP\EMNLP2021_first_page", [0], "E:\论�
 
 ```
 
+## 翻译
+### 谷歌以及百度翻译客户端版，注意百度翻译免费额度只有5w了
 ```python
-"""
-以下是使用进度条的一个例子，可以在retrieve_file函数中找到
-在urlretrieve中，每次下载一个block的文件，就会调用 reporthook函数，并且传入三个值，
-当前块号，块的大小，总量
-在其他地方使用时，也可以在函数中增加一个callable 参数，并且传入类似的3个值，再初始化
-common_util.process_bar对象，使用对象的process方法进行传参，从而实现进度条的包装
-注意：调用之前必须先使用process方法，实现初始化，否则无法达到100%但实际上任务以及成功
-"""
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
-bar = None
-bar = process_bar()
-reporthook = bar.process
-urlretrieve(url="", filename="", reporthook=reporthook, data="")
+basic_config(logs_style=LOG_STYLE_PRINT)
+# 通过百度翻译api平台申请获得
+appid = "20200316xxxx99558"
+secret_key = "BK6xxxxxDGBwaZgr4F"
+# 实现文本翻译， 可以结合上一块代码获取PDF中的文字翻译，注意的是使用了百度
+# 和谷歌翻译，因此如果使用谷歌翻译，则需要提供代理，默认会尝试http://127.0.01:1080 这个地址
+text_translate("", appid, secret_key, is_google=True)
+
 ```
 
+### 谷歌翻译网页版
 ```python
 """
 百度翻译api已经不再免费提供文本翻译，每个月只有5w字符额度，因此请使用谷歌翻译，
@@ -283,4 +278,24 @@ token = "xx"
 translate_web(content=s, sl=EN, tl=ZH_CN, proxy="127.0.0.1:33210",
               translate_method=google_trans_final, cookie=cookie, token=token)
 ```
+
+## 进度条
+```python
+"""
+以下是使用进度条的一个例子，可以在retrieve_file函数中找到
+在urlretrieve中，每次下载一个block的文件，就会调用 reporthook函数，并且传入三个值，
+当前块号，块的大小，总量
+在其他地方使用时，也可以在函数中增加一个callable 参数，并且传入类似的3个值，再初始化
+common_util.process_bar对象，使用对象的process方法进行传参，从而实现进度条的包装
+注意：调用之前必须先使用process方法，实现初始化，否则无法达到100%但实际上任务以及成功
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+bar = None
+bar = process_bar()
+reporthook = bar.process
+urlretrieve(url="", filename="", reporthook=reporthook, data="")
+```
+
 
