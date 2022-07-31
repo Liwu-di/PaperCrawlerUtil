@@ -4,6 +4,7 @@ import io
 import json
 import sys
 import threading
+import time
 import urllib
 from typing import Optional, Callable, Any, Iterable, Mapping
 
@@ -686,7 +687,20 @@ class Py4Js:
 
 def google_trans_final(content: str = "", sl: str = AUTO, tl: str = EN,
                        proxy: str = "127.0.0.1:1080", reporthook: Callable[[], None] = None,
-                       total: int = 0, need_log: bool = True):
+                       total: int = 0, need_log: bool = True, cookie: str = "", token: str = "") -> str:
+    """
+        网页版谷歌翻译，需要提供可以访问谷歌的代理
+        :param token: not used
+        :param cookie: not used
+        :param total: 翻译总数量
+        :param content: 待翻译内容
+        :param sl: 源语言
+        :param tl: 目标语言
+        :param proxy: 代理
+        :param reporthook: 完成翻译后使用的函数，这里默认使用内置进度条
+        :param need_log: 是否需要打印日志，翻译结果等
+        :return: 翻译后的文本
+        """
     js = Py4Js()
     tk = js.getTk(content)
     url = "http://translate.google.com/translate_a/single?client=t"
@@ -696,9 +710,9 @@ def google_trans_final(content: str = "", sl: str = AUTO, tl: str = EN,
     url = url + ("&pc=1&srcrom=0&ssel=0&tsel=0&kc=2&tk=%s&q=%s" % (tk, content))
     html = random_proxy_header_access(url=url, proxy=proxy, require_proxy=True,
                                       random_proxy=False, return_type="object", need_log=False)
+    ret = ''
     try:
         trans = html.json()[0]
-        ret = ''
         for i in range(len(trans)):
             line = trans[i][0]
             if line is not None:
@@ -711,11 +725,16 @@ def google_trans_final(content: str = "", sl: str = AUTO, tl: str = EN,
     return ret
 
 
-def google_translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
-                         proxy: str = "127.0.0.1:1080", sleep_time: float = 2,
-                         need_log: bool = True):
+def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
+                  proxy: str = "127.0.0.1:1080", sleep_time: float = 2,
+                  need_log: bool = True, translate_method: Callable[[], str] = None,
+                  cookie: str = "", token: str = ""):
     """
-    网页版谷歌翻译，需要提供可以访问谷歌的代理
+    网页版翻译接口，可以通过translate_method传入需要调用的翻译接口，如果为谷歌翻译需要提供可以访问谷歌的代理
+    :param token: token
+    :param cookie: cookie
+    :param translate_method: 需要调用的翻译方法，需要接受的参数包括：
+    content, sl, tl, proxy, total, reporthook, need_log, cookie, token
     :param content: 待翻译内容
     :param sl: 源语言
     :param tl: 目标语言
@@ -733,21 +752,24 @@ def google_translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
         while len(content) > 1000:
             temp = content[0:999]
             content = content[1000:]
-            temp_trans = google_trans_final(content=temp, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                            reporthook=p.process, need_log=need_log)
+            temp_trans = translate_method(content=temp, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                          reporthook=p.process, need_log=need_log, cookie=cookie,
+                                          token=token)
             res_trans = res_trans + temp_trans
             count = count + 1
             time.sleep(sleep_time)
-        temp_trans = google_trans_final(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                        reporthook=p.process, need_log=need_log)
+        temp_trans = translate_method(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                      need_log=need_log, cookie=cookie, reporthook=p.process,
+                                      token=token)
         res_trans += temp_trans
         if need_log:
             log(res_trans)
         return res_trans
     else:
         time.sleep(sleep_time)
-        res_trans = google_trans_final(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                       reporthook=p.process, need_log=need_log)
+        res_trans = translate_method(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                     need_log=need_log, cookie=cookie, reporthook=p.process,
+                                     token=token)
         if need_log:
             log(res_trans)
         return res_trans

@@ -91,10 +91,9 @@ def random_proxy_header_access(url: str, proxy: str = '',
                                            , allow_redirects=allow_redirects, json=json, data=post_data,
                                            params=get_params)
             html = None
-            if return_type == "str":
-                html = request.content
-            else:
-                html = request
+            if return_type != "str":
+                return request
+            html = request.content
             if need_log:
                 log("爬取成功，返回内容")
             time.sleep(sleep_time)
@@ -104,7 +103,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
             log(string="错误信息:%s" % result, print_file=sys.stderr)
             log("尝试重连")
             time.sleep(sleep_time)
-        if html is not None:
+        if (type(html) == str or type(html) == bytes) and len(html) >= 0:
             if need_log:
                 log(get_split(lens=100))
             if type(html) == bytes:
