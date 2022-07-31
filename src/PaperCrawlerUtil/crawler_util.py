@@ -18,7 +18,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
                                need_log: bool = True, cookie: str = "", if_bytes_encoding: str = "utf-8",
                                method: str = GET, get_params: List[tuple] or dict or bytes = None,
                                post_data: dict or List[tuple] or bytes = None,
-                               json=None, allow_redirects: bool = True) -> str:
+                               json=None, allow_redirects: bool = True, return_type: str = "str") -> str or object:
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
@@ -32,7 +32,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
     :param cookie: 对于需要cookie即登录才能访问的网站，需要提供cookie
     :param need_log: 是否需要日志
     :param url:链接
-    :param proxy:提供代理
+    :param proxy:提供代理，例如："127.0.0.1:1080"
     :param require_proxy:是否需要代理，默认为真
     :param max_retry:默认最大尝试10次
     :param sleep_time:每次爬取睡眠时间
@@ -40,6 +40,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
     :param random_proxy:随机使用代理，默认为真，随机使用真实地址而不使用代理
     :param time_out: 一个元组或者浮点数，元组前者表示连接超时阈值，后者表示获取内容超时阈值、
                     如果是浮点数，则两者值设为一样
+    :param return_type: 需要返回处理过的字符串（“str”）还是原始对象（“object”）
     """
     proxy_provide = False
     cookie_jar = RequestsCookieJar()
@@ -89,7 +90,11 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 request = requests.request(method=method, url=url, headers=headers, timeout=time_out, cookies=cookie_jar
                                            , allow_redirects=allow_redirects, json=json, data=post_data,
                                            params=get_params)
-            html = request.content
+            html = None
+            if return_type == "str":
+                html = request.content
+            else:
+                html = request
             if need_log:
                 log("爬取成功，返回内容")
             time.sleep(sleep_time)
@@ -99,8 +104,9 @@ def random_proxy_header_access(url: str, proxy: str = '',
             log(string="错误信息:%s" % result, print_file=sys.stderr)
             log("尝试重连")
             time.sleep(sleep_time)
-        if len(html) != 0:
-            log(get_split(lens=100))
+        if html is not None:
+            if need_log:
+                log(get_split(lens=100))
             if type(html) == bytes:
                 try:
                     html = str(html, encoding=if_bytes_encoding)
