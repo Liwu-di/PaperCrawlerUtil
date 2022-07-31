@@ -252,6 +252,7 @@ cooperatePdf("E:\论文阅读\论文\EMNLP\EMNLP2021_first_page", [0], "E:\论�
 当前块号，块的大小，总量
 在其他地方使用时，也可以在函数中增加一个callable 参数，并且传入类似的3个值，再初始化
 common_util.process_bar对象，使用对象的process方法进行传参，从而实现进度条的包装
+注意：调用之前必须先使用process方法，实现初始化，否则无法达到100%但实际上任务以及成功
 """
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -260,5 +261,21 @@ bar = None
 bar = process_bar()
 reporthook = bar.process
 urlretrieve(url="", filename="", reporthook=reporthook, data="")
+```
+
+```python
+"""
+百度翻译api已经不再免费提供文本翻译，每个月只有5w字符额度，因此请使用谷歌翻译，
+百度翻译网页版将再下次更新提供
+"""
+
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+s = ""
+for i in range(1000):
+    s = s + "i am an apple. "
+google_translate_web(s, tl=ZH_CN, proxy="127.0.0.1:33210")
 ```
 

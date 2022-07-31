@@ -6,13 +6,15 @@ import sys
 import threading
 import urllib
 from typing import Optional, Callable, Any, Iterable, Mapping
+
+import requests
 from httpcore import SyncHTTPProxy
 import PyPDF2
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import pdfplumber
 from googletrans import Translator
 from pdf2docx import Converter
-
+import execjs
 from crawler_util import *
 
 
@@ -491,7 +493,6 @@ def getSomePagesFromFileOrDirectory(path: str, page_range: tuple or list, out_di
 def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_path: str = "",
                           need_log: bool = True, timeout: float = -1, group_id: str = "",
                           need_group: bool = True) -> bool:
-
     """
     合并列表的PDF文件到指定目录
     :param files: 文件列表
@@ -633,6 +634,123 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
             i = i + 1
     else:
         cooperatePdfWithLimit(files, page_range, out_path, need_log, timeout, need_group=False)
+
+
+class Py4Js:
+
+    def __init__(self):
+        self.ctx = execjs.compile(""" 
+        function TL(a) { 
+        var k = ""; 
+        var b = 406644; 
+        var b1 = 3293161072; 
+
+        var jd = "."; 
+        var $b = "+-a^+6"; 
+        var Zb = "+-3^+b+-f"; 
+
+        for (var e = [], f = 0, g = 0; g < a.length; g++) { 
+            var m = a.charCodeAt(g); 
+            128 > m ? e[f++] = m : (2048 > m ? e[f++] = m >> 6 | 192 : (55296 == (m & 64512) && g + 1 < a.length && 56320 == (a.charCodeAt(g + 1) & 64512) ? (m = 65536 + ((m & 1023) << 10) + (a.charCodeAt(++g) & 1023), 
+            e[f++] = m >> 18 | 240, 
+            e[f++] = m >> 12 & 63 | 128) : e[f++] = m >> 12 | 224, 
+            e[f++] = m >> 6 & 63 | 128), 
+            e[f++] = m & 63 | 128) 
+        } 
+        a = b; 
+        for (f = 0; f < e.length; f++) a += e[f], 
+        a = RL(a, $b); 
+        a = RL(a, Zb); 
+        a ^= b1 || 0; 
+        0 > a && (a = (a & 2147483647) + 2147483648); 
+        a %= 1E6; 
+        return a.toString() + jd + (a ^ b) 
+    }; 
+
+    function RL(a, b) { 
+        var t = "a"; 
+        var Yb = "+"; 
+        for (var c = 0; c < b.length - 2; c += 3) { 
+            var d = b.charAt(c + 2), 
+            d = d >= t ? d.charCodeAt(0) - 87 : Number(d), 
+            d = b.charAt(c + 1) == Yb ? a >>> d: a << d; 
+            a = b.charAt(c) == Yb ? a + d & 4294967295 : a ^ d 
+        } 
+        return a 
+    } 
+    """)
+
+    def getTk(self, text):
+        return self.ctx.call("TL", text)
+
+
+def google_trans_final(content: str = "", sl: str = AUTO, tl: str = EN,
+                       proxy: str = "127.0.0.1:1080", reporthook: Callable[[], None] = None,
+                       total: int = 0, need_log: bool = True):
+    js = Py4Js()
+    tk = js.getTk(content)
+    url = "http://translate.google.com/translate_a/single?client=t"
+    url = url + "&sl=" + sl + "&tl=" + tl
+    url = url + ("&hl=en&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw")
+    url = url + ("&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&clearbtn=1&otf=1")
+    url = url + ("&pc=1&srcrom=0&ssel=0&tsel=0&kc=2&tk=%s&q=%s" % (tk, content))
+    html = random_proxy_header_access(url=url, proxy=proxy, require_proxy=True,
+                                      random_proxy=False, return_type="object", need_log=False)
+    try:
+        trans = html.json()[0]
+        ret = ''
+        for i in range(len(trans)):
+            line = trans[i][0]
+            if line is not None:
+                ret += trans[i][0]
+        if reporthook:
+            reporthook(0, 1000, total)
+    except Exception as e:
+        if need_log:
+            log("翻译错误：{}".format(e), print_file=sys.stderr)
+    return ret
+
+
+def google_translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
+                         proxy: str = "127.0.0.1:1080", sleep_time: float = 2,
+                         need_log: bool = True):
+    """
+    网页版谷歌翻译，需要提供可以访问谷歌的代理
+    :param content: 待翻译内容
+    :param sl: 源语言
+    :param tl: 目标语言
+    :param proxy: 代理
+    :param sleep_time: 每次访问翻译睡眠时间
+    :param need_log: 是否需要打印日志，翻译结果等
+    :return: 翻译后的文本
+    """
+    res_trans = ""
+    count = 0
+    sum = len(content)
+    p = process_bar(desc="翻译进度：", final_prompt="翻译完成", total=sum)
+    p.process(0, 1000, sum)
+    if len(content) > 1000:
+        while len(content) > 1000:
+            temp = content[0:999]
+            content = content[1000:]
+            temp_trans = google_trans_final(content=temp, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                            reporthook=p.process, need_log=need_log)
+            res_trans = res_trans + temp_trans
+            count = count + 1
+            time.sleep(sleep_time)
+        temp_trans = google_trans_final(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                        reporthook=p.process, need_log=need_log)
+        res_trans += temp_trans
+        if need_log:
+            log(res_trans)
+        return res_trans
+    else:
+        time.sleep(sleep_time)
+        res_trans = google_trans_final(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
+                                       reporthook=p.process, need_log=need_log)
+        if need_log:
+            log(res_trans)
+        return res_trans
 
 
 if __name__ == "__main__":
