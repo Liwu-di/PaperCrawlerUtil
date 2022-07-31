@@ -6,7 +6,6 @@ A set of tools for building small crawlers, including accessing links, getting e
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
 PDF file merging, PDF file intercepting certain pages, etc.
 
-@[toc]
 
 ## 基本使用
 ```python
