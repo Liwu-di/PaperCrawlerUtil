@@ -266,7 +266,7 @@ urlretrieve(url="", filename="", reporthook=reporthook, data="")
 ```python
 """
 百度翻译api已经不再免费提供文本翻译，每个月只有5w字符额度，因此请使用谷歌翻译，
-百度翻译网页版将再下次更新提供
+
 """
 
 from PaperCrawlerUtil.common_util import *
@@ -276,6 +276,11 @@ from PaperCrawlerUtil.document_util import *
 s = ""
 for i in range(1000):
     s = s + "i am an apple. "
-google_translate_web(s, tl=ZH_CN, proxy="127.0.0.1:33210")
+cookie = "xx"
+token = "xx"
+#由于在谷歌翻译中，并没有使用token，cookie参数，因此随便填，这里有这个参数只是做统一管理
+#后期可以改为对象传值
+translate_web(content=s, sl=EN, tl=ZH_CN, proxy="127.0.0.1:33210",
+              translate_method=google_trans_final, cookie=cookie, token=token)
 ```
 
