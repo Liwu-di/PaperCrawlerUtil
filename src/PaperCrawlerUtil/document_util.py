@@ -460,9 +460,10 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
 
 
 def getSomePagesFromFileOrDirectory(path: str, page_range: tuple or list, out_directory: str = "",
-                                    need_log: bool = True, timeout: float = 20) -> None:
+                                    need_log: bool = True, timeout: float = 20, need_bar: bool = True) -> None:
     """
     从给定的文件夹或者文件路径中，截取指定的页面，保存到给定输出目录中
+    :param need_bar: 是否需要使用进度条代替日志显示，此项为True时，覆盖need_log参数
     :param path: 文件夹或者文件路径
     :param page_range: 截取的范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
     则按照列表给出的信息截取
@@ -474,19 +475,30 @@ def getSomePagesFromFileOrDirectory(path: str, page_range: tuple or list, out_di
 
     count = 0
     sum = 0
+    need_log = need_log if not need_bar else False
     if os.path.isfile(path):
+        p = process_bar(total=1, desc="文件截取进度：", final_prompt="文件截取完成")
+        p.process(0, 1, 1)
         sum = 1
-        if getSomePagesFromOnePDF(path, local_path_generate(out_directory), page_range, need_log):
+        if getSomePagesFromOnePDF(path, local_path_generate(out_directory, need_log=need_log), page_range, need_log):
             count = count + 1
+            p.process(1, 1, 1)
     else:
         files = getAllFiles(path)
+        total = 0
+        for f in files:
+            if f.endswith(".pdf"):
+                total = total + 1
+        p = process_bar(total=total, desc="文件截取进度：", final_prompt="文件截取完成")
+        p.process(0, 1, total)
         for k in files:
             if not k.endswith(".pdf"):
                 log(string="文件{}不是PDF文件".format(k), print_file=sys.stderr)
                 continue
             sum = sum + 1
-            if getSomePagesFromOnePDF(k, local_path_generate(out_directory), page_range, need_log, timeout):
+            if getSomePagesFromOnePDF(k, local_path_generate(out_directory, need_log=need_log), page_range, need_log, timeout):
                 count = count + 1
+                p.process(count, 1, total)
     if need_log:
         log("总计待截取文件：{}，成功：{}".format(str(sum), str(count)))
 
@@ -601,9 +613,10 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
 
 def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = "",
                  need_log: bool = True, timeout: float = -1, group_number: int = 50,
-                 need_group: bool = True) -> None:
+                 need_group: bool = True, need_processbar: bool = True) -> None:
     """
     合并文件夹中所有的PDF文件到指定目录
+    :param need_processbar: 是否需要使用进度条代替日志显示，此项为True时，覆盖need_log参数
     :param path: 文件夹路径
     :param page_range: 合并的页码范围，如果是元组，则连续截取[a,b]的页面，注意从0开始，如果是列表，
     则按照列表给出的信息截取，如果此项值不给定，则默认全部合并
@@ -615,6 +628,7 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
     :param need_group: 是否需要分组合并
     :return:
     """
+    need_log = need_log if not need_processbar else False
     if len(path) == 0:
         log("给定路径为空，合并结束：{}".format(path))
     elif os.path.isfile(path):
@@ -623,6 +637,9 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
         page_range = []
     files = getAllFiles(path)
     if need_group:
+        if need_processbar:
+            p = process_bar(desc="文件合并进度：", total=len(files), final_prompt="文件合并完成")
+            p.process(0, group_number, len(files))
         i: int = 0
         group_id: int = 0
         file_group = []
@@ -631,10 +648,17 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
                 cooperatePdfWithLimit(file_group, page_range, out_path, need_log, timeout, str(group_id))
                 group_id = group_id + 1
                 file_group.clear()
+                if need_processbar:
+                    p.process(0, group_number, len(files))
             file_group.append(files[i])
             i = i + 1
     else:
+        if need_processbar:
+            p = process_bar(desc="文件合并进度：", total=len(files), final_prompt="文件合并完成")
+            p.process(0, group_number, len(files))
         cooperatePdfWithLimit(files, page_range, out_path, need_log, timeout, need_group=False)
+        if need_processbar:
+            p.process(0, len(files), len(files))
 
 
 class Py4Js:
