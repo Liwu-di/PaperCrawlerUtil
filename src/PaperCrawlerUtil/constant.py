@@ -304,3 +304,19 @@ YO = "yo"
 """祖鲁语"""
 ZU = "zu"
 
+"""
+谷歌国家地区域名
+"""
+HONG_KONG = ".com.hk"
+AUSTRALIA = ".com.au"
+JAPAN = ".jp"
+RUSSIA = ".com.ru"
+ROOT = ".com"
+SINGAPORE = ".com.sg"
+DOMAIN_LIST = [HONG_KONG, AUSTRALIA, JAPAN, RUSSIA, ROOT, SINGAPORE]
+
+"""
+文件名不能包含的字符
+"""
+
+FORBIDDEN_LIST = ["#", "%", "&", "*", "|", ":", "\"", "<", ">", "?", "/", "\\"]

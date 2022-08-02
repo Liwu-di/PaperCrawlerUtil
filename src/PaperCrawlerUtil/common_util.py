@@ -543,6 +543,8 @@ def local_path_generate(folder_name: str, file_name: str = "",
         file_name = file_name + str(random.randint(10000, 99999))
         file_name = file_name + suffix
     dir = os.path.abspath(folder_name)
+    for k in FORBIDDEN_LIST:
+        file_name = file_name.replace(k, "")
     work_path = os.path.join(dir, file_name)
     return work_path
 
