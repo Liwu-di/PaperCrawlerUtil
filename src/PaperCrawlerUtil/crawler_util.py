@@ -355,5 +355,62 @@ def get_pdf_form_arXiv(title: str, folder_name: str, sleep_time: float = 1.2,
     get_split()
 
 
+def google_scholar_search_crawler(contain_all: List[str] = None, contain_complete_sentence: List[str] = None,
+                                  least_contain_one: List[str] = None, not_contain: List[str] = None,
+                                  q: str = "", need_log: bool = True, sleep_time: float = 15,
+                                  need_retrieve_file: bool = False, start: int = 0, proxy: str = "",
+                                  file_sava_directory: str = "") -> object or List:
+    if len(proxy) == 0:
+        log("谷歌学术需要提供代理", print_file=sys.stderr)
+        return None
+    if contain_all is None and contain_complete_sentence is None and least_contain_one is None and not_contain is None \
+            and len(q) == 0:
+        log("查询内容q或者高级查找关键词不能全部为空", print_file=sys.stderr)
+        return None
+    base_url = "https://scholar.google"
+    base_url = base_url + random.choice(DOMAIN_LIST)
+    base_url = base_url + "/scholar?start=" + str(start) + "&hl=zh-CN&as_sdt=0%2C5&q="
+    q_ = "+".join(contain_all) + "+" \
+         + "OR+" + "+OR+".join(least_contain_one) + "+" \
+         + ("\"" + "+".join(contain_complete_sentence) + "\"") + "+" \
+         + "-" + "+-".join(not_contain)
+    q = q if len(q) != 0 else q_
+    base_url = base_url + q + "&oq="
+    html = random_proxy_header_access(url=base_url, require_proxy=True, proxy=proxy,
+                                      random_proxy=False, need_log=need_log, return_type="object")
+    if need_retrieve_file:
+        if type(html) == str:
+            html = html
+        else:
+            html = html.content
+        div_list = get_attribute_of_html(html=html, rule={"div class=\"gs_r gs_or gs_scl\"": IN, "data-cid": IN,
+                                                          "data-did": IN, "data-aid": IN, "data-rp": IN,
+                                                          "引用": IN, "<div id=\"gs_top\" onclick=\"\">": NOT_IN,
+                                                          "<div id=\"gs_bdy\">": NOT_IN,
+                                                          "<div id=\"gs_bdy_ccl\" role=\"main\">": NOT_IN,
+                                                          "<div id=\"gs_res_ccl\">": NOT_IN,
+                                                          "<div id=\"gs_res_ccl_mid\">": NOT_IN},
+                                         attr_list=["div"])
+        for div in div_list:
+            name = get_attribute_of_html(html=div, rule={"class=\"gs_rt\"": IN}, attr_list=["h3"])
+            if len(name) != 0:
+                name = deleteSpecialCharFromHtmlElement(html=name[0], sep="")
+                name = name + ".pdf"
+                name = name.replace(":", "")
+            else:
+                continue
+            link = get_attribute_of_html(html=div, rule={"[PDF]": IN})[0].split("href=\"")[1].split("\">")[0]
+            if len(link) == 0:
+                log("文件：{}没有PDF可下载".format(name))
+                continue
+            file_sava_path = local_path_generate(file_sava_directory, file_name=name)
+            retrieve_file(url=link, path=file_sava_path, need_log=False, require_proxy=True, proxies=proxy)
+            log("文件：{}保存成功到：{}".format(name, file_sava_path))
+        time.sleep(sleep_time)
+    else:
+        time.sleep(sleep_time)
+        return html
+
+
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)

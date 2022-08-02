@@ -297,4 +297,23 @@ reporthook = bar.process
 urlretrieve(url="", filename="", reporthook=reporthook, data="")
 ```
 
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+"""
+搜素谷歌学术，并且可以下载有PDF链接的文件，
+contain_all，contain_complete_sentence，least_contain_one，not_contain和q只需要提供一个，
+并且q的优先级高于四个高级查询列表。
+必须提供一个可以访问谷歌的代理
+"""
+contain_all = ["text", "summary"]
+contain_complete_sentence = ["prompt", "learning"]
+least_contain_one = ["a", "b", "c"]
+not_contain = []
+google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence=contain_complete_sentence,
+                              least_contain_one=least_contain_one, not_contain=not_contain, need_retrieve_file=True,
+                              proxy="127.0.0.1:33210", file_sava_directory="E:\\")
+```
 

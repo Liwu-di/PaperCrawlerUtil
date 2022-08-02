@@ -592,6 +592,22 @@ def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
     return cookie_jar
 
 
+def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = " ") -> str:
+    names = []
+    flag = True
+    for k in list(html):
+        if k == "<":
+            flag = False
+            continue
+        if k == ">":
+            flag = True
+            names.append(sep)
+            continue
+        if flag:
+            names.append(k)
+    return "".join(names)
+
+
 class NoProxyException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
