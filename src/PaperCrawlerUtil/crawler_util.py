@@ -178,7 +178,7 @@ def retrieve_file(url: str, path: str, proxies: str = "",
         except NoProxyException as e:
             raise e
         except Exception as e:
-            log(string="抽取失败:{}".format(e), print_file=sys.stderr)
+            log(string="抽取:{},失败:{}".format(url, e), print_file=sys.stderr)
             time.sleep(sleep_time)
         if success:
             return success
@@ -360,6 +360,21 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
                                   q: str = "", need_log: bool = True, sleep_time: float = 15,
                                   need_retrieve_file: bool = False, start: int = 0, proxy: str = "",
                                   file_sava_directory: str = "") -> object or List:
+    """
+    爬取谷歌学术爬虫
+    :param contain_all:高级搜索，包含列表中全部字符
+    :param contain_complete_sentence: 高级搜索，必须包含完整字句
+    :param least_contain_one: 高级搜索，至少包含列表中的某一个字符
+    :param not_contain: 高级搜索，不包含列表中的所有字符串
+    :param q: 普通搜索，输入查询内容，优先级高于以上四个高级搜索关键词
+    :param need_log: 是否需要日志
+    :param sleep_time: 睡眠时间，防止被封ip
+    :param need_retrieve_file: 是否需要爬取PDF文件，如果有
+    :param start: 开始索引，必须为10的整数倍或者0
+    :param proxy: 可以爬取谷歌的代理ip：port
+    :param file_sava_directory: 文件保存的目录，文件名自动爬取
+    :return: 返回文件列表或者html对象，参考need_retrieve_file
+    """
     if len(proxy) == 0:
         log("谷歌学术需要提供代理", print_file=sys.stderr)
         return None
@@ -377,8 +392,10 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
     q = q if len(q) != 0 else q_
     base_url = base_url + q + "&oq="
     html = random_proxy_header_access(url=base_url, require_proxy=True, proxy=proxy,
-                                      random_proxy=False, need_log=need_log, return_type="object")
+                                      random_proxy=False, need_log=need_log, return_type="object",
+                                      sleep_time=sleep_time)
     if need_retrieve_file:
+        file_list = []
         if type(html) == str:
             html = html
         else:
@@ -406,9 +423,9 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
             file_sava_path = local_path_generate(file_sava_directory, file_name=name)
             retrieve_file(url=link, path=file_sava_path, need_log=False, require_proxy=True, proxies=proxy)
             log("文件：{}保存成功到：{}".format(name, file_sava_path))
-        time.sleep(sleep_time)
+            file_list.append(file_sava_path)
+        return file_list
     else:
-        time.sleep(sleep_time)
         return html
 
 

@@ -550,6 +550,14 @@ def local_path_generate(folder_name: str, file_name: str = "",
 
 
 def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> None:
+    """
+    写文件
+    :param path: 文件路径
+    :param mode: 模式
+    :param string: 字符串
+    :param encoding: 编码
+    :return:
+    """
     try:
         with open(path, mode=mode, encoding=encoding) as f:
             f.write(string)
@@ -593,6 +601,12 @@ def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
 
 
 def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = " ") -> str:
+    """
+    从html文本中删除标签，如：”<a>b</a>“ -> "b"
+    :param html: html文本
+    :param sep: 在每次去除完一个标签之后，加入的间隔符，如：sep=” “, ”<a>b</a>“ -> " b "
+    :return: 处理玩得字符串
+    """
     names = []
     flag = True
     for k in list(html):
