@@ -1,3 +1,4 @@
+import pickle
 import sys
 from typing import List
 
@@ -620,6 +621,41 @@ def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = " ") -> str:
         if flag:
             names.append(k)
     return "".join(names)
+
+
+def save_obj(src: object, path: str = "") -> bool:
+    """
+    保存对象
+    :param src: 需要保存的对象
+    :param path: 保存的路径
+    :return: 返回是否保存成功,True 表示成功
+    """
+    path = path if len(path) > 0 else local_path_generate("", suffix=".db")
+    try:
+        with open(path, mode="wb") as f:
+            pickle.dump(src, f, pickle.HIGHEST_PROTOCOL)
+        f.close()
+        return True
+    except Exception as e:
+        log("保存object错误：{}".format(e), print_file=sys.stderr)
+        return False
+
+
+def load_obj(path: str) -> object:
+    """
+    加载对象
+    :param path: 被加载对象的保存路径
+    :return: 返回对象
+    """
+    res = None
+    try:
+        with open(path, mode="rb") as f:
+            res = pickle.load(f)
+        f.close()
+        return res if (res is not None) else None
+    except Exception as e:
+        log("加载object错误：{}".format(e), print_file=sys.stderr)
+        return None
 
 
 class NoProxyException(Exception):
