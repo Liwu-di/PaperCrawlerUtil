@@ -103,7 +103,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
             log(string="错误信息:%s" % result, print_file=sys.stderr)
             log("尝试重连")
             time.sleep(sleep_time)
-        if (type(html) == str or type(html) == bytes) and len(html) >= 0:
+        if (type(html) == str or type(html) == bytes) and len(html) > 0 and return_type == "str":
             if need_log:
                 log(get_split(lens=100))
             if type(html) == bytes:
@@ -112,8 +112,10 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 except Exception as e:
                     log(string="字节转字符串错误：{}".format(e), print_file=sys.stderr)
             return html
-    return html
-
+    if return_type == "str":
+        return ""
+    else:
+        return None
 
 def retrieve_file(url: str, path: str, proxies: str = "",
                   require_proxy: bool = False, max_retry: int = 10,
@@ -189,44 +191,10 @@ def retrieve_file(url: str, path: str, proxies: str = "",
         return success
 
 
-def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_retry: int = 10,
-                       require_proxy: bool = False, random_proxy: bool = True,
-                       proxies: bool = "", need_log: bool = True) -> None:
-    """
-    save file from sci_hub by doi string provided
-    :param need_log: 是否需要日志
-    :param require_proxy:
-    :param random_proxy:
-    :param proxies:
-    :param doi: paper doi
-    :param work_path: file path to save
-    :param sleep_time: thread sleep time which finish part function
-    :param max_retry: max times to retry if fail to retrieve
-    :return:
-    """
-    domain_list = ['sci-hub.se/', 'sci-hub.st/', 'sci-hub.ru/']
-    html = ''
-    for i in range(max_retry):
-        url = 'https://' + domain_list[random.randint(0, 2)] + doi
-        html = random_proxy_header_access(url,
-                                          max_retry=1, proxy=proxies,
-                                          random_proxy=random_proxy,
-                                          require_proxy=require_proxy)
-        if len(html) == 0:
-            log(string="爬取失败，字符串长度为0", print_file=sys.stderr)
-            time.sleep(sleep_time)
-            continue
-        elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
-            log(string="爬取失败，无法从字符串中提取需要的元素", print_file=sys.stderr)
-            time.sleep(sleep_time)
-            continue
-        else:
-            if need_log:
-                log("从sichub获取目标文件链接成功，等待分析提取")
-            break
-    if len(html) == 0:
-        log(string="获取html文件达到最大次数，停止获取doi:{}".format(doi), print_file=sys.stderr)
-        return
+def get_pdf_link_from_sci_hub_download_page_and_download(html: str, work_path: str, sleep_time: float = 1.2,
+                                                         max_retry: int = 10,
+                                                         require_proxy: bool = False,
+                                                         proxies: bool = "", need_log: bool = True) -> bool:
     attr_list = get_attribute_of_html(html, {"href=": "in"}, ["button"])
     for paths in attr_list:
         paths = str(paths)
@@ -248,9 +216,92 @@ def get_pdf_url_by_doi(doi: str, work_path: str, sleep_time: float = 1.2, max_re
             if success:
                 if need_log:
                     log("文件{}提取成功".format(work_path))
-                break
+                return True
         if not success:
-            log(string="抽取文件达到最大次数，停止获取doi:{}".format(doi), print_file=sys.stderr)
+            log(string="抽取文件达到最大次数，停止获取{}".format(path), print_file=sys.stderr)
+            return False
+    return False
+
+
+def get_pdf_url_by_doi(search: str, work_path: str, sleep_time: float = 1.2, max_retry: int = 10,
+                       require_proxy: bool = False, random_proxy: bool = True,
+                       proxies: bool = "", need_log: bool = True, is_doi: bool = True) -> bool:
+    """
+    save file from sci_hub by doi string provided
+    :param is_doi: search字段是否是doi，还是名称
+    :param need_log: 是否需要日志
+    :param require_proxy:是否需要代理
+    :param random_proxy:是否在使用代理时，随机使用本机地址
+    :param proxies:提供代理，如果提供，则一直使用该代理，并且受random_proxy影响
+    :param search: 搜索字段
+    :param work_path: file path to save
+    :param sleep_time: thread sleep time which finish part function
+    :param max_retry: max times to retry if fail to retrieve
+    :return:
+    """
+    domain_list = ['sci-hub.se/', 'sci-hub.st/', 'sci-hub.ru/']
+    html = ''
+
+    if is_doi:
+        for i in range(max_retry):
+            url = 'https://' + domain_list[random.randint(0, 2)]
+            url = url + search
+            html = random_proxy_header_access(url,
+                                              max_retry=1, proxy=proxies,
+                                              random_proxy=random_proxy,
+                                              require_proxy=require_proxy)
+            if len(html) == 0:
+                log(string="爬取失败，字符串长度为0", print_file=sys.stderr)
+                time.sleep(sleep_time)
+                continue
+            elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
+                log(string="爬取失败，无法从字符串中提取需要的元素", print_file=sys.stderr)
+                time.sleep(sleep_time)
+                continue
+            else:
+                if need_log:
+                    log("从sichub获取目标文件链接成功，等待分析提取")
+                break
+        if len(html) == 0:
+            log(string="获取html文件达到最大次数，停止获取doi:{}".format(search), print_file=sys.stderr)
+            return
+        return get_pdf_link_from_sci_hub_download_page_and_download(html=html, work_path=work_path,
+                                                                    sleep_time=sleep_time,
+                                                                    max_retry=max_retry, require_proxy=require_proxy,
+                                                                    proxies="", need_log=need_log)
+    else:
+        for i in range(max_retry):
+            url = 'https://' + domain_list[random.randint(0, 2)]
+            html = random_proxy_header_access(method=POST, post_data={"request": search}, require_proxy=require_proxy,
+                                              max_retry=max_retry, sleep_time=sleep_time, random_proxy=random_proxy,
+                                              need_log=need_log, return_type="object", url=url)
+            if html is not None and \
+                    verify_rule(rule={400: LESS_THAN, 200: GREATER_AND_EQUAL}, origin=float(html.status_code)):
+                if verify_rule(rule={0: MORE_THAN}, origin=len(html.url)) \
+                        and verify_rule(rule={"未找到文章": NOT_IN, "article not found": NOT_IN}, origin=html.text):
+                    if need_log:
+                        log("重定向到网址：{}".format(html.url))
+                    download_page = random_proxy_header_access(method=GET, require_proxy=require_proxy,
+                                                               max_retry=max_retry, sleep_time=sleep_time,
+                                                               random_proxy=random_proxy,
+                                                               need_log=need_log, return_type="str", url=html.url)
+                    res = get_pdf_link_from_sci_hub_download_page_and_download(html=download_page, work_path=work_path,
+                                                                               sleep_time=sleep_time,
+                                                                               max_retry=max_retry,
+                                                                               require_proxy=require_proxy,
+                                                                               proxies=proxies,
+                                                                               need_log=need_log)
+                    if res:
+                        return res
+                else:
+                    log("未查询到对应文件名文件: {}".format(search), print_file=sys.stderr)
+                    return False
+            elif html is not None:
+                log("访问失败，状态为：{}".format(str(html.status_code)), print_file=sys.stderr)
+            else:
+                log("访问出错，再次尝试", print_file=sys.stderr)
+        log(string="抽取文件达到最大次数，停止获取文件:{}".format(search), print_file=sys.stderr)
+        return False
 
 
 def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
@@ -279,7 +330,7 @@ def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
             return False
         elif str(value) == LESS_THAN or str(value) == LESS_THAN or str(value) == LESS_THAN_AND_EQUAL or str(
                 value) == MORE_THAN or str(value) == GREATER_AND_EQUAL:
-            if type(origin) != float:
+            if type(origin) != float and type(origin) != int:
                 return False
             else:
                 if str(value) == LESS_THAN and float(origin) >= float(key):
@@ -308,17 +359,17 @@ def get_attribute_of_html(html: str, rule: dict = None, attr_list: list = None) 
         attr_list = ['a']
     if rule is None:
         rule = {'href': 'in'}
-    list = []
+    res_list = []
     if len(html) == 0:
-        return list
+        return res_list
     bs = BeautifulSoup(html, 'html.parser')
     elements_list = []
     for k in attr_list:
         elements_list.extend(bs.find_all(k))
     for elements in elements_list:
         if verify_rule(rule, elements):
-            list.append(str(elements))
-    return list
+            res_list.append(str(elements))
+    return list(set(res_list))
 
 
 def get_pdf_form_arXiv(title: str, folder_name: str, sleep_time: float = 1.2,
@@ -389,6 +440,7 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
          + "OR+" + "+OR+".join(least_contain_one) + "+" \
          + ("\"" + "+".join(contain_complete_sentence) + "\"") + "+" \
          + "-" + "+-".join(not_contain)
+    q = q.replace(" ", "+")
     q = q if len(q) != 0 else q_
     base_url = base_url + q + "&oq="
     html = random_proxy_header_access(url=base_url, require_proxy=True, proxy=proxy,
