@@ -104,9 +104,12 @@ def google_translate(string: str, src: str = 'en', dest: str = 'zh-cn',
 
 def sentence_translate(string: str, appid: str, secret_key: str,
                        max_retry: int = 10, proxies: str = None,
-                       probability: float = 0.5, is_google: bool = True) -> str:
+                       probability: float = 0.5, is_google: bool = True,
+                       need_log: bool = True, sleep_time: float = 1.2) -> str:
     """
     随机使用百度谷歌翻译句子
+    :param sleep_time: 休眠时间
+    :param need_log: 是否需要日志
     :param string: 待翻译语句
     :param appid: 百度翻译appid
     :param secret_key: 百度翻译密钥
@@ -121,9 +124,9 @@ def sentence_translate(string: str, appid: str, secret_key: str,
         res = ""
         if is_google:
             if two_one_choose(probability):
-                res = baidu_translate(string, appid, secret_key)
+                res = baidu_translate(string, appid, secret_key, need_log=need_log, sleep_time=sleep_time)
             else:
-                res = google_translate(string, proxies=proxies)
+                res = google_translate(string, proxies=proxies, need_log=need_log, sleep_time=sleep_time)
             if len(res) == 0:
                 continue
             else:
@@ -752,9 +755,12 @@ def google_trans_final(content: str = "", sl: str = AUTO, tl: str = EN,
 def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
                   proxy: str = "127.0.0.1:1080", sleep_time: float = 2,
                   need_log: bool = True, translate_method: Callable[[], str] = None,
-                  cookie: str = "", token: str = ""):
+                  cookie: str = "", token: str = "", reporthook: Callable[[], None] = None,
+                  need_default_reporthook: bool = False):
     """
     网页版翻译接口，可以通过translate_method传入需要调用的翻译接口，如果为谷歌翻译需要提供可以访问谷歌的代理
+    :param need_default_reporthook: 是否需要默认的报告函数，默认为进度条，初始值False
+    :param reporthook: 报告函数
     :param token: token
     :param cookie: cookie
     :param translate_method: 需要调用的翻译方法，需要接受的参数包括：
@@ -770,20 +776,24 @@ def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
     res_trans = ""
     count = 0
     sum = len(content)
-    p = process_bar(desc="翻译进度：", final_prompt="翻译完成", total=sum)
-    p.process(0, 1000, sum)
+    if reporthook is None and need_default_reporthook:
+        p = process_bar(desc="翻译进度：", final_prompt="翻译完成", total=sum)
+        p.process(0, 1000, sum)
+        reporthook = p.process
+    else:
+        reporthook = reporthook
     if len(content) > 1000:
         while len(content) > 1000:
             temp = content[0:999]
             content = content[1000:]
             temp_trans = translate_method(content=temp, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                          reporthook=p.process, need_log=need_log, cookie=cookie,
+                                          reporthook=reporthook, need_log=need_log, cookie=cookie,
                                           token=token)
             res_trans = res_trans + temp_trans
             count = count + 1
             time.sleep(sleep_time)
         temp_trans = translate_method(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                      need_log=need_log, cookie=cookie, reporthook=p.process,
+                                      need_log=need_log, cookie=cookie, reporthook=reporthook,
                                       token=token)
         res_trans += temp_trans
         if need_log:
@@ -792,7 +802,7 @@ def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
     else:
         time.sleep(sleep_time)
         res_trans = translate_method(content=content, sl=sl, tl=tl, proxy=proxy, total=sum,
-                                     need_log=need_log, cookie=cookie, reporthook=p.process,
+                                     need_log=need_log, cookie=cookie, reporthook=reporthook,
                                      token=token)
         if need_log:
             log(res_trans)
