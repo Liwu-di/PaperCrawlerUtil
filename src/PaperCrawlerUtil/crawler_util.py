@@ -117,6 +117,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
     else:
         return None
 
+
 def retrieve_file(url: str, path: str, proxies: str = "",
                   require_proxy: bool = False, max_retry: int = 10,
                   sleep_time: float = 1.2, random_proxy: bool = True,
@@ -207,7 +208,11 @@ def get_pdf_link_from_sci_hub_download_page_and_download(html: str, work_path: s
         for i in range(max_retry):
             path = path.replace("'", "").replace("\"", "").replace(",", "")
             if (not path.startswith("http:")) and (not path.startswith("https:")):
-                path = "https://" + (path.replace("//", "", 1))
+                if "sci" not in path or "hub" not in path:
+                    path = "https://" + random.choice(['sci-hub.se', 'sci-hub.st', 'sci-hub.ru']) + (
+                        path.replace("//", "", 1))
+                else:
+                    path = "https://" + (path.replace("//", "", 1))
             else:
                 path = path
             success = retrieve_file(
