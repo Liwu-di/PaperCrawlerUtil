@@ -547,6 +547,7 @@ def local_path_generate(folder_name: str, file_name: str = "",
     for k in FORBIDDEN_LIST:
         file_name = file_name.replace(k, "")
     work_path = os.path.join(dir, file_name)
+
     return work_path
 
 

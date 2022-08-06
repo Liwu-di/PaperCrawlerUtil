@@ -319,4 +319,4 @@ DOMAIN_LIST = [HONG_KONG, AUSTRALIA, JAPAN, RUSSIA, ROOT, SINGAPORE]
 文件名不能包含的字符
 """
 
-FORBIDDEN_LIST = ["#", "%", "&", "*", "|", ":", "\"", "<", ">", "?", "/", "\\"]
+FORBIDDEN_LIST = ["#", "%", "&", "*", "|", ":", "\"", "<", ">", "?", "/", "\\", "\n"]
