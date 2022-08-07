@@ -551,7 +551,7 @@ def local_path_generate(folder_name: str, file_name: str = "",
     return work_path
 
 
-def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> None:
+def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> bool:
     """
     写文件
     :param path: 文件路径
@@ -565,8 +565,10 @@ def write_file(path: str, mode: str, string: str, encoding: str = "utf-8") -> No
             f.write(string)
         f.close()
         log("写入文件{}成功".format(path))
+        return True
     except Exception as e:
         log(string="写入文件{}失败：{}".format(path, e), print_file=sys.stderr)
+        return False
 
 
 def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
