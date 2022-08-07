@@ -252,7 +252,8 @@ appid = "20200316xxxx99558"
 secret_key = "BK6xxxxxDGBwaZgr4F"
 # 实现文本翻译， 可以结合上一块代码获取PDF中的文字翻译，注意的是使用了百度
 # 和谷歌翻译，因此如果使用谷歌翻译，则需要提供代理，默认会尝试http://127.0.01:1080 这个地址
-text_translate("", appid, secret_key, is_google=True)
+# probability越大，则使用谷歌翻译的概率越大，大于1时，100%使用谷歌翻译
+text_translate("", appid, secret_key, is_google=True, probability=1.5)
 
 ```
 
