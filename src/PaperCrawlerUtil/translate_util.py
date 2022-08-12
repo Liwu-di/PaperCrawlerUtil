@@ -4,18 +4,19 @@
 # @FileName: translate_util.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
-from typing import Callable
-
-from PaperCrawlerUtil import random_proxy_header_access
-from common_util import *
-import urllib
-from httpcore import SyncHTTPProxy
 import hashlib
 import http
 import json
 import time
-from googletrans import Translator
+import urllib
+from typing import Callable
+
 import execjs
+from googletrans import Translator
+from httpcore import SyncHTTPProxy
+
+from PaperCrawlerUtil import random_proxy_header_access
+from common_util import *
 
 
 def baidu_translate(string: str,
@@ -320,3 +321,72 @@ def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
         if need_log:
             log(res_trans)
         return res_trans
+
+
+class Translators:
+
+    def __init__(self, sleep_time: float = 2, need_log: bool = True, sl: str = AUTO, tl: str = EN,
+                 proxy: str = "127.0.0.1:1080", reporthook: Callable[[], None] = None, cookie: str = "",
+                 token: str = "", max_retry: int = 10, path: str = "", appid: str = "", secret: str = "",
+                 total: int = 10) -> None:
+        super().__init__()
+        self.sleep_time = sleep_time
+        self.need_log = need_log
+        self.content = ""
+        self.sl = sl
+        self.tl = tl
+        self.proxy = proxy
+        self.reporthook = reporthook
+        self.cookie = cookie
+        self.token = token
+        self.max_retry = max_retry
+        self.path = path
+        self.appid = appid
+        self.secret = secret
+        self.total = total
+
+    def set_param(self, content: str = None, sleep_time: float = None, need_log: bool = None, sl: str = None,
+                  tl: str = None, proxy: str = None, reporthook: Callable[[], None] = None,
+                  cookie: str = None, token: str = None, max_retry: int = None, path: str = None, appid: str = None,
+                  secret: str = None, total: int = None):
+        self.content = content if content is not None else self.content
+        self.sleep_time = sleep_time if sleep_time is not None else self.sleep_time
+        self.need_log = need_log if need_log is not None else self.need_log
+        self.proxy = proxy if proxy is not None else self.proxy
+        self.reporthook = reporthook if reporthook is not None else self.reporthook
+        self.sl = sl if sl is not None else self.sl
+        self.tl = tl if tl is not None else self.tl
+        self.cookie = cookie if cookie is not None else self.cookie
+        self.token = token if token is not None else self.token
+        self.max_retry = max_retry if max_retry is not None else self.max_retry
+        self.path = path if path is not None else self.path
+        self.appid = appid if appid is not None else self.appid
+        self.secret = secret if secret is not None else self.secret
+        self.total = total if total is not None else self.total
+
+    def web_translator(self, translate_method: Callable[[], str] = None, need_default_reporthook: bool = False):
+        return translate_web(content=self.content, sl=self.sl, tl=self.tl, proxy=self.proxy, sleep_time=self.sleep_time,
+                             need_log=self.need_log, translate_method=translate_method, cookie=self.cookie,
+                             token=self.token, reporthook=self.reporthook,
+                             need_default_reporthook=need_default_reporthook)
+
+    def baidu_translate_api(self):
+        return baidu_translate(self.content, appid=self.appid, secret_key=self.secret, sec="auto", dst="zh",
+                               sleep_time=self.sleep_time, need_log=self.need_log)
+
+    def google_translate_api(self):
+        return google_translate(self.content, self.sl, self.tl, self.proxy, self.sleep_time, self.need_log)
+
+    def text_translate_api(self, is_google: bool = True,
+                           probability: float = 1.5):
+        return text_translate(path=self.ath, appid=self.appid, secret_key=self.secret, max_retry=self.max_retry,
+                              is_google=is_google, probability=probability, proxies=self.proxy)
+
+    def sentence_translate_api(self, is_google: bool = True, probability: float = 1.5):
+        return sentence_translate(self.content, self.appid, self.secret, self.max_retry, self.proxy, probability,
+                                  is_google,
+                                  self.need_log, self.sleep_time)
+
+    def google_translate_web(self):
+        return google_trans_final(self.content, self.sl, self.tl, self.proxy, self.reporthook, self.total,
+                                  self.need_log, self.cookie, self.token)
