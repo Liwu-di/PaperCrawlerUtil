@@ -173,6 +173,7 @@ def write_log(string: str = "", print_file: object = sys.stdout):
 def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
         print_flush: bool = None) -> None:
     global log_style
+    string = string if string is not None else ""
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
