@@ -279,6 +279,31 @@ translate_web(content=s, sl=EN, tl=ZH_CN, proxy="127.0.0.1:33210",
               translate_method=google_trans_final, cookie=cookie, token=token)
 ```
 
+### 翻译集合类
+```python
+"""
+该类是一个集合类，把一些公用的参数放在init设置，调用时精简代码，内容不变
+具体内容可以参考对应的外部函数
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+basic_config(logs_style=LOG_STYLE_PRINT)
+t = Translators(tl=ZH_CN, proxy="127.0.0.1:33210")
+s = ""
+for i in range(50):
+    s = s + "i am an apple"
+t.set_param(content=s, total=len(s))
+log(t.google_translate_api())
+log(get_split())
+log(t.sentence_translate_api())
+log(get_split())
+log(t.web_translator(translate_method=google_trans_final, need_default_reporthook=True))
+log(get_split())
+log(t.google_translate_web())
+```
+
 ## 进度条
 ```python
 """

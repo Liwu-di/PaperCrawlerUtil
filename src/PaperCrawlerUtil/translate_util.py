@@ -325,10 +325,29 @@ def translate_web(content: str = "", sl: str = AUTO, tl: str = EN,
 
 class Translators:
 
+    """
+    该类是一个以上方法的集合，方便调用，内容不变，具体的方法内容或者参数详解参考上述的方法
+    """
     def __init__(self, sleep_time: float = 2, need_log: bool = True, sl: str = AUTO, tl: str = EN,
                  proxy: str = "127.0.0.1:1080", reporthook: Callable[[], None] = None, cookie: str = "",
                  token: str = "", max_retry: int = 10, path: str = "", appid: str = "", secret: str = "",
                  total: int = 10) -> None:
+
+        """
+        :param sleep_time: 休眠时间
+        :param need_log: 是否需要日志
+        :param sl: 源语言
+        :param tl: 目标语言
+        :param proxy: 代理连接（可以连接谷歌的链接）
+        :param reporthook: 报告钩子函数，部分函数有调用
+        :param cookie: cookie
+        :param token: token
+        :param max_retry: 最大尝试次数
+        :param path: 待翻译文本链接
+        :param appid: 百度翻译appid
+        :param secret: 百度翻译密钥
+        :param total: 翻译的文本总长度
+        """
         super().__init__()
         self.sleep_time = sleep_time
         self.need_log = need_log
@@ -349,6 +368,22 @@ class Translators:
                   tl: str = None, proxy: str = None, reporthook: Callable[[], None] = None,
                   cookie: str = None, token: str = None, max_retry: int = None, path: str = None, appid: str = None,
                   secret: str = None, total: int = None):
+        """
+        :param sleep_time: 休眠时间
+        :param need_log: 是否需要日志
+        :param sl: 源语言
+        :param tl: 目标语言
+        :param proxy: 代理连接（可以连接谷歌的链接）
+        :param reporthook: 报告钩子函数，部分函数有调用
+        :param cookie: cookie
+        :param token: token
+        :param max_retry: 最大尝试次数
+        :param path: 待翻译文本链接
+        :param appid: 百度翻译appid
+        :param secret: 百度翻译密钥
+        :param total: 翻译的文本总长度
+        """
+
         self.content = content if content is not None else self.content
         self.sleep_time = sleep_time if sleep_time is not None else self.sleep_time
         self.need_log = need_log if need_log is not None else self.need_log
@@ -379,7 +414,7 @@ class Translators:
 
     def text_translate_api(self, is_google: bool = True,
                            probability: float = 1.5):
-        return text_translate(path=self.ath, appid=self.appid, secret_key=self.secret, max_retry=self.max_retry,
+        return text_translate(path=self.path, appid=self.appid, secret_key=self.secret, max_retry=self.max_retry,
                               is_google=is_google, probability=probability, proxies=self.proxy)
 
     def sentence_translate_api(self, is_google: bool = True, probability: float = 1.5):

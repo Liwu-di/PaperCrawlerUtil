@@ -430,7 +430,7 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
     sub = sub_func_write_pdf(out_path, outputStream, output)
     # sub.setDaemon(True)
     sub.start()
-    if timeout < 0:
+    if timeout <= 0:
         sub.join()
     else:
         sub.join(timeout=timeout)
