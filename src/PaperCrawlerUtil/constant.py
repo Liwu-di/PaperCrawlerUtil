@@ -79,6 +79,23 @@ HEAD = "HEAD"
 PUT = "PUT"
 PATCH = "PATCH"
 
+
+"""
+office 处理
+"""
+LIST = "list"
+DICT = "dict"
+COL = "col"
+ROW = "row"
+CELL = "cell"
+LIST_OF_OBJECT = "list of object"
+LIST_OF_TYPE = "list of type"
+LIST_OF_VALUE = "list of value"
+TYPE_OF_LENGTH = "length"
+EXCEL_RETURN_TYPE = {LIST_OF_OBJECT: "list of object", LIST_OF_TYPE: "list of type",
+                     LIST_OF_VALUE: "list of value", TYPE_OF_LENGTH: "length"}
+
+
 """
 谷歌翻译
 """

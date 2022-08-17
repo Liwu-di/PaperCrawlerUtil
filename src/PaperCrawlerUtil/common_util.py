@@ -174,6 +174,11 @@ def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: ob
         print_flush: bool = None) -> None:
     global log_style
     string = string if string is not None else ""
+    if type(string) != str:
+        try:
+            string = str(string)
+        except Exception as e:
+            string = "待输出的日志不是字符串形式，也无法转换为字符串，{}：{}".format(string, e)
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
@@ -660,6 +665,16 @@ def load_obj(path: str) -> object:
     except Exception as e:
         log("加载object错误：{}".format(e), print_file=sys.stderr)
         return None
+
+
+def get_variable_name_from_string(string: str = "") -> str:
+    """
+    获得常量的名称，主要是懒得自己大写
+    :param string: "list of value"
+    :return: LIST_OF_VALUE = "list of value"
+    """
+    k = string
+    return k.replace(" ", "_").upper() + " = \"" + string + "\""
 
 
 class NoProxyException(Exception):
