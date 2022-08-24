@@ -344,3 +344,65 @@ google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence
                               proxy="127.0.0.1:33210", file_sava_directory="E:\\")
 ```
 
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+"""
+csv文件处理，类CsvProcess
+"""
+filednames = []
+with open("C:\\Users\\李武第\\Desktop\\export2022.08.06-07.56.18.csv", mode="r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    count = 0
+    for row in reader:
+        if count >= 1:
+            break
+        filednames.extend(row)
+        count = count + 1
+f.close()
+csvp = CsvProcess(file_path="C:\\Users\\李武第\\Desktop\\export2022.08.06-07.56.18.csv")
+a = csvp.csv_data(data_format="dict")
+b = csvp.csv_data(data_format="list")
+with open("C:\\Users\\李武第\\Desktop\\a.csv", mode="w+", encoding="utf-8-sig") as f:
+    c = csv.DictWriter(f, fieldnames=filednames)
+    c.writeheader()
+    c.writerows(a)
+f.close()
+csvp.write_csv(b, write_path="C:\\Users\\李武第\\Desktop\\b.csv")
+csvp.write_csv(a, data_format="dict", title=filednames, write_path="C:\\Users\\李武第\\Desktop\\a.csv")
+
+```
+
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+"""
+.xls文件处理，类ExcelProcess
+"""
+basic_config(logs_style=LOG_STYLE_PRINT)
+e = ExcelProcess(filename=r"C:\\Users\\李武第\\Desktop\\1.xls")
+res = []
+for k in range(e.row_size):
+    res.append(e.excel_data(index=k))
+res_dict = {}
+for k in res:
+    if len(k[4]) == 0:
+        continue
+    elif k[4] == "非深度学习":
+        continue
+    if not k[4] in res_dict.keys():
+        tem = [k]
+        res_dict[k[4]] = tem
+    else:
+        res_dict[k[4]].append(k)
+res_list = []
+for p in res_dict.items():
+    for k in range(len(p[1])):
+        res_list.append(p[1][k])
+    #log(p[0] + str(len(p[1])))
+    print(len(p[1]))
+e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
+```
