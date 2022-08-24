@@ -610,7 +610,7 @@ def cookieString2CookieJar(cookie: str = "") -> RequestsCookieJar:
     return cookie_jar
 
 
-def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = " ") -> str:
+def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = "") -> str:
     """
     从html文本中删除标签，如：”<a>b</a>“ -> "b"
     :param html: html文本
