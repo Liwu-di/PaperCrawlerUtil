@@ -23,14 +23,11 @@ pip install PaperCrawlerUtil
 ```
 
 ## 基本使用
-```python
-"""
 本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
-则需要自己提供代理或者将require_proxy置为False
-[proxy pool](https://github.com/Python3WebSpider/ProxyPool)
+则需要自己提供代理或者将require_proxy置为False  
+[proxy pool项目仓库](https://github.com/Python3WebSpider/ProxyPool)  
 感谢大佬为开源社区做出的贡献
-"""
-```
+
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
