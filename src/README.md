@@ -16,6 +16,11 @@ A set of tools for building small crawlers, including accessing links, getting e
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
 PDF file merging, PDF file intercepting certain pages, etc.
 
+# 安装与使用
+```commandline
+可以直接安装本包
+pip install PaperCrawlerUtil
+```
 
 ## 基本使用
 ```python
@@ -24,59 +29,7 @@ PDF file merging, PDF file intercepting certain pages, etc.
 则需要自己提供代理或者将require_proxy置为False
 [proxy pool](https://github.com/Python3WebSpider/ProxyPool)
 感谢大佬为开源社区做出的贡献
-**更新**：
-目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
-默认为http://127.0.0.1:5555/random，使用方法如下：
 """
-
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.document_util import *
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
-            redis_host="127.0.0.1",
-            redis_port=6379,
-            redis_database=0)
-
-"""
-代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
-**也可以不使用Redis，直接使用python dict代替，方法如下：**
-"""
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
-
-"""
-使用dict时，也可以像redis一样，保存数据到硬盘，下次启动再加载，默认保存在dict.db，
-可以通过dict_store_path修改路径，如下：
-basic_config会返回三个对象，依次为flask server，getter，tester，
-这三个对象都有方法save_dict()保存字典
-
-"""
-
-s, g, t = basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
-                           need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
-                           api_port=5556, set_daemon=True)
-time.sleep(10)
-t.save_dict()
-s.save_dict()
-g.save_dict()
-
-"""
-其中日志信息比较多，也可以在basic_config中取消日志输出例如：
-"""
-basic_config(require_proxy_pool=True, need_tester_log=False,
-                 need_getter_log=False, need_storage_log=False)
-
-"""
-也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
-其中set_daemon必须为False，否则主线程结束之后，子线程也结束了
-"""
-basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
-                     need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
-                     api_port=5556, set_daemon=False)
-```
-
-```commandline
-也可以直接安装本包
-pip install PaperCrawlerUtil
 ```
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -91,16 +44,71 @@ basic_config(log_file_name="1.log",
                  log_level=logging.WARNING,
                  proxy_pool_url="http://xxx",
                  logs_style=LOG_STYLE_LOG)
-#更新：
-#目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
-#默认为http://127.0.0.1:5555/random，使用方法如下：
+```
+###***更新：***  
+目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
+默认为http://127.0.0.1:5555/random，  
+使用方法如下：
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+"""
+代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
+"""
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
             redis_host="127.0.0.1",
             redis_port=6379,
             redis_database=0)
-#代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
+
 
 ```
+###***也可以不使用Redis，直接使用python dict代替，方法如下：***
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
+```
+```python
+"""
+使用dict时，也可以像redis一样，保存数据到硬盘，下次启动再加载，默认保存在dict.db，
+可以通过dict_store_path修改路径，如下：
+basic_config会返回三个对象，依次为flask server，getter，tester，
+这三个对象都有方法save_dict()保存字典
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+s, g, t = basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
+                           need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
+                           api_port=5556, set_daemon=True)
+time.sleep(10)
+t.save_dict()
+s.save_dict()
+g.save_dict()
+
+"""
+其中日志信息比较多，也可以在basic_config中取消日志输出例如：
+"""
+basic_config(require_proxy_pool=True, need_tester_log=False,
+                 need_getter_log=False, need_storage_log=False)
+```
+```python
+"""
+也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
+其中set_daemon必须为False，否则主线程结束之后，子线程也结束了
+"""
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
+                     need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
+                     api_port=5556, set_daemon=False)
+```
+
 ```python
 """
 更新，增加cookie的访问
