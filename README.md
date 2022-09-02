@@ -1,7 +1,17 @@
 # PaperCrawlerUtil
-一套用来构建小爬虫的工具组，包括访问链接， 获取元素，抽取文件等等
-也有已经实现好通过scihub获取论文的小工具，还有对于pdf转doc，文本翻译,代理连接获取以及通过api获取代理链接，
-PDF文件合并，PDF文件截取某些页等
+一套用来构建小爬虫的工具组，包括:
+1. 爬虫相关： 
+    * 访问链接 
+    * 获取元素
+    * 抽取文件等等
+2. 已经实现好的工具
+    * 通过scihub获取论文的小工具，
+    * 还有对于pdf转doc，
+    * 文本翻译,
+    * 代理连接获取以及通过api获取代理链接，
+    * PDF文件合并，
+    * PDF文件截取某些页等  
+
 A set of tools for building small crawlers, including accessing links, getting elements, extracting files, etc.
 There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
 PDF file merging, PDF file intercepting certain pages, etc.
@@ -12,9 +22,9 @@ PDF file merging, PDF file intercepting certain pages, etc.
 """
 本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
 则需要自己提供代理或者将require_proxy置为False
-https://github.com/Python3WebSpider/ProxyPool
+[proxy pool](https://github.com/Python3WebSpider/ProxyPool)
 感谢大佬为开源社区做出的贡献
-更新：
+**更新**：
 目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
 默认为http://127.0.0.1:5555/random，使用方法如下：
 """
@@ -29,7 +39,7 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
 
 """
 代理连接爬取和检测需要时间，所以刚开始可能会出现代理大量无法使用情况
-也可以不使用Redis，直接使用python dict代替，方法如下：
+**也可以不使用Redis，直接使用python dict代替，方法如下：**
 """
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
 
@@ -343,7 +353,7 @@ google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence
                               least_contain_one=least_contain_one, not_contain=not_contain, need_retrieve_file=True,
                               proxy="127.0.0.1:33210", file_sava_directory="E:\\")
 ```
-
+##CSV文件处理
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -374,6 +384,7 @@ csvp.write_csv(a, data_format="dict", title=filednames, write_path="C:\\Users\\�
 
 ```
 
+## xls文件处理
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
