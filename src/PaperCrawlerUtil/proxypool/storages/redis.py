@@ -140,10 +140,12 @@ class RedisClient(object):
         cursor, proxies = self.db.zscan(self.redis_key, cursor, count=count)
         return cursor, convert_proxy_or_proxies([i[0] for i in proxies])
 
-    def save(self) -> bool:
+    @staticmethod
+    def save() -> bool:
         print("redis方式不需要保存")
 
-    def load(self) -> dict:
+    @staticmethod
+    def load() -> dict:
         print("redis方式不需要加载")
 
 
