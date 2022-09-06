@@ -11,3 +11,6 @@ test.py
 delete.bat
 crawler_util.log
 *.db
+src/crawler_generate/build
+src/crawler_generate/node_modules
+src/crawler_generate/test
