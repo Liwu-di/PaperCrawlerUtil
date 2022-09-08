@@ -23,10 +23,11 @@ pip install PaperCrawlerUtil
 ```
 
 ## 基本使用
-本项目依赖proxypool项目，该项目可以爬取免费的代理，如果不使用该项目，
-则需要自己提供代理或者将require_proxy置为False  
+本项目依赖proxypool项目，该项目可以爬取免费的代理，
 [proxy pool项目仓库](https://github.com/Python3WebSpider/ProxyPool)  
-感谢大佬为开源社区做出的贡献
+感谢大佬为开源社区做出的贡献  
+Thanks for supporting of JetBrains Open Source Support project and your free license.  
+![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
 
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -42,7 +43,7 @@ basic_config(log_file_name="1.log",
                  proxy_pool_url="http://xxx",
                  logs_style=LOG_STYLE_LOG)
 ```
-###***更新：***  
+### ***更新：***  
 目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
 默认为http://127.0.0.1:5555/random，  
 使用方法如下：
@@ -61,7 +62,7 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
 
 
 ```
-###***也可以不使用Redis，直接使用python dict代替，方法如下：***
+### ***也可以不使用Redis，直接使用python dict代替，方法如下：***
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
