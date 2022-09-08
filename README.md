@@ -26,8 +26,8 @@ pip install PaperCrawlerUtil
 本项目依赖proxypool项目，该项目可以爬取免费的代理，
 [proxy pool项目仓库](https://github.com/Python3WebSpider/ProxyPool)  
 感谢大佬为开源社区做出的贡献  
-Thanks for supporting of JetBrains Open Source Support project and your free license.  
-The logo will be shown at bottom  
+Thanks for supporting of JetBrains Open Source Support project and your free license.   
+![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
 
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -424,4 +424,3 @@ for p in res_dict.items():
 e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
 ```  
 
-![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
