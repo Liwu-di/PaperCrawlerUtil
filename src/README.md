@@ -27,7 +27,7 @@ pip install PaperCrawlerUtil
 [proxy pool项目仓库](https://github.com/Python3WebSpider/ProxyPool)  
 感谢大佬为开源社区做出的贡献  
 Thanks for supporting of JetBrains Open Source Support project and your free license.  
-![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
+The logo will be shown at bottom  
 
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -422,4 +422,6 @@ for p in res_dict.items():
     #log(p[0] + str(len(p[1])))
     print(len(p[1]))
 e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
-```
+```  
+
+![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
