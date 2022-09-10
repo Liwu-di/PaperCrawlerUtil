@@ -34,7 +34,6 @@ from tqdm import tqdm
 PROXY_POOL_URL = ""
 log_style = LOG_STYLE_PRINT
 PROXY_POOL_CAN_RUN_FLAG = True
-KEEP_PROCESS_BAR_FLAG = True
 
 
 logging.basicConfig(filename="crawler_util.log", level=logging.WARNING)
@@ -176,6 +175,8 @@ def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: ob
         print_flush: bool = None) -> None:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
+    :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
+    与process_bar的初始化file参数一致，默认为sys.stderr
     :param string: 待输出字符串
     :param print_sep: 输出字符串之间的连接符，同print方法sep，目前被废弃
     :param print_end: 输出字符串之后的结尾添加字符
@@ -183,8 +184,9 @@ def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: ob
     :param print_flush: 是否强制输出缓冲区，同print方法flush，目前被废弃
     :return:
     """
-    global log_style, KEEP_PROCESS_BAR_FLAG
-    print_file = sys.stderr if KEEP_PROCESS_BAR_FLAG else print_file
+    global log_style
+    print_file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
+        if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else print_file
     string = string if string is not None else ""
     if type(string) != str:
         try:
@@ -375,8 +377,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  test_valid_stats: List[int] = [200, 206, 302],
                  api_threaded: bool = True,
                  test_anonymous: bool = True,
-                 keep_process_bar_style: bool = True) -> tuple:
+                 keep_process_bar_style: bool = True,
+                 keep_process_bar_style_file: object = sys.stderr) -> tuple:
     """
+    :param keep_process_bar_style_file: 保持进度条格式时，需要的输出流参数
     :param keep_process_bar_style: 是否保持进度条格式，如果此项为True，则log函数中参数print_file参数不会生效
     :param test_anonymous: 是否仅获取匿名代理，默认为True
     :param api_threaded:
@@ -419,9 +423,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
     """
     if len(log_file_name) != 0 and log_level != 0:
         logging.basicConfig(filename=log_file_name, level=log_level, force=True)
-    global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG, KEEP_PROCESS_BAR_FLAG
+    global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
-    KEEP_PROCESS_BAR_FLAG = keep_process_bar_style
     set_cross_file_variable(
         [(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key, redis_string)),
          (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
@@ -434,7 +437,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
          (GETTER_TIMEOUT, getter_timeout), (TESTER_URL, tester_url),
          (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
          (ENABLE_SERVER, enable_server), (TEST_VALID_STATUS, test_valid_stats), (TEST_ANONYMOUS, test_anonymous),
-         (API_THREADED, api_threaded)])
+         (API_THREADED, api_threaded), (KEEP_PROCESS_BAR_STYLE, keep_process_bar_style),
+         (KEEP_PROCESS_BAR_STYLE_FILE, keep_process_bar_style_file)])
     PROXY_POOL_URL = proxy_pool_url if len(proxy_pool_url) != 0 else PROXY_POOL_URL
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -712,14 +716,14 @@ class ThreadStopException(Exception):
     def __repr__(self) -> str:
         return super().__repr__()
 
-# if __name__ == "__main__":
-#     basic_config(logs_style=LOG_STYLE_PRINT)
-#     bar = process_bar()
-#     bar.process(0, 1, 100)
-#     for i in range(100):
-#         bar.process(0, 1, 100)
-#         log("ahfu")
-#         time.sleep(0.1)
+if __name__ == "__main__":
+    basic_config(logs_style=LOG_STYLE_PRINT)
+    bar = process_bar()
+    bar.process(0, 1, 100)
+    for i in range(100):
+        bar.process(0, 1, 100)
+        log("ahfu")
+        time.sleep(0.1)
 #     for batch in tqdm(range(100), total=100, position=0, file=sys.stdout, desc="desc"):
 #         if batch % 5 == 0:
 #             tqdm.write(str(batch))
