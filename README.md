@@ -333,10 +333,19 @@ common_util.process_bar对象，使用对象的process方法进行传参，从�
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
-bar = None
+
+
+# basic_config中，keep_process_bar_style参数默认为真，则使用本
+# 模块的log方法时，print_file会强制使用sys.stderr，保持和process_bar
+# 使用一样的流，保证进度条始终在最下方
+basic_config(logs_style=LOG_STYLE_PRINT)
 bar = process_bar()
-reporthook = bar.process
-urlretrieve(url="", filename="", reporthook=reporthook, data="")
+# 初始化
+bar.process(0, 1, 100)
+for i in range(100):
+  bar.process(0, 1, 100)
+  log("ahfu")
+  time.sleep(0.1)
 ```
 
 ## 谷歌学术爬虫
@@ -359,7 +368,7 @@ google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence
                               least_contain_one=least_contain_one, not_contain=not_contain, need_retrieve_file=True,
                               proxy="127.0.0.1:33210", file_sava_directory="E:\\")
 ```
-##CSV文件处理
+## CSV文件处理
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *

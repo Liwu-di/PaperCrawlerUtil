@@ -34,6 +34,8 @@ from tqdm import tqdm
 PROXY_POOL_URL = ""
 log_style = LOG_STYLE_PRINT
 PROXY_POOL_CAN_RUN_FLAG = True
+KEEP_PROCESS_BAR_FLAG = True
+
 
 logging.basicConfig(filename="crawler_util.log", level=logging.WARNING)
 
@@ -172,7 +174,17 @@ def write_log(string: str = "", print_file: object = sys.stdout):
 
 def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
         print_flush: bool = None) -> None:
-    global log_style
+    """
+    本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
+    :param string: 待输出字符串
+    :param print_sep: 输出字符串之间的连接符，同print方法sep，目前被废弃
+    :param print_end: 输出字符串之后的结尾添加字符
+    :param print_file: 输出流
+    :param print_flush: 是否强制输出缓冲区，同print方法flush，目前被废弃
+    :return:
+    """
+    global log_style, KEEP_PROCESS_BAR_FLAG
+    print_file = sys.stderr if KEEP_PROCESS_BAR_FLAG else print_file
     string = string if string is not None else ""
     if type(string) != str:
         try:
@@ -182,12 +194,10 @@ def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: ob
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
-        print(get_timestamp() + get_split(lens=3, style=" ")
-              + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
+        tqdm.write(s=get_timestamp() + get_split(lens=3, style=" ") + string, file=print_file, end=print_end)
     elif log_style == LOG_STYLE_ALL:
         write_log(string, print_file)
-        print(get_timestamp() + get_split(lens=3, style=" ")
-              + string, sep=print_sep, end=print_end, file=print_file, flush=print_flush)
+        tqdm.write(s=get_timestamp() + get_split(lens=3, style=" ") + string, file=print_file, end=print_end)
 
 
 class CanStopThread(threading.Thread):
@@ -364,8 +374,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  enable_server: bool = True,
                  test_valid_stats: List[int] = [200, 206, 302],
                  api_threaded: bool = True,
-                 test_anonymous: bool = True) -> tuple:
+                 test_anonymous: bool = True,
+                 keep_process_bar_style: bool = True) -> tuple:
     """
+    :param keep_process_bar_style: 是否保持进度条格式，如果此项为True，则log函数中参数print_file参数不会生效
     :param test_anonymous: 是否仅获取匿名代理，默认为True
     :param api_threaded:
     :param test_valid_stats: 测试代理时，指定什么状态为代理可以使用
@@ -407,8 +419,9 @@ def basic_config(log_file_name: str = "crawler_util.log",
     """
     if len(log_file_name) != 0 and log_level != 0:
         logging.basicConfig(filename=log_file_name, level=log_level, force=True)
-    global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
+    global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG, KEEP_PROCESS_BAR_FLAG
     global log_style
+    KEEP_PROCESS_BAR_FLAG = keep_process_bar_style
     set_cross_file_variable(
         [(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key, redis_string)),
          (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
@@ -700,13 +713,14 @@ class ThreadStopException(Exception):
         return super().__repr__()
 
 # if __name__ == "__main__":
-#     a = CanStopThread()
 #     basic_config(logs_style=LOG_STYLE_PRINT)
-#     try:
-#         a.stop()
-#     except ThreadStopException as e:
-#         log("线程{}结束".format(a.name))
-#     except Exception as e:
-#         log("结束线程{}错误{}".format(a.name, e))
-#     except BaseException as e:
-#         log(e)
+#     bar = process_bar()
+#     bar.process(0, 1, 100)
+#     for i in range(100):
+#         bar.process(0, 1, 100)
+#         log("ahfu")
+#         time.sleep(0.1)
+#     for batch in tqdm(range(100), total=100, position=0, file=sys.stdout, desc="desc"):
+#         if batch % 5 == 0:
+#             tqdm.write(str(batch))
+#             time.sleep(1)
