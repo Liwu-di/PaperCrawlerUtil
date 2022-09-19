@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2022/9/5 16:50
 # @Author  : 银尘
-# @FileName: code_generate.py
+# @FileName: application.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
 import json
@@ -9,15 +9,20 @@ from common_util import *
 from flask import Flask, request
 from constant import *
 
-code_generate = Flask(__name__)
+"""
+this file is some applications constructed by PaperCrawlerUtil 
+and can run by Flask and provide services to website
+"""
+
+applications = Flask(__name__)
 
 
-@code_generate.route("/")
+@applications.route("/")
 def hello_world():
     return 'hello world'
 
 
-@code_generate.route("/code_generate/", methods=[POST])
+@applications.route("/code_generate/", methods=[POST])
 def generate():
     data = json.loads(request.get_data())
     # 到最终保存或提取文件需要多少层
@@ -42,4 +47,4 @@ def generate():
 
 
 if __name__ == "__main__":
-    code_generate.run(host="0.0.0.0", port=8000, debug=True)
+    applications.run(host="0.0.0.0", port=8000, debug=True)
