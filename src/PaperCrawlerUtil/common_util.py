@@ -171,7 +171,7 @@ def write_log(string: str = "", print_file: object = sys.stdout):
         logging.error(string)
 
 
-def log(string: str, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
+def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
         print_flush: bool = None) -> None:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
