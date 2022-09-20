@@ -26,7 +26,6 @@ class CsvProcess:
         self.encoding = encoding
         self.mode = open_mode
         self.path = file_path
-        self.size = self.csv_size()
 
     def csv_size(self):
         """
