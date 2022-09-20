@@ -9,7 +9,6 @@ from PaperCrawlerUtil.office_util import *
 from PaperCrawlerUtil.pdf_util import *
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.document_util import *
-from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.global_val import *
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.translate_util import *

@@ -15,7 +15,7 @@ import execjs
 from googletrans import Translator
 from httpcore import SyncHTTPProxy
 
-from PaperCrawlerUtil import random_proxy_header_access
+from PaperCrawlerUtil.crawler_util import *
 from common_util import *
 
 
