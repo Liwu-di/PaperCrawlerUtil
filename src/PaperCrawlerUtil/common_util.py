@@ -111,7 +111,8 @@ class process_bar(object):
         self.desc = desc
         self.total = total
         self.leave = leave
-        self.file = file
+        self.file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
+            if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else file
         self.ncols = ncols
         self.mininterval = mininterval
         self.maxinterval = maxinterval
@@ -148,7 +149,7 @@ class process_bar(object):
                             , delay=self.delay, gui=self.gui)
         else:
             self.batch = args[1]
-            if self.current + self.batch > self.total:
+            if self.current + self.batch >= self.total:
                 self.bar.update(self.total - self.current)
                 self.current = self.total
                 self.bar.set_postfix_str(self.final_prompt)
@@ -716,15 +717,12 @@ class ThreadStopException(Exception):
     def __repr__(self) -> str:
         return super().__repr__()
 
-if __name__ == "__main__":
-    basic_config(logs_style=LOG_STYLE_PRINT)
-    bar = process_bar()
-    bar.process(0, 1, 100)
-    for i in range(100):
-        bar.process(0, 1, 100)
-        log("ahfu")
-        time.sleep(0.1)
-#     for batch in tqdm(range(100), total=100, position=0, file=sys.stdout, desc="desc"):
-#         if batch % 5 == 0:
-#             tqdm.write(str(batch))
-#             time.sleep(1)
+# if __name__ == "__main__":
+#     basic_config(logs_style=LOG_STYLE_PRINT, keep_process_bar_style_file=sys.stdout)
+#     bar = process_bar(final_prompt="wancheng")
+#     bar.process(0, 1, 100)
+#     for i in range(100):
+#         bar.process(0, 1, 100)
+#         log("ahfu")
+#         time.sleep(0.1)
+
