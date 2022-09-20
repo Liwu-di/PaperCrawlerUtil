@@ -16,7 +16,7 @@ from googletrans import Translator
 from httpcore import SyncHTTPProxy
 
 from PaperCrawlerUtil.crawler_util import *
-from common_util import *
+from PaperCrawlerUtil.common_util import *
 
 
 def baidu_translate(string: str,

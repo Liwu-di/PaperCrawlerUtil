@@ -9,8 +9,8 @@ import csv
 import xlrd
 import xlwt
 
-from common_util import *
-from crawler_util import verify_rule
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import verify_rule
 
 
 class CsvProcess:

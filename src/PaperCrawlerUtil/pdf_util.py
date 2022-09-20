@@ -7,7 +7,7 @@
 import io
 import os
 
-from PaperCrawlerUtil import verify_rule
+from PaperCrawlerUtil.crawler_util import verify_rule
 from common_util import *
 import pdfplumber
 from PyPDF2 import PdfFileWriter, PdfFileReader

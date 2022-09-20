@@ -1,6 +1,6 @@
-from translate_util import *
-from pdf_util import *
-from office_util import *
+from PaperCrawlerUtil.translate_util import *
+from PaperCrawlerUtil.pdf_util import *
+from PaperCrawlerUtil.office_util import *
 
 
 if __name__ == "__main__":

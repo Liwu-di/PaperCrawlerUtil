@@ -28,7 +28,7 @@ from requests.cookies import RequestsCookieJar
 from proxypool.processors.getter import Getter
 from proxypool.processors.server import app
 from proxypool.processors.tester import Tester
-from constant import *
+from PaperCrawlerUtil.constant import *
 from tqdm import tqdm
 
 PROXY_POOL_URL = ""

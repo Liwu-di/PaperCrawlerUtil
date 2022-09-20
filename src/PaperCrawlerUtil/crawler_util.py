@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from fake_useragent import UserAgent
 
-from common_util import *
+from PaperCrawlerUtil.common_util import *
 
 
 def random_proxy_header_access(url: str, proxy: str = '',
