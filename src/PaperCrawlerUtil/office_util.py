@@ -117,6 +117,12 @@ class ExcelProcess:
                 if sheet_name is not None else self.excel.sheet_by_index(sheet_index)
             self.row_size = self.sheet.nrows
             self.col_size = self.sheet.ncols
+        else:
+            self.excel = None
+            self.sheet_names = []
+            self.sheet = None
+            self.row_size = 0
+            self.col_size = 0
 
     def modify(self, sheet_index: int = None, sheet_name: str = None, file_name:str = None):
         """
@@ -218,6 +224,10 @@ class ExcelProcess:
         workbook.save(path)
 
     def __del__(self):
-        self.excel.release_resources()
+        if self.excel is not None:
+            self.excel.release_resources()
 
 
+if __name__ == "__main__":
+    excel = ExcelProcess()
+    excel.write_excel([[1, 2], [3, 4]], local_path_generate("", suffix=".xls"))

@@ -2,7 +2,7 @@ import pickle
 import sys
 from typing import List
 
-import PaperCrawlerUtil.global_val
+import PaperCrawlerUtil.global_val as global_val
 from proxypool.storages.proxy_dict import ProxyDict
 
 sys.path.append("PaperCrawlerUtil")

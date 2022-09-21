@@ -4,7 +4,7 @@ import time
 import aiohttp
 from loguru import logger
 
-import PaperCrawlerUtil.global_val
+import PaperCrawlerUtil.global_val as global_val
 from proxypool.schemas import Proxy
 from proxypool.storages.redis import RedisClient
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
