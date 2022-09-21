@@ -98,7 +98,7 @@ class ExcelProcess:
 
     #@todo 只能打开xls，需要换库解决，xlrd新版本不行了
 
-    def __init__(self, filename: str, sheet_index: int = 0, sheet_name: str = None) -> None:
+    def __init__(self, filename: str = "", sheet_index: int = 0, sheet_name: str = None) -> None:
 
         """
         只能处理xls文件，后续进行改造
@@ -110,20 +110,30 @@ class ExcelProcess:
         self.filename = filename
         self.sheet_index = sheet_index
         self.sheet_name = sheet_name
-        self.excel = xlrd.open_workbook(filename)
-        self.sheet_names = self.excel.sheet_names()
-        self.sheet = self.excel.sheet_by_name(sheet_name) \
-            if sheet_name is not None else self.excel.sheet_by_index(sheet_index)
-        self.row_size = self.sheet.nrows
-        self.col_size = self.sheet.ncols
+        if len(filename) > 0:
+            self.excel = xlrd.open_workbook(filename)
+            self.sheet_names = self.excel.sheet_names()
+            self.sheet = self.excel.sheet_by_name(sheet_name) \
+                if sheet_name is not None else self.excel.sheet_by_index(sheet_index)
+            self.row_size = self.sheet.nrows
+            self.col_size = self.sheet.ncols
 
-    def modify(self, sheet_index: int = None, sheet_name: str = None):
+    def modify(self, sheet_index: int = None, sheet_name: str = None, file_name:str = None):
         """
         修改初始化参数
+        :param file_name: 文件名
         :param sheet_index: 工作簿序号
         :param sheet_name: 工作簿名称，这个优先级最高
         :return:
         """
+        self.filename = file_name if file_name is not None else self.filename
+        if len(self.filename) > 0:
+            self.excel = xlrd.open_workbook(self.filename)
+            self.sheet_names = self.excel.sheet_names()
+            self.sheet = self.excel.sheet_by_name(sheet_name) \
+                if sheet_name is not None else self.excel.sheet_by_index(sheet_index)
+            self.row_size = self.sheet.nrows
+            self.col_size = self.sheet.ncols
         self.sheet_index = sheet_index if sheet_index is not None else self.sheet_index
         self.sheet_name = sheet_name if sheet_name is not None else self.sheet_name
         if sheet_index is not None or sheet_name is not None:

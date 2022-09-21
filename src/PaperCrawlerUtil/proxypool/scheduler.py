@@ -2,7 +2,7 @@ import time
 import multiprocessing
 import sys
 
-import global_val
+import PaperCrawlerUtil.global_val
 
 sys.path.append("../../PaperCrawlerUtil")
 from proxypool.processors.server import app

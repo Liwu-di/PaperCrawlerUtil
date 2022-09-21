@@ -1,6 +1,6 @@
 from loguru import logger
 
-import global_val
+import PaperCrawlerUtil.global_val
 from proxypool.storages.redis import RedisClient
 from proxypool.crawlers import __all__ as crawlers_cls
 from proxypool.storages.proxy_dict import ProxyDict

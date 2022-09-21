@@ -1,6 +1,6 @@
 from flask import Flask, g
 
-import global_val
+import PaperCrawlerUtil.global_val
 from proxypool.exceptions import PoolEmptyException
 from proxypool.storages.redis import RedisClient
 from global_val import *

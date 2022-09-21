@@ -15,7 +15,7 @@ from typing import List
 from loguru import logger
 from proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
 from global_val import *
-import global_val
+import PaperCrawlerUtil.global_val
 from constant import *
 
 

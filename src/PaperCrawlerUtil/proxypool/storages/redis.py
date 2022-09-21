@@ -1,6 +1,6 @@
 import redis
 
-import global_val
+import PaperCrawlerUtil.global_val
 from proxypool.exceptions import PoolEmptyException
 from proxypool.schemas import Proxy
 from random import choice
