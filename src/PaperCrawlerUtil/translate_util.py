@@ -436,6 +436,13 @@ class Translators:
         :param mist_language_list: 中间转换语言，最后一个是最终输出语言
         :return: 返回链式翻译的结果
         """
+        flag = True
+        for k in mist_language_list:
+            if k not in ALL_LANGUAGE_LIST:
+                log("存在不可翻译的语言类型：{}，请修改".format(k))
+                flag = False
+        if not flag:
+            return ""
         p_bar = process_bar(final_prompt="翻译完成", unit="language class")
         p_bar.process(0, 1, len(mist_language_list))
         if translator == GOOGLE_TRANSLATOR:

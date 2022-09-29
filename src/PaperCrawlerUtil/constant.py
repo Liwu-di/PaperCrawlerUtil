@@ -333,6 +333,19 @@ YO = "yo"
 """祖鲁语"""
 ZU = "zu"
 
+ALL_LANGUAGE_LIST = [AUTO, "auto", AF, "af", SQ, "sq", AM, "am", AR, "ar", HY, "hy", AZ, "az", EU, "eu", BE, "be", BN,
+                     "bn", BS, "bs", BG, "bg", CA, "ca", CEB, "ceb", ZH_CN, "zh-CN", ZH_TW, "zh-TW", CO, "co", HR, "hr",
+                     CS, "cs", DA, "da", NL, "nl", EN, "en", EO, "eo", ET, "et", FI, "fi", FR, "fr", FY, "fy", GL, "gl",
+                     KA, "ka", DE, "de", EL, "el", GU, "gu", HT, "ht", HA, "ha", HAW, "haw", HE, "he", HI, "hi", HMN,
+                     "hmn", HU, "hu", IS_, "is", IG, "ig", ID, "id", GA, "ga", IT, "it", JA, "ja", JV, "jv", KN, "kn",
+                     KK, "kk", KM, "km", RW, "rw", KO, "ko", KU, "ku", KY, "ky", LO, "lo", LA, "la", LV, "lv", LT, "lt",
+                     LB, "lb", MK, "mk", MG, "mg", MS, "ms", ML, "ml", MT, "mt", MI, "mi", MR, "mr", MN, "mn", MY, "my",
+                     NE, "ne", NO, "no", NY, "ny", OR_, "or", PS, "ps", FA, "fa", PL, "pl", PT, "pt", PA, "pa", RO,
+                     "ro", RU, "ru", SM, "sm", GD, "gd", SR, "sr", ST, "st", SN, "sn", SD, "sd", SI, "si", SK, "sk", SL,
+                     "sl", SO, "so", ES, "es", SU, "su", SW, "sw", SV, "sv", TL, "tl", TG, "tg", TA, "ta", TT, "tt", TE,
+                     "te", TH, "th", TR, "tr", TK, "tk", UK, "uk", UR, "ur", UG, "ug", UZ, "uz", VI, "vi", CY, "cy", XH,
+                     "xh", YI, "yi", YO, "yo", ZU, "zu"]
+
 """
 谷歌国家地区域名
 """
