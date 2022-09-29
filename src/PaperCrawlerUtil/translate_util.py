@@ -425,3 +425,46 @@ class Translators:
     def google_translate_web(self):
         return google_trans_final(self.content, self.sl, self.tl, self.proxy, self.reporthook, self.total,
                                   self.need_log, self.cookie, self.token)
+
+    def chain_translate(self, content: str, sl: str = AUTO, mist_language_list: List[str] = [EN, RU, JA, ZH_CN],
+                        translator: str = GOOGLE_TRANSLATOR):
+        """
+        这是一个基于翻译类的应用，链式翻译，用来论文降重，大家都懂
+        :param content: 待翻译的内容
+        :param translator: 指定翻译器，尽量指定谷歌，百度翻译有限额
+        :param sl: 初始的语言
+        :param mist_language_list: 中间转换语言，最后一个是最终输出语言
+        :return: 返回链式翻译的结果
+        """
+        p_bar = process_bar(final_prompt="翻译完成", unit="language class")
+        p_bar.process(0, 1, len(mist_language_list))
+        if translator == GOOGLE_TRANSLATOR:
+            self.set_param(content=content, sl=sl, tl=mist_language_list[0], sleep_time=2)
+            log("sl -> tl = {} -> {}".format(sl, mist_language_list[0]))
+            mist_res = self.web_translator(translate_method=google_trans_final)
+            p_bar.process(1, 1, len(mist_language_list))
+            for i in range(len(mist_language_list) - 1):
+                self.set_param(content=mist_res, sl=mist_language_list[i], tl=mist_language_list[i + 1])
+                log("sl -> tl = {} -> {}".format(mist_language_list[i], mist_language_list[i + 1]))
+                mist_res = self.web_translator(translate_method=google_trans_final)
+                p_bar.process(i + 2, 1, len(mist_language_list))
+                time.sleep(self.sleep_time)
+            return mist_res
+        elif translator == BAIDU_TRANSLATOR:
+            self.set_param(content=content, sl=sl, tl=mist_language_list[0])
+            mist_res = self.baidu_translate_api()
+            log("sl -> tl = {} -> {}".format(sl, mist_language_list[0]))
+            for i in range(len(mist_language_list) - 1):
+                self.set_param(content=mist_res, sl=mist_language_list[i], tl=mist_language_list[i + 1])
+                log("sl -> tl = {} -> {}".format(mist_language_list[i], mist_language_list[i + 1]))
+                mist_res = self.baidu_translate_api()
+                p_bar.process(i + 2, 1, len(mist_language_list))
+                time.sleep(self.sleep_time)
+            return mist_res
+
+
+if __name__ == "__main__":
+    t = Translators(proxy="127.0.0.1:33210")
+    k = t.chain_translate(content="Traffic flow forecasting or prediction plays an important role in the traffic control and management of a city. Existing works mostly train a model using the traffic flow data of a city and then test the trained model using the data of the same city. It may not be truly intelligent as there are many cities around us and there should be some shared knowledge among different cities. The data of a city and its knowledge can be used to help improve the traffic flow forecasting of other cities. To address this motivation, we study building a universal deep learning model for multi-city traffic flow forecasting. In this paper, we exploit spatial-temporal correlations among different cities with multi-task learning to approach the traffic flow forecasting tasks of multiple cities. As a result, we propose a Multi-city Traffic flow forecasting Network (MTN) via multi-task learning to extract the spatial dependency and temporal regularity among multiple cities later used to improve the performance of each individual city traffic flow forecasting collaboratively. In brief, the proposed model is a quartet of methods: (1) It integrates three temporal intervals and formulates a multi-interval component for each city to extract temporal features of each city; (2) A spatial-temporal attention layer with 3D Convolutional kernels is plugged into the neural networks to learn spatial-temporal relationship; (3) As traffic peak distributions of different cities are often similar, it proposes to use a peak zoom network to learn the peak effect of multiple cities and enhance the prediction performance on important time steps in different cities; (4) It uses a fusion layer to merge the outputs from distinct temporal intervals for the final forecasting results. Experimental results using real-world datasets from DIDI show the superior performance of the proposed model.")
+
+

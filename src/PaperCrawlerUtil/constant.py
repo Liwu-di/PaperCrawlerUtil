@@ -37,6 +37,16 @@ API_THREADED = "API_THREADED"
 KEEP_PROCESS_BAR_STYLE = "keep_process_bar_style"
 KEEP_PROCESS_BAR_STYLE_FILE = "keep_process_bar_style_file"
 
+
+"""
+chain translate 定义
+"""
+ACCURACY = "accuracy"
+MORE = "MORE"
+GOOGLE_TRANSLATOR = "google"
+BAIDU_TRANSLATOR = "baidu"
+
+
 """
 存储方式定义
 """
