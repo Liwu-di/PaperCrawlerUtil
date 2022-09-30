@@ -472,7 +472,7 @@ def pdf2docx(pdf_path: str, word_path: str, end_pages: int = None,
     file_list = []
     file = True
     count = 0
-    if os.path.isfile(pdf_path) and os.path.isfile:
+    if os.path.isfile(pdf_path):
         file_list.append(pdf_path)
         if need_log:
             log("转换文件{}开始".format(pdf_path))
@@ -484,16 +484,13 @@ def pdf2docx(pdf_path: str, word_path: str, end_pages: int = None,
     for ele in file_list:
         if ele.endswith(".pdf"):
             try:
-                cv = Converter(ele)
+                cv = MyPdf2DocxConverter(ele)
                 if start_pages is None:
                     start_pages = 0
                 if end_pages is None:
                     end_pages = len(cv.pages)
-                if not file:
-                    cv.convert(local_path_generate(word_path), start=start_pages, end=end_pages)
-                else:
-                    cv.convert(local_path_generate(word_path, suffix=".docx"), start=start_pages, end=end_pages)
-                    count = count + 1
+                cv.convert(local_path_generate(word_path, suffix=".docx"), start=start_pages, end=end_pages)
+                count = count + 1
                 log("总计pdf文件个数{}，已经完成{}".format(len(file_list), count))
             except Exception as e:
                 log(string="转换失败文件{},{}".format(ele, e), print_file=sys.stderr)
@@ -691,11 +688,6 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
     iters = None
     if type(page_range) == tuple:
         new_page_range = ()
-        for k in page_range:
-            '''@todo: 完善verify_rule()'''
-            if not (0 <= k <= pdf_pages_len - 1):
-                log(string="范围参数有错", print_file=sys.stderr)
-                return False
         if len(page_range) == 0:
             log(string="页码范围不明确，返回错误", print_file=sys.stderr)
             return False
@@ -707,6 +699,17 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
             new_page_range = (page_range[0], page_range[1])
         else:
             new_page_range = (page_range[0], page_range[1])
+        # check tuple legal or not
+        a = []
+        for k in new_page_range:
+            if k < 0:
+                a.append(0)
+            elif k > pdf_pages_len:
+                a.append(pdf_pages_len)
+            a.append(k)
+        new_page_range = (a[0], a[1])
+        if new_page_range[1] < new_page_range[0]:
+            new_page_range = (new_page_range[1], new_page_range[0])
         iters = range(new_page_range[0], new_page_range[1])
     else:
         # 去重
@@ -809,7 +812,7 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
         for p in range(len(out_path) - 4):
             temp.append(out_path[p])
         out_path = "".join(temp)
-        out_path = (out_path + group_id + ".pdf") if len(out_path) != 0 else local_path_generate("")
+        out_path = (out_path + "-groupid-" +group_id + ".pdf") if len(out_path) != 0 else local_path_generate("")
     else:
         out_path = out_path if len(out_path) != 0 else local_path_generate("")
     count = 0
@@ -837,12 +840,11 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
             if len(page_range) == 0:
                 if need_log:
                     log("默认全部合并，因为范围为空")
-                new_page_range[0] = 0
-                new_page_range[1] = pdf_pages_len - 1
+                new_page_range = (0, pdf_pages_len)
             elif len(page_range) == 1:
                 if need_log:
                     log("使用范围截取，但只有一个参数，结束参数默认为最大值")
-                new_page_range = (page_range[0], pdf_pages_len - 1)
+                new_page_range = (page_range[0], pdf_pages_len)
             elif len(page_range) > 2:
                 if need_log:
                     log("使用范围参数，但参数数量过多，截取两个")
@@ -911,13 +913,12 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
     :param need_group: 是否需要分组合并
     :return:
     """
-    need_log = need_log if not need_processbar else False
     if len(path) == 0:
         log("给定路径为空，合并结束：{}".format(path))
     elif os.path.isfile(path):
         log("给定的是文件路径，合并结束：{}".format(path))
     if page_range is None:
-        page_range = []
+        page_range = ()
     files = getAllFiles(path)
     if need_group:
         if need_processbar:
@@ -928,6 +929,8 @@ def cooperatePdf(path: str, page_range: tuple or list = None, out_path: str = ""
         file_group = []
         while i < len(files):
             if (i != 0 and ((i % group_number) == 0)) or (i == len(files) - 1):
+                if i == len(files) - 1:
+                    file_group.append(files[i])
                 cooperatePdfWithLimit(file_group, page_range, out_path, need_log, timeout, str(group_id))
                 group_id = group_id + 1
                 file_group.clear()
