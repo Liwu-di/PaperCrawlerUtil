@@ -486,5 +486,16 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
         return html
 
 
+def get_all_link_from_html(html: str, get_type: str = ACCURACY):
+    """
+    获取html中所有链接，有两种模式，一种是保证正确型，只识别http，https开头和href开头的
+    还有一种是全面型，尽可能多的识别链接，比如/adta/download/jafs.pdf等等也识别为链接，这种需要配合前缀链接使用
+    后一种返回时，会分为两部分，一部分是保证正确型，另一部分是尽可能多的识别的链接
+    :param get_type:
+    :param html:
+    :return:
+    """
+
+
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)

@@ -309,7 +309,7 @@ def set_cross_file_variable(key_val: List[tuple]) -> bool:
 
 def is_ip(proxy_test: str = "") -> bool:
     """
-    测试字符串是否是一个ip地址
+    测试字符串是否是一个http | https ip地址
     :param proxy_test: 待测试字符串
     :return:是则返回True
     """

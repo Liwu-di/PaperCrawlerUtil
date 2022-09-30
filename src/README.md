@@ -12,9 +12,18 @@
     * PDF文件合并，
     * PDF文件截取某些页等  
 
-A set of tools for building small crawlers, including accessing links, getting elements, extracting files, etc.
-There are also small tools that have been implemented to obtain papers through scihub, as well as pdf to doc, text translation, proxy connection acquisition and proxy link acquisition through api,
-PDF file merging, PDF file intercepting certain pages, etc.
+A set of tools for building small crawlers, including   
+1. crawler utils:  
+   1. accessing links  
+   2. getting elements  
+   3. extracting files, etc.
+2. other tools:  
+   1. obtain papers through scihub  
+   2. pdf to doc  
+   3. text translation  
+   4. proxy connection acquisition and proxy link acquisition through api  
+   5. PDF file merging  
+   6. PDF file intercepting certain pages, etc.  
 
 # 安装与使用
 ```commandline
@@ -68,8 +77,8 @@ from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
-```
-```python
+
+
 """
 使用dict时，也可以像redis一样，保存数据到硬盘，下次启动再加载，默认保存在dict.db，
 可以通过dict_store_path修改路径，如下：
@@ -94,6 +103,8 @@ g.save_dict()
 basic_config(require_proxy_pool=True, need_tester_log=False,
                  need_getter_log=False, need_storage_log=False)
 ```
+
+### 单独启用代理池(对proxypool项目的一个小扩展，可以直接代码启动，省事)
 ```python
 """
 也可以单独启用代理池，作为其他应用的一部分使用，方法如下：
@@ -105,19 +116,6 @@ from PaperCrawlerUtil.document_util import *
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False,
                      need_getter_log=False, proxypool_storage="dict", need_storage_log=False,
                      api_port=5556, set_daemon=False)
-```
-
-```python
-"""
-更新，增加cookie的访问
-"""
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.document_util import *
-cookie = "axxxx=c9IxxxxxdK"
-html = random_proxy_header_access(
-    url="https://s.taobao.com/search?q=iphone5",
-    require_proxy=False, cookie=cookie)
 ```
 
 ## 爬取CVPR文章
@@ -166,6 +164,9 @@ name = get_attribute_of_html(html,
                              rule={"href": IN, "pdf": NOT_IN, "main": IN, "full": NOT_IN, "emnlp": IN,
                                    "align-middle": IN, "emnlp-main.": IN},
                              attr_list=['strong'])
+"""
+获取文件名
+"""
 names = []
 for k in name:
     p = list(k)
@@ -318,6 +319,13 @@ log(get_split())
 log(t.web_translator(translate_method=google_trans_final, need_default_reporthook=True))
 log(get_split())
 log(t.google_translate_web())
+
+"""
+链式翻译示例
+"""
+tt = Translators(proxy="127.0.0.1:33210")
+k = tt.chain_translate(content="Traffic flow forecasting or prediction plays an important role in the traffic control and management of a city. Existing works mostly train a model using the traffic flow data of a city and then test the trained model using the data of the same city. It may not be truly intelligent as there are many cities around us and there should be some shared knowledge among different cities. The data of a city and its knowledge can be used to help improve the traffic flow forecasting of other cities. To address this motivation, we study building a universal deep learning model for multi-city traffic flow forecasting. In this paper, we exploit spatial-temporal correlations among different cities with multi-task learning to approach the traffic flow forecasting tasks of multiple cities. As a result, we propose a Multi-city Traffic flow forecasting Network (MTN) via multi-task learning to extract the spatial dependency and temporal regularity among multiple cities later used to improve the performance of each individual city traffic flow forecasting collaboratively. In brief, the proposed model is a quartet of methods: (1) It integrates three temporal intervals and formulates a multi-interval component for each city to extract temporal features of each city; (2) A spatial-temporal attention layer with 3D Convolutional kernels is plugged into the neural networks to learn spatial-temporal relationship; (3) As traffic peak distributions of different cities are often similar, it proposes to use a peak zoom network to learn the peak effect of multiple cities and enhance the prediction performance on important time steps in different cities; (4) It uses a fusion layer to merge the outputs from distinct temporal intervals for the final forecasting results. Experimental results using real-world datasets from DIDI show the superior performance of the proposed model.")
+
 ```
 
 ## 进度条
