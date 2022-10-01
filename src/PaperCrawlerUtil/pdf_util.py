@@ -20,19 +20,11 @@ from common_util import *
 import pdfplumber
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from pdf2docx import Converter
-
+from pdf2docx.converter import ConversionException, MakedocxException
 
 # check PyMuPDF>=1.19.x
 if list(map(int, fitz.VersionBind.split("."))) < [1, 19, 0]:
     raise SystemExit("PyMuPDF>=1.19.0 is required for pdf2docx.")
-
-
-class ConversionException(Exception):
-    pass
-
-
-class MakedocxException(ConversionException):
-    pass
 
 
 class MyPdf2DocxConverter(Converter):

@@ -657,7 +657,8 @@ def save_obj(src: object, path: str = "") -> bool:
     :param path: 保存的路径
     :return: 返回是否保存成功,True 表示成功
     """
-    path = path if len(path) > 0 else local_path_generate("", suffix="." + str(type(src)))
+    path = path if len(path) > 0 else local_path_generate("", suffix="." + "".join(filter(str.isalpha, str(type([])))).
+                                                          replace("class", ""))
     try:
         with open(path, mode="wb") as f:
             pickle.dump(src, f, pickle.HIGHEST_PROTOCOL)
@@ -717,12 +718,13 @@ class ThreadStopException(Exception):
     def __repr__(self) -> str:
         return super().__repr__()
 
-# if __name__ == "__main__":
-#     basic_config(logs_style=LOG_STYLE_PRINT, keep_process_bar_style_file=sys.stdout)
-#     bar = process_bar(final_prompt="wancheng")
-#     bar.process(0, 1, 100)
-#     for i in range(100):
-#         bar.process(0, 1, 100)
-#         log("ahfu")
-#         time.sleep(0.1)
+
+if __name__ == "__main__":
+    basic_config(logs_style=LOG_STYLE_PRINT)
+    # bar = process_bar(final_prompt="wancheng")
+    # bar.process(0, 1, 100)
+    # for i in range(100):
+    #     bar.process(0, 1, 100)
+    #     log("ahfu")
+    #     time.sleep(0.1)
 
