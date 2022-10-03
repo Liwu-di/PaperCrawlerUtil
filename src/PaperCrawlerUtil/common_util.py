@@ -36,9 +36,6 @@ log_style = LOG_STYLE_PRINT
 PROXY_POOL_CAN_RUN_FLAG = True
 
 
-logging.basicConfig(filename="crawler_util.log", level=logging.WARNING)
-
-
 class process_bar(object):
     """
     封装进度条类tdqm，实现retrieve_file进度条显示，
@@ -173,9 +170,10 @@ def write_log(string: str = "", print_file: object = sys.stdout):
 
 
 def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
-        print_flush: bool = None) -> None:
+        print_flush: bool = None, need_time_stamp: bool = True) -> None:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
+    :param need_time_stamp: 是否需要对于输出的日志添加时间戳
     :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
     与process_bar的初始化file参数一致，默认为sys.stderr
     :param string: 待输出字符串
@@ -189,6 +187,8 @@ def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_fil
     print_file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
         if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else print_file
     string = string if string is not None else ""
+    if need_time_stamp:
+        string = get_timestamp() + get_split(lens=3, style=" ") + string
     if type(string) != str:
         try:
             string = str(string)
@@ -197,10 +197,10 @@ def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_fil
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
-        tqdm.write(s=get_timestamp() + get_split(lens=3, style=" ") + string, file=print_file, end=print_end)
+        tqdm.write(s=string, file=print_file, end=print_end)
     elif log_style == LOG_STYLE_ALL:
         write_log(string, print_file)
-        tqdm.write(s=get_timestamp() + get_split(lens=3, style=" ") + string, file=print_file, end=print_end)
+        tqdm.write(s=string, file=print_file, end=print_end)
 
 
 class CanStopThread(threading.Thread):
@@ -422,10 +422,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
     :param logs_style: log表示使用日志文件，print表示使用控制台，all表示两者都使用
     :return:
     """
-    if len(log_file_name) != 0 and log_level != 0:
-        logging.basicConfig(filename=log_file_name, level=log_level, force=True)
     global PROXY_POOL_URL, PROXY_POOL_CAN_RUN_FLAG
     global log_style
+    if len(log_file_name) != 0 and log_level != 0 and (logs_style == LOG_STYLE_ALL or logs_style == LOG_STYLE_LOG):
+        logging.basicConfig(filename=log_file_name, level=log_level, force=True)
     set_cross_file_variable(
         [(REDIS_CONF, (redis_host, redis_port, redis_password, redis_database, redis_key, redis_string)),
          (STORAGE_CONF, proxypool_storage), (CROSS_FILE_GLOBAL_DICT_CONF, {}),
@@ -721,6 +721,8 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    for k in range(100):
+        log("fhudihdsi")
     # bar = process_bar(final_prompt="wancheng")
     # bar.process(0, 1, 100)
     # for i in range(100):

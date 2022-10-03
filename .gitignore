@@ -14,3 +14,4 @@ crawler_util.log
 src/crawler_generate/build
 src/crawler_generate/node_modules
 src/crawler_generate/test
+src/FrontEnd/node_modules
