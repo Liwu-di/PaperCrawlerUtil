@@ -169,14 +169,14 @@ def write_log(string: str = "", print_file: object = sys.stdout):
         logging.error(string)
 
 
-def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
-        print_flush: bool = None, need_time_stamp: bool = True) -> None:
+def log(string: str or object = "", print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
+        print_flush: bool = None, need_time_stamp: bool = True) -> bool:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
     :param need_time_stamp: 是否需要对于输出的日志添加时间戳
     :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
     与process_bar的初始化file参数一致，默认为sys.stderr
-    :param string: 待输出字符串
+    :param string: 待输出字符串或者对象，对象只支持print方式
     :param print_sep: 输出字符串之间的连接符，同print方法sep，目前被废弃
     :param print_end: 输出字符串之后的结尾添加字符
     :param print_file: 输出流
@@ -184,23 +184,30 @@ def log(string: str = "", print_sep: str = ' ', print_end: str = "\n", print_fil
     :return:
     """
     global log_style
+    flag = True
     print_file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
         if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else print_file
     string = string if string is not None else ""
-    if need_time_stamp:
+    if need_time_stamp and type(string) == str:
         string = get_timestamp() + get_split(lens=3, style=" ") + string
     if type(string) != str:
         try:
-            string = str(string)
+            print(get_timestamp() + ":" + get_split(lens=3, style=" "), file=print_file, end=print_end, sep=print_sep, flush=print_flush)
+            print(string, file=print_file, end=print_end, sep=print_sep, flush=print_flush)
         except Exception as e:
-            string = "待输出的日志不是字符串形式，也无法转换为字符串，{}：{}".format(string, e)
+            string = "待输出的日志不是字符串形式，也无法使用print方式显示，{}".format(e)
+            flag = False
+        return flag
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
+        return flag
     elif log_style == LOG_STYLE_PRINT:
         tqdm.write(s=string, file=print_file, end=print_end)
+        return flag
     elif log_style == LOG_STYLE_ALL:
         write_log(string, print_file)
         tqdm.write(s=string, file=print_file, end=print_end)
+        return flag
 
 
 class CanStopThread(threading.Thread):
@@ -721,12 +728,4 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    for k in range(100):
-        log("fhudihdsi")
-    # bar = process_bar(final_prompt="wancheng")
-    # bar.process(0, 1, 100)
-    # for i in range(100):
-    #     bar.process(0, 1, 100)
-    #     log("ahfu")
-    #     time.sleep(0.1)
 
