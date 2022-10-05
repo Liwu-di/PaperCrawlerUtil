@@ -2,6 +2,8 @@ import pickle
 import sys
 from typing import List
 
+import flask
+
 import PaperCrawlerUtil.global_val as global_val
 from proxypool.storages.proxy_dict import ProxyDict
 
@@ -176,7 +178,7 @@ def log(string: str or object = "", print_sep: str = ' ', print_end: str = "\n",
     :param need_time_stamp: 是否需要对于输出的日志添加时间戳
     :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
     与process_bar的初始化file参数一致，默认为sys.stderr
-    :param string: 待输出字符串或者对象，对象只支持print方式
+    :param string: 待输出字符串或者对象，对象只支持print方式或者可以被str函数转成字符串的对象
     :param print_sep: 输出字符串之间的连接符，同print方法sep，目前被废弃
     :param print_end: 输出字符串之后的结尾添加字符
     :param print_file: 输出流
@@ -188,26 +190,25 @@ def log(string: str or object = "", print_sep: str = ' ', print_end: str = "\n",
     print_file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
         if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else print_file
     string = string if string is not None else ""
-    if need_time_stamp and type(string) == str:
-        string = get_timestamp() + get_split(lens=3, style=" ") + string
     if type(string) != str:
         try:
-            print(get_timestamp() + ":" + get_split(lens=3, style=" "), file=print_file, end=print_end, sep=print_sep, flush=print_flush)
-            print(string, file=print_file, end=print_end, sep=print_sep, flush=print_flush)
+            string = str(string)
         except Exception as e:
-            string = "待输出的日志不是字符串形式，也无法使用print方式显示，{}".format(e)
-            flag = False
-        return flag
+            try:
+                print(string, file=print_file, end=print_end, sep=print_sep, flush=print_flush)
+            except Exception as ee:
+                string = "待输出的日志不是字符串形式，也无法使用print方式显示，{}".format(e)
+                flag = False
+    if need_time_stamp and type(string) == str:
+        string = get_timestamp() + get_split(lens=3, style=" ") + string
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
-        return flag
     elif log_style == LOG_STYLE_PRINT:
         tqdm.write(s=string, file=print_file, end=print_end)
-        return flag
     elif log_style == LOG_STYLE_ALL:
         write_log(string, print_file)
         tqdm.write(s=string, file=print_file, end=print_end)
-        return flag
+    return flag
 
 
 class CanStopThread(threading.Thread):
@@ -728,4 +729,3 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-
