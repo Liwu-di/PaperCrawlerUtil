@@ -160,8 +160,45 @@ class process_bar(object):
         self.bar.close()
 
 
-def get_timestamp() -> str:
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+def get_timestamp(split: str or list = "-", accuracy: int = 6) -> str:
+    """
+    %Y  Year with century as a decimal number.
+    %m  Month as a decimal number [01,12].
+    %d  Day of the month as a decimal number [01,31].
+    %H  Hour (24-hour clock) as a decimal number [00,23].
+    %M  Minute as a decimal number [00,59].
+    %S  Second as a decimal number [00,61].
+    %z  Time zone offset from UTC.
+    %a  Locale's abbreviated weekday name.
+    %A  Locale's full weekday name.
+    %b  Locale's abbreviated month name.
+    %B  Locale's full month name.
+    %c  Locale's appropriate date and time representation.
+    %I  Hour (12-hour clock) as a decimal number [01,12].
+    %p  Locale's equivalent of either AM or PM.
+    :param split:
+    :param accuracy:
+    :return:
+    """
+    time_stamp_name = ["Y", "m", "d", "H", "M", "S", "z", "a", "A", "B", "c", "I", "p"]
+    if accuracy >= len(time_stamp_name):
+        accuracy = len(time_stamp_name)
+    time_style = ""
+    if type(split) == str:
+        temp = split
+        split = []
+        for i in range(accuracy):
+            split.append(temp)
+    elif type(split) == list:
+        if len(split) < accuracy:
+            for i in range(accuracy - len(split)):
+                split.append("-")
+    for i in range(accuracy):
+        if i == accuracy - 1:
+            time_style = time_style + "%" + time_stamp_name[i]
+        else:
+            time_style = time_style + "%" + time_stamp_name[i] + split[i]
+    return time.strftime(time_style, time.localtime())
 
 
 def write_log(string: str = "", print_file: object = sys.stdout):
@@ -200,7 +237,7 @@ def log(string: str or object = "", print_sep: str = ' ', print_end: str = "\n",
                 string = "待输出的日志不是字符串形式，也无法使用print方式显示，{}".format(e)
                 flag = False
     if need_time_stamp and type(string) == str:
-        string = get_timestamp() + get_split(lens=3, style=" ") + string
+        string = get_timestamp(split=["-", "-", " ", ":", ":"]) + get_split(lens=3, style=" ") + string
     if log_style == LOG_STYLE_LOG:
         write_log(string, print_file)
     elif log_style == LOG_STYLE_PRINT:
@@ -729,3 +766,4 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    log(get_timestamp("-", accuracy=100))
