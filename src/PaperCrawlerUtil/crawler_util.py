@@ -309,46 +309,6 @@ def get_pdf_url_by_doi(search: str, work_path: str, sleep_time: float = 1.2, max
         return False
 
 
-def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
-    """
-    verify the element string. if element satisfy all rules provided by rule arg,
-    return true.
-    :param rule:a dictionary that represent rules. the key is the match string and the value
-    is the rule. The rule is only support "in" and "not in" and "equal" and "not equal",
-    and more than, less than and greater or equal and less than or equal.
-     example:{"href": "in"}
-    :param origin:the string will be verified
-    :return:a bool value represent whether element satisfy all rule
-    """
-    if rule is None or len(rule) == 0:
-        return True
-    if origin is None:
-        return False
-    for key, value in rule.items():
-        if str(value) == IN and str(key) not in str(origin):
-            return False
-        elif str(value) == NOT_IN and str(key) in str(origin):
-            return False
-        elif str(value) == EQUAL and str(key) != str(origin):
-            return False
-        elif str(value) == NOT_EQUAL and str(key) == str(origin):
-            return False
-        elif str(value) == LESS_THAN or str(value) == LESS_THAN or str(value) == LESS_THAN_AND_EQUAL or str(
-                value) == MORE_THAN or str(value) == GREATER_AND_EQUAL:
-            if type(origin) != float and type(origin) != int:
-                return False
-            else:
-                if str(value) == LESS_THAN and float(origin) >= float(key):
-                    return False
-                elif str(value) == LESS_THAN_AND_EQUAL and float(origin) > float(key):
-                    return False
-                elif str(value) == GREATER_AND_EQUAL and float(origin) < float(key):
-                    return False
-                elif str(value) == MORE_THAN and float(origin) <= float(key):
-                    return False
-    return True
-
-
 def get_attribute_of_html(html: str, rule: dict = None, attr_list: list = None) -> list:
     """
     Use beautifulsoup4 to scan the html string get by urllib.get().

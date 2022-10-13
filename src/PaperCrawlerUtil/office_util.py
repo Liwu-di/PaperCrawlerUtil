@@ -10,7 +10,6 @@ import xlrd
 import xlwt
 
 from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import verify_rule
 
 
 class CsvProcess:

@@ -15,8 +15,7 @@ from docx import Document
 from pdf2docx.page.Page import Page
 from pdf2docx.page.Pages import Pages
 import io
-from PaperCrawlerUtil.crawler_util import verify_rule
-from common_util import *
+from PaperCrawlerUtil.common_util import *
 import pdfplumber
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from pdf2docx import Converter
