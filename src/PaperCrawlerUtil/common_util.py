@@ -160,7 +160,7 @@ class process_bar(object):
         self.bar.close()
 
 
-def get_timestamp(split: str or list = "-", accuracy: int = 6) -> str:
+def get_timestamp(split: str or list = ["-", "-", " ", ":", ":"], accuracy: int = 6) -> str:
     """
     %Y  Year with century as a decimal number.
     %m  Month as a decimal number [01,12].
@@ -766,4 +766,4 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    log(get_timestamp("-", accuracy=100))
+    # log(get_timestamp())
