@@ -158,7 +158,11 @@ class process_bar(object):
                 self.current = self.current + self.batch
 
     def __del__(self):
-        self.bar.close()
+        try:
+            if self.bar is not None:
+                self.bar.close()
+        except Exception as e:
+            log("进度条关闭失败:{}".format(e), print_file=sys.stderr)
 
 
 def verify_rule(rule: dict, origin: float or str or Tag) -> bool:
