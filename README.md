@@ -1,32 +1,33 @@
 # PaperCrawlerUtil
 一套工具组，包括:
 1. 爬虫相关： 
-    * 访问链接 
-    * 获取元素
-    * 抽取文件等等
+   * 访问链接 
+   * 获取元素
+   * 抽取文件等等
 2. 已经实现好的工具
-    * 通过scihub获取论文的小工具，
-    * 还有对于pdf转doc，
-    * 文本翻译,
-    * 代理连接获取以及通过api获取代理链接，
-    * PDF文件合并，
-    * PDF文件截取某些页等  
+   * 通过scihub获取论文的小工具，
+   * 还有对于pdf转doc，
+   * 文本翻译,
+   * 代理连接获取以及通过api获取代理链接，
+   * PDF文件合并，
+   * PDF文件截取某些页等  
 3. 科研相关
    * 通过给定的数据库连接，自动记录运行代码的时间，结束时间，运行的文件等等
+
 A set of tools , including   
-4. crawler utils:  
+1. crawler utils:  
    1. accessing links  
    2. getting elements  
    3. extracting files, etc.
-5. other tools:  
+2. other tools:  
    1. obtain papers through scihub  
    2. pdf to doc  
    3. text translation  
    4. proxy connection acquisition and proxy link acquisition through api  
    5. PDF file merging  
    6. PDF file intercepting certain pages, etc.  
-6. Research related
-    * Through a given database connection, automatically record the time of running the code, the end time, the running file, etc.
+3. Research related
+   * Through a given database connection, automatically record the time of running the code, the end time, the running file, etc.
 # 安装与使用
 ```commandline
 可以直接安装本包
