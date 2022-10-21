@@ -1,5 +1,5 @@
 # PaperCrawlerUtil
-一套用来构建小爬虫的工具组，包括:
+一套工具组，包括:
 1. 爬虫相关： 
     * 访问链接 
     * 获取元素
@@ -11,20 +11,22 @@
     * 代理连接获取以及通过api获取代理链接，
     * PDF文件合并，
     * PDF文件截取某些页等  
-
-A set of tools for building small crawlers, including   
-1. crawler utils:  
+3. 科研相关
+   * 通过给定的数据库连接，自动记录运行代码的时间，结束时间，运行的文件等等
+A set of tools , including   
+4. crawler utils:  
    1. accessing links  
    2. getting elements  
    3. extracting files, etc.
-2. other tools:  
+5. other tools:  
    1. obtain papers through scihub  
    2. pdf to doc  
    3. text translation  
    4. proxy connection acquisition and proxy link acquisition through api  
    5. PDF file merging  
    6. PDF file intercepting certain pages, etc.  
-
+6. Research related
+    * Through a given database connection, automatically record the time of running the code, the end time, the running file, etc.
 # 安装与使用
 ```commandline
 可以直接安装本包
@@ -441,3 +443,37 @@ for p in res_dict.items():
 e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
 ```  
 
+## 科研工具，记录执行情况
+```python
+from PaperCrawlerUtil.research_util import *
+"""
+c = {
+  "db_url": "数据库的ip地址",
+  "db_username": "数据库用户名",
+  "pass": "数据库密码",
+  "port": "数据库端口",
+  "ssl_ip": "如果是云端服务器，需要使用ssl，这里就是服务器ip",
+  "ssl_admin": "服务器用户名",
+  "ssl_pwd": "服务器密码",
+  "ssl_db_port": "服务器上数据库端口",
+  "ssl_port": "ssl 端口，一般为22",
+  "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True"
+}
+"""
+c = {
+        "db_url": "4.x.x.x",
+        "db_username": "root",
+        "pass": "xxxx",
+        "port": 3306,
+        "ssl_ip": "4.x.x.x",
+        "ssl_admin": "root",
+        "ssl_pwd": "xxxx.",
+        "ssl_db_port": 3306,
+        "ssl_port": 22,
+        "ignore_error": True
+    }
+a = ResearchRecord(**c)
+p = a.insert(__file__, get_timestamp())
+p = a.update(p[0], get_timestamp(), "ffdsfsda")
+log(p[0])
+```
