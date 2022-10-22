@@ -5,13 +5,13 @@ import sys
 import PaperCrawlerUtil.global_val as global_val
 
 sys.path.append("../../PaperCrawlerUtil")
-from proxypool.processors.server import app
-from proxypool.processors.getter import Getter
-from proxypool.processors.tester import Tester
-from proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_THREADED, \
+from PaperCrawlerUtil.proxypool.processors.server import app
+from PaperCrawlerUtil.proxypool.processors.getter import Getter
+from PaperCrawlerUtil.proxypool.processors.tester import Tester
+from PaperCrawlerUtil.proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_THREADED, \
     IS_PROD, APP_PROD_METHOD, IS_WINDOWS
 from loguru import logger
-from constant import *
+from PaperCrawlerUtil.constant import *
 
 
 if IS_WINDOWS:
@@ -106,7 +106,7 @@ class Scheduler():
     def run(self):
         global tester_process, getter_process, server_process
         try:
-            logger.info('starting proxypool...')
+            logger.info('starting PaperCrawlerUtil.proxypool...')
             if global_val.get_value(ENABLE_TESTER):
                 tester_process = multiprocessing.Process(
                     target=self.run_tester)

@@ -6,7 +6,7 @@ import flask
 from bs4 import Tag
 
 import PaperCrawlerUtil.global_val as global_val
-from proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
 
 sys.path.append("PaperCrawlerUtil")
 sys.path.append("PaperCrawlerUtil/proxypool")
@@ -26,11 +26,11 @@ import random
 import threading
 import time
 import requests
-from proxypool.setting import *
+from PaperCrawlerUtil.proxypool.setting import *
 from requests.cookies import RequestsCookieJar
-from proxypool.processors.getter import Getter
-from proxypool.processors.server import app
-from proxypool.processors.tester import Tester
+from PaperCrawlerUtil.proxypool.processors.getter import Getter
+from PaperCrawlerUtil.proxypool.processors.server import app
+from PaperCrawlerUtil.proxypool.processors.tester import Tester
 from PaperCrawlerUtil.constant import *
 from tqdm import tqdm
 

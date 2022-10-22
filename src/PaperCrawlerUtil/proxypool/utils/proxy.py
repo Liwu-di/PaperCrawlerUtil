@@ -1,4 +1,4 @@
-from proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 
 def is_valid_proxy(data):

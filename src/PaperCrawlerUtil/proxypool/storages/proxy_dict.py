@@ -8,15 +8,15 @@ import os
 import pickle
 import random
 
-from proxypool.exceptions import PoolEmptyException
-from proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 from random import choice
 from typing import List
 from loguru import logger
-from proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
-from global_val import *
+from PaperCrawlerUtil.proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
+from PaperCrawlerUtil.global_val import *
 import PaperCrawlerUtil.global_val as global_val
-from constant import *
+from PaperCrawlerUtil.constant import *
 
 
 class ProxyDict(object):

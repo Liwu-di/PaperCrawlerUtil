@@ -1,7 +1,7 @@
 from retrying import RetryError, retry
 import requests
 from loguru import logger
-from constant import *
+from PaperCrawlerUtil.constant import *
 import PaperCrawlerUtil.global_val as global_val
 from fake_headers import Headers
 import time

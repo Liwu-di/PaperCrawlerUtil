@@ -1,11 +1,11 @@
 from flask import Flask, g
 
 import PaperCrawlerUtil.global_val as global_val
-from proxypool.exceptions import PoolEmptyException
-from proxypool.storages.redis import RedisClient
-from global_val import *
-from proxypool.storages.proxy_dict import ProxyDict
-from constant import *
+from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
+from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
+from PaperCrawlerUtil.global_val import *
+from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.constant import *
 
 IS_DEV = True
 

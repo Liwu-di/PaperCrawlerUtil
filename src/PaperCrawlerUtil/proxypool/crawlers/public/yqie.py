@@ -1,7 +1,7 @@
 from pyquery import PyQuery as pq
 
-from proxypool.schemas import Proxy
-from proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 
 BASE_URL = "http://ip.yqie.com/ipproxy.htm"
 MAX_PAGE = 1

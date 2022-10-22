@@ -1,5 +1,5 @@
-from proxypool.schemas import Proxy
-from proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 import re
 import time
 BASE_URL = 'https://ip.ihuan.me/today/{path}.html'

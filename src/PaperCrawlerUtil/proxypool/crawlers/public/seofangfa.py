@@ -1,8 +1,8 @@
 import requests
 from pyquery import PyQuery as pq
 
-from proxypool.schemas import Proxy
-from proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 
 requests.packages.urllib3.disable_warnings()
 BASE_URL = "https://proxy.seofangfa.com/"

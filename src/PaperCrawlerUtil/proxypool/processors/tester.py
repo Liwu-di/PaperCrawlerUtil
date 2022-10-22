@@ -5,12 +5,12 @@ import aiohttp
 from loguru import logger
 
 import PaperCrawlerUtil.global_val as global_val
-from proxypool.schemas import Proxy
-from proxypool.storages.redis import RedisClient
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
 from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from asyncio import TimeoutError
-from constant import *
-from proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
 
 EXCEPTIONS = (
     ClientProxyConnectionError,

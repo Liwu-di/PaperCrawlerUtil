@@ -1,10 +1,10 @@
 from loguru import logger
 
 import PaperCrawlerUtil.global_val as global_val
-from proxypool.storages.redis import RedisClient
-from proxypool.crawlers import __all__ as crawlers_cls
-from proxypool.storages.proxy_dict import ProxyDict
-from constant import *
+from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
+from PaperCrawlerUtil.proxypool.crawlers import __all__ as crawlers_cls
+from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.constant import *
 
 
 class Getter(object):
