@@ -195,7 +195,8 @@ class ExcelProcess:
         """
         return self.excel.sheet_loaded(self.sheet_name if self.sheet_name is not None else self.sheet_index)
 
-    def write_excel(self, content: List[List[object]], path: str, book_name: str = "new book",
+    @staticmethod
+    def write_excel(content: List[List[object]], path: str, book_name: str = "new book",
                     encoding: str = "ascii"):
         """
         @todo: 这里数据的格式重新调整一次，做成可以写多个工作簿的
@@ -228,5 +229,4 @@ class ExcelProcess:
 
 
 if __name__ == "__main__":
-    excel = ExcelProcess()
-    excel.write_excel([[1, 2], [3, 4]], local_path_generate("", suffix=".xls"))
+    basic_config(logs_style=LOG_STYLE_PRINT)

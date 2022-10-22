@@ -117,6 +117,8 @@ research util 建表
 """
 
 CREATE_DB_TABLE = "CREATE TABLE `research`.`record_result` (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'record number',\n  `file_execute` VARCHAR(200) BINARY NULL DEFAULT 'unkonwn file',\n  `excute_time` VARCHAR(200) NOT NULL DEFAULT '',\n  `finish_time` VARCHAR(200) NOT NULL DEFAULT '',\n  `result` VARCHAR(1000) NULL DEFAULT 'unkonwn result',\n  PRIMARY KEY (`id`))\nENGINE = InnoDB\nDEFAULT CHARACTER SET = utf8\nCOMMENT = 'research result record record_resulttable';\n"
+TABLE_TITLE = ["id", "file_execute", "exec_time", "finish_time", "result"]
+
 
 """自动识别，只能用在源语言"""
 AUTO = "auto"

@@ -477,4 +477,8 @@ a = ResearchRecord(**c)
 p = a.insert(__file__, get_timestamp())
 p = a.update(p[0], get_timestamp(), "ffdsfsda")
 log(p[0])
+
+# 导出数据
+a = ResearchRecord(**c)
+k = a.export((100, 200), file_type="xls")
 ```
