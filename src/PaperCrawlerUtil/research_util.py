@@ -56,9 +56,17 @@ class ResearchRecord(object):
 
     @staticmethod
     def create_db_table():
+        """
+        返回建表建数据库语句
+        :return:
+        """
         return CREATE_DB_TABLE
 
     def create_db_conn(self):
+        """
+        链接数据库，不返回链接，全局使用一个连接conn
+        :return:
+        """
         connection = pymysql.connect(host=self.db_url,
                                      user=self.db_username,
                                      password=self.db_pass,
@@ -120,6 +128,10 @@ class ResearchRecord(object):
             return False
 
     def select_all(self):
+        """
+        查询所有数据
+        :return:
+        """
         sql = "select count(*) from `" + self.db_database + "`.`" + self.db_table + "`"
         res = []
         if self._execute(sql):
@@ -131,6 +143,12 @@ class ResearchRecord(object):
             return []
 
     def select_page(self, page: int = 100, page_no: int = 0) -> List:
+        """
+        分页查找
+        :param page:页面大小
+        :param page_no: 页面号
+        :return:
+        """
         res = []
         sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` LIMIT {} OFFSET {}" \
             .format(str(page), str(page_no * page))
