@@ -105,7 +105,7 @@ class ResearchRecord(object):
             sql = "select   id   from  " + self.db_database + "." + self.db_table + \
                   " order   by   id   desc   limit   1"
             if self._execute(sql):
-                return self.cursor.fetchone()
+                return self.cursor.fetchone()[0]
             else:
                 return -1,
         else:

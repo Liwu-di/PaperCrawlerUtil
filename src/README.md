@@ -475,8 +475,8 @@ c = {
     }
 a = ResearchRecord(**c)
 p = a.insert(__file__, get_timestamp())
-p = a.update(p[0], get_timestamp(), "ffdsfsda")
-log(p[0])
+p = a.update(p, get_timestamp(), "ffdsfsda")
+log(p)
 
 # 导出数据
 a = ResearchRecord(**c)

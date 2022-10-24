@@ -634,10 +634,12 @@ def two_one_choose(p: int = 0.5) -> bool:
 
 
 def local_path_generate(folder_name: str, file_name: str = "",
-                        suffix: str = ".pdf", need_log: bool = True) -> str:
+                        suffix: str = ".pdf", need_log: bool = True,
+                        create_folder_only: bool = False) -> str:
     """
     create a folder whose name is folder_name in folder which code in if folder_name
     is not exist. and then concat pdf_name to create file path.
+    :param create_folder_only: 是否只创建文件夹
     :param need_log: 是否需要日志，不影响重要信息输出
     :param suffix: 自动命名时文件后缀
     :param folder_name: 待创建的文件夹名称
@@ -654,6 +656,9 @@ def local_path_generate(folder_name: str, file_name: str = "",
             os.makedirs(folder_name)
     except Exception as e:
         log(string="创建文件夹{}失败".format(e), print_file=sys.stderr)
+        return ""
+    if create_folder_only:
+        return os.path.abspath(folder_name)
     if len(file_name) == 0:
         file_name = str(time.strftime("%H_%M_%S", time.localtime()))
         file_name = file_name + str(random.randint(10000, 99999))
@@ -812,7 +817,4 @@ class ThreadStopException(Exception):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    class a(object):
-        def __str__(self):
-            raise Exception
-    log(get_timestamp(), get_timestamp(), a(), print_sep="\n")
+
