@@ -5,6 +5,7 @@
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
 import sys
+import time
 
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.common_util import *
@@ -60,6 +61,7 @@ class ResearchRecord(object):
         返回建表建数据库语句
         :return:
         """
+        log(CREATE_DB_TABLE)
         return CREATE_DB_TABLE
 
     def create_db_conn(self):
@@ -79,6 +81,7 @@ class ResearchRecord(object):
     def _execute(self, sql: str) -> bool:
         """
         内部方法，执行sql
+        也可以执行用户自定义的sql，比如利用建表时默认的四个默认列记录数据等
         :param sql: 待执行的sql
         :return:
         """
@@ -91,16 +94,17 @@ class ResearchRecord(object):
                 write_file(local_path_generate("", "record_error.log"), mode="a+", string=sql + "\n")
             return False
 
-    def insert(self, file: str, exec_time: str) -> tuple:
+    def insert(self, file: str, exec_time: str, args: str = "") -> tuple:
         """
         插入，初始化记录，记录执行的文件，开始的时间
+        :param args: 运行参数，可以在update时修改
         :param file: 执行的文件，使用__file__即可
         :param exec_time: 开始执行的时间
         :return:
         """
         exec_time = exec_time if len(exec_time) > 0 else get_timestamp()
-        sql = "insert into `{}`.`{}`(`file_execute`, `excute_time`) " \
-              "values ('{}', '{}')".format(self.db_database, self.db_table, file, exec_time)
+        sql = "insert into `{}`.`{}`(`file_execute`, `excute_time`, `args`) " \
+              "values ('{}', '{}','{}')".format(self.db_database, self.db_table, file, exec_time, args)
         if self._execute(sql):
             sql = "select   id   from  " + self.db_database + "." + self.db_table + \
                   " order   by   id   desc   limit   1"
@@ -111,17 +115,20 @@ class ResearchRecord(object):
         else:
             return -1,
 
-    def update(self, id: int, finish_time: str = "", result: str = "") -> bool:
+    def update(self, id: int, finish_time: str = "", result: str = "", args: str = "", remark: str = "") -> bool:
         """
         执行结束之后，使用该方法更新
+        :param remark: 备注
+        :param args: 运行参数
         :param id: 要更新的记录id，可以从插入方法的返回值获得
         :param finish_time: 结束的时间
         :param result: 执行的结果
         :return:
         """
         finish_time = finish_time if len(finish_time) > 0 else get_timestamp()
-        sql = "update `" + self.db_database + "." + self.db_table + "` set result='{}', finish_time='{}' where id = {}". \
-            format(result, finish_time, str(id))
+        sql = "update `" + self.db_database + "`.`" + self.db_table + \
+              "` set result='{}', finish_time='{}', args='{}', other='{}' where id = {}". \
+                  format(result, finish_time, args, remark,str(id))
         if self._execute(sql):
             return True
         else:
@@ -239,3 +246,19 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    c = {
+        "db_url": "47.94.21.180",
+        "db_username": "root",
+        "pass": "Q7NRPeJao7GkOium",
+        "port": 3306,
+        "ssl_ip": "47.94.21.180",
+        "ssl_admin": "root",
+        "ssl_pwd": "liwudi1998328.",
+        "ssl_db_port": 3306,
+        "ssl_port": 22,
+        "ignore_error": True
+    }
+    a = ResearchRecord(**c)
+    p = a.insert(__file__, get_timestamp())
+    time.sleep(2)
+    a.update(p, get_timestamp())
