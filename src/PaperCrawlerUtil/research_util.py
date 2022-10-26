@@ -246,19 +246,4 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    c = {
-        "db_url": "47.94.21.180",
-        "db_username": "root",
-        "pass": "Q7NRPeJao7GkOium",
-        "port": 3306,
-        "ssl_ip": "47.94.21.180",
-        "ssl_admin": "root",
-        "ssl_pwd": "liwudi1998328.",
-        "ssl_db_port": 3306,
-        "ssl_port": 22,
-        "ignore_error": True
-    }
-    a = ResearchRecord(**c)
-    p = a.insert(__file__, get_timestamp())
-    time.sleep(2)
-    a.update(p, get_timestamp())
+
