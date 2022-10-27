@@ -102,14 +102,16 @@ class ResearchRecord(object):
     def insert(self, file: str, exec_time: str, args: str = "") -> tuple:
         """
         插入，初始化记录，记录执行的文件，开始的时间
-        :param args: 运行参数，可以在update时修改
+        :param args: 运行参数
         :param file: 执行的文件，使用__file__即可
         :param exec_time: 开始执行的时间
         :return:
         """
         exec_time = exec_time if len(exec_time) > 0 else get_timestamp()
         sql = "insert into `{}`.`{}`(`file_execute`, `excute_time`, `args`) " \
-              "values ('{}', '{}','{}')".format(self.db_database, self.db_table, file, exec_time, args)
+              "values ('{}', '{}','{}')".format(self.db_database, self.db_table,
+                                                pymysql.converters.escape_string(file), exec_time,
+                                                pymysql.converters.escape_string(args))
         if self._execute(sql):
             sql = "select   id   from  " + self.db_database + "." + self.db_table + \
                   " order   by   id   desc   limit   1"
@@ -120,7 +122,7 @@ class ResearchRecord(object):
         else:
             return -1,
 
-    def update(self, id: int, finish_time: str = "", result: str = "", args: str = "", remark: str = "") -> bool:
+    def update(self, id: int, finish_time: str = "", result: str = "", remark: str = "") -> bool:
         """
         执行结束之后，使用该方法更新
         :param remark: 备注
@@ -132,8 +134,9 @@ class ResearchRecord(object):
         """
         finish_time = finish_time if len(finish_time) > 0 else get_timestamp()
         sql = "update `" + self.db_database + "`.`" + self.db_table + \
-              "` set result='{}', finish_time='{}', args='{}', other='{}' where id = {}". \
-                  format(result, finish_time, args, remark, str(id))
+              "` set result='{}', finish_time='{}', other='{}' where id = {}". \
+                  format(pymysql.converters.escape_string(result), finish_time,
+                         pymysql.converters.escape_string(remark), str(id))
         if self._execute(sql):
             return True
         else:
