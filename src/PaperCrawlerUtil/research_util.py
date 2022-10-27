@@ -16,6 +16,8 @@ import pymysql
 
 class ResearchRecord(object):
     """
+    通过在程序中调用该对象方法，在数据库中记录参数，运行的文件， 运行的时间等信息
+    也提供了基本的数据库操作的封装和导出，也可以执行自定义SQL
     目前，数据库和表都是限定的固定值，之后再改
     """
 
@@ -38,6 +40,8 @@ class ResearchRecord(object):
                 remote_bind_address=('localhost', db_conf["ssl_db_port"])
             )
             self.ssl.start()
+        else:
+            self.ssl = None
 
         self.db_url = "127.0.0.1" if check_ssl else db_conf["db_url"]
         self.db_username = db_conf["db_username"]
@@ -73,7 +77,8 @@ class ResearchRecord(object):
                                      user=self.db_username,
                                      password=self.db_pass,
                                      db=self.db_database,
-                                     port=self.port
+                                     port=self.port,
+                                     charset="utf8"
                                      )
         self.conn = connection
         self.conn.autocommit(True)
@@ -128,7 +133,7 @@ class ResearchRecord(object):
         finish_time = finish_time if len(finish_time) > 0 else get_timestamp()
         sql = "update `" + self.db_database + "`.`" + self.db_table + \
               "` set result='{}', finish_time='{}', args='{}', other='{}' where id = {}". \
-                  format(result, finish_time, args, remark,str(id))
+                  format(result, finish_time, args, remark, str(id))
         if self._execute(sql):
             return True
         else:
@@ -236,14 +241,18 @@ class ResearchRecord(object):
             return False
 
     def __del__(self):
+        """
+        关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
+        TypeError: 'NoneType' object is not callable
+        :return:
+        """
         if self.ssl is not None:
-            self.ssl.close()
+            self.ssl.stop
         if self.conn is not None:
-            self.conn.close()
+            self.conn.close
         if self.cursor is not None:
-            self.cursor.close()
+            self.cursor.close
 
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-
