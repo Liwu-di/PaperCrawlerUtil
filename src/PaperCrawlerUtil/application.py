@@ -4,11 +4,13 @@
 # @FileName: application.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
+import argparse
+import ast
 import json
-from common_util import *
+from PaperCrawlerUtil.common_util import *
 from flask import Flask, request
-from constant import *
-
+from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.research_util import *
 """
 this file is some applications constructed by PaperCrawlerUtil 
 and can run by Flask and provide services to website
@@ -46,5 +48,23 @@ def generate():
     return code
 
 
+@applications.route("/get_record/", methods=[POST])
+def get_record():
+    """
+    查询research结果记录
+    :return:
+    """
+    data = json.loads(request.get_data())
+    c = ast.literal_eval(data["c"])
+    page = data["page"]
+    no = data["no"]
+    record = ResearchRecord(**c)
+    data = {"data": list(record.select_page(page, no))}
+    return json.encoder.JSONEncoder().encode(data).replace("\n", "")
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
+    args = parser.parse_args()
     applications.run(host="0.0.0.0", port=8000, debug=True)
