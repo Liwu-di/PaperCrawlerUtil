@@ -67,4 +67,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
     args = parser.parse_args()
-    applications.run(host="0.0.0.0", port=8000, debug=True)
+    applications.run(host="0.0.0.0", port=args.port, debug=True)
