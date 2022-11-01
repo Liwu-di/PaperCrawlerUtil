@@ -119,6 +119,7 @@ research util 建表
 CREATE_DB_TABLE = "\nCREATE SCHEMA `research` ;\n\nCREATE TABLE `research`.`record_result` (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'record number',\n  `file_execute` VARCHAR(200) BINARY NULL DEFAULT 'unkonwn file',\n  `excute_time` VARCHAR(200)  NULL  ,\n  `finish_time` VARCHAR(200)  NULL  ,\n  `result` VARCHAR(1000) NULL DEFAULT 'unkonwn result',\n  `args` text NULL,\n  `other` text null,\n  `default1` text null,\n  `default2` text null,\n  `default3` text null,\n  `default4` text null,\n  PRIMARY KEY (`id`))\nENGINE = InnoDB\nDEFAULT CHARACTER SET = utf8\nCOMMENT = 'research result record record_result table'; "
 TABLE_TITLE = ["id", "file_execute", "exec_time", "finish_time", "result", "args", "other", "default1", "default2",
                "default3", "default4"]
+OP_TYPE = ["INSERT", "UPDATE", "DELETE", "SELECT"]
 
 
 """自动识别，只能用在源语言"""

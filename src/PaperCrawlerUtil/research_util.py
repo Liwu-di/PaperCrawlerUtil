@@ -243,6 +243,60 @@ class ResearchRecord(object):
             log("导出失败：{}".format(e))
             return False
 
+    def generate_sql(self, kvs: dict, op_type: str, condition: dict[str: tuple], limit: int = 100) -> str:
+        """
+
+        :param condition:
+        :param limit:
+        :param kvs:
+        :param op_type:
+        :return:
+        """
+        fields = []
+        values = []
+        condition_clause = "WHERE "
+        for kv in kvs.items():
+            fields.append("`" + str(kv[0]) + "`")
+            t = type(kv[1])
+            if t == int or t == float:
+                values.append(str(kv[1]))
+            else:
+                values.append("\"" + str(kv[1]) + "\"")
+        if condition is None or len(condition) == 0:
+            condition_clause = ""
+        else:
+            count = 0
+            for kv in condition.items():
+                t = type(kv[0][1])
+                if t == int or t == float:
+                    condition_clause = condition_clause + str(kv[0][0]) + " " + str(kv[1]) + " " + str(kv[0][1])
+                else:
+                    condition_clause = condition_clause + \
+                                       str(kv[0][0]) + " " + str(kv[1]) + " " + "\"" + str(kv[0][1]) + "\""
+                if count < len(condition) - 1:
+                    condition_clause = condition_clause + " AND "
+                count = count + 1
+        if op_type not in OP_TYPE:
+            op_type = OP_TYPE[3]
+        if op_type == OP_TYPE[0]:
+            sql = "INSERT INTO `" + self.db_database + "`.`" + self.db_table + "` ({})" + " VALUES ({});"
+            sql = sql.format(", ".join(fields), ", ".join(values))
+        elif op_type == OP_TYPE[1]:
+            sql = "UPDATE `" + self.db_database + "`.`" + self.db_table + "` SET {} {};"
+            modify = ""
+            for i in range(len(fields)):
+                modify = modify + fields[i] + " = " + values[i]
+                if i < len(fields) - 1:
+                    modify = modify + ", "
+            sql = sql.format(modify, condition_clause)
+        elif op_type == OP_TYPE[2]:
+            sql = "DELETE FROM `" + self.db_database + "`.`" + self.db_table + "` {};"
+            sql = sql.format(condition_clause)
+        elif op_type == OP_TYPE[3]:
+            sql = "SELECT * FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};".\
+                format(condition_clause, str(limit))
+        return sql
+
     def __del__(self):
         """
         关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
