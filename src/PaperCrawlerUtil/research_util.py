@@ -245,12 +245,23 @@ class ResearchRecord(object):
 
     def generate_sql(self, kvs: dict, op_type: str, condition: dict[str: tuple], limit: int = 100) -> str:
         """
+        根据给定的值生成简单的sql
+        :param condition:键值对，键是元组，长度为两个元素，值是条件参数，例如：
+        {("dass", 231): "="}，代码会转换为“dass” = 231 作为条件加入where语句
+        :param limit:select 语句中防止查询过大，默认100
+        :param kvs:修改，增加时，需要给定该参数，指示需要修改或新增行时的参数，例如
+            {"id": 2, "file_execute": "file", "exec_time": "2022年11月1日21:24:58"}，代码会将之转换为如下：
 
-        :param condition:
-        :param limit:
-        :param kvs:
-        :param op_type:
-        :return:
+            INSERT INTO `research`.`record_result` (`id`, `file_execute`, `exec_time`)
+            VALUES (2, "file", "2022年11月1日21:24:58");
+
+            UPDATE `research`.`record_result` SET `id` = 2, `file_execute` = "file",
+            `exec_time` = "2022年11月1日21:24:58";
+
+            SELECT `id`, `file_execute`, `excute_time` FROM `research`.`record_result`;
+
+        :param op_type: 取值为["INSERT", "UPDATE", "DELETE", "SELECT"]，指明生成的sql类型
+        :return:生成的sql
         """
         fields = []
         values = []
@@ -293,7 +304,7 @@ class ResearchRecord(object):
             sql = "DELETE FROM `" + self.db_database + "`.`" + self.db_table + "` {};"
             sql = sql.format(condition_clause)
         elif op_type == OP_TYPE[3]:
-            sql = "SELECT * FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};".\
+            sql = "SELECT" + " {} ".format(", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};".\
                 format(condition_clause, str(limit))
         return sql
 

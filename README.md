@@ -481,4 +481,25 @@ log(p)
 # 导出数据
 a = ResearchRecord(**c)
 k = a.export((100, 200), file_type="xls")
+
+# 生成sql
+import ast
+# c指的是数据库的配置，这里省略一下，直接用字符串代替命令行传参
+c = '{"db_url":"xx.xx.xx.x"}'
+# literal_eval 可以吧字符串转成python对象
+c = ast.literal_eval(c)
+record = ResearchRecord(**c)
+kvs = {}
+con = {}
+# 生成条件和键值对，作为例子
+for k in TABLE_TITLE:
+  if random.Random().randint(0, 10) > 5:
+      kvs[k] = "aaaa"
+      con[(k, "156")] = "="
+  else:
+      kvs[k] = 551
+      con[(k, 57275)] = ">"
+log(kvs, con)
+for p in OP_TYPE:
+  log(record.generate_sql(kvs, p, con))
 ```
