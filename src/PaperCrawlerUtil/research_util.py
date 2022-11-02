@@ -250,15 +250,15 @@ class ResearchRecord(object):
         {("dass", 231): "="}，代码会转换为“dass” = 231 作为条件加入where语句
         :param limit:select 语句中防止查询过大，默认100
         :param kvs:修改，增加时，需要给定该参数，指示需要修改或新增行时的参数，例如
-            {"id": 2, "file_execute": "file", "exec_time": "2022年11月1日21:24:58"}，代码会将之转换为如下：
+            {"id": 2, "file_execute": "file", "execute_time": "2022年11月1日21:24:58"}，代码会将之转换为如下：
 
-            INSERT INTO `research`.`record_result` (`id`, `file_execute`, `exec_time`)
+            INSERT INTO `research`.`record_result` (`id`, `file_execute`, `execute_time`)
             VALUES (2, "file", "2022年11月1日21:24:58");
 
             UPDATE `research`.`record_result` SET `id` = 2, `file_execute` = "file",
-            `exec_time` = "2022年11月1日21:24:58";
+            `execute_time` = "2022年11月1日21:24:58";
 
-            SELECT `id`, `file_execute`, `excute_time` FROM `research`.`record_result`;
+            SELECT `id`, `file_execute`, `execute_time` FROM `research`.`record_result`;
 
         :param op_type: 取值为["INSERT", "UPDATE", "DELETE", "SELECT"]，指明生成的sql类型
         :return:生成的sql
