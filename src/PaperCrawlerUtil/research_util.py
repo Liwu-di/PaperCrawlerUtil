@@ -18,17 +18,18 @@ class ResearchRecord(object):
     """
     通过在程序中调用该对象方法，在数据库中记录参数，运行的文件， 运行的时间等信息
     也提供了基本的数据库操作的封装和导出，也可以执行自定义SQL
-    目前，数据库和表都是限定的固定值，之后再改
+    建表语句可以通过类的静态方法获得：ResearchRecord.create_db_table()
+    也可以自己建表，自己建表时至少继承如下列：["id", "file_execute", "execute_time", "finish_time", "result", "args", "other"]
     """
 
     def __init__(self, **db_conf) -> None:
         """
         :param db_conf:详见readme文件
         """
+        super().__init__()
         if len(db_conf) <= 0:
             log("需要配置字典", print_file=sys.stderr)
             return None
-        super().__init__()
         check_ssl = True if db_conf.get("ssl_ip") is not None and db_conf.get("ssl_admin") is not None and \
                             db_conf.get("ssl_pwd") is not None and db_conf.get("ssl_db_port") is not None \
                             and db_conf.get("ssl_port") is not None else False
@@ -47,8 +48,8 @@ class ResearchRecord(object):
         self.db_username = db_conf["db_username"]
         self.db_pass = db_conf["pass"]
         self.port = self.ssl.local_bind_port if check_ssl else db_conf["port"]
-        self.db_database = "research"
-        self.db_table = "record_result"
+        self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
+        self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
         self.db_type = "mysql"
         self.conn = None
         self.cursor = None
@@ -308,8 +309,9 @@ class ResearchRecord(object):
             sql = "DELETE FROM `" + self.db_database + "`.`" + self.db_table + "` {};"
             sql = sql.format(condition_clause)
         elif op_type == OP_TYPE[3]:
-            sql = "SELECT" + " {} ".format(", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};".\
-                format(condition_clause, str(limit))
+            sql = "SELECT" + " {} ".format(
+                ", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};". \
+                      format(condition_clause, str(limit))
         return sql
 
     def __del__(self):
