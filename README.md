@@ -41,6 +41,7 @@ pip install PaperCrawlerUtil
 Thanks for supporting of JetBrains Open Source Support project and your free license.   
 ![jetbrains logo 图片](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/jb_beam.png)
 
+## 关于代理池
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -55,7 +56,7 @@ basic_config(log_file_name="1.log",
                  proxy_pool_url="http://xxx",
                  logs_style=LOG_STYLE_LOG)
 ```
-### ***更新：***  
+### ***代理池更新：***  
 目前版本迭代已经可以做到仅需要提供redis信息就可以获得一个代理连接，
 默认为http://127.0.0.1:5555/random，  
 使用方法如下：
@@ -74,13 +75,12 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True,
 
 
 ```
-### ***也可以不使用Redis，直接使用python dict代替，方法如下：***
+### ***代理池更新：也可以不使用Redis，直接使用python dict代替，方法如下：***
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
 basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, proxypool_storage="dict")
-
 
 """
 使用dict时，也可以像redis一样，保存数据到硬盘，下次启动再加载，默认保存在dict.db，
@@ -121,7 +121,8 @@ basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_lo
                      api_port=5556, set_daemon=False)
 ```
 
-## 爬取CVPR文章
+## 爬虫应用
+### 爬取CVPR文章
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
@@ -150,7 +151,7 @@ for times in ["2019", "2020", "2021"]:
             # retrieve_file 获取文件，可以设置是否使用代理等等
             retrieve_file("https://openaccess.thecvf.com/" + pdf_path, work_path)
 ```
-## 爬取EMNLP文章
+### 爬取EMNLP文章
 ```python
 """
 以下是一个新的例子，用来爬取EMNLP2021的文章，使用了内置代理池，翻译等
@@ -208,13 +209,34 @@ if len(pdf_url) == len(names):
 log("count={}".format(str(count)))
 ```
 
-## 根据doi从sci-hub下载（测试较少，不一定好用）
+### 根据doi从sci-hub下载（测试较少，不一定好用）
 ```python
 from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.crawler_util import *
 from PaperCrawlerUtil.document_util import *
 #此外也可以通过doi从sci-hub下载，示例代码如下：
 get_pdf_url_by_doi(doi="xxxx", work_path=local_path_generate("./"))
+```
+
+### 谷歌学术爬虫
+```python
+from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.crawler_util import *
+from PaperCrawlerUtil.document_util import *
+
+"""
+搜素谷歌学术，并且可以下载有PDF链接的文件，
+contain_all，contain_complete_sentence，least_contain_one，not_contain和q只需要提供一个，
+并且q的优先级高于四个高级查询列表。
+必须提供一个可以访问谷歌的代理
+"""
+contain_all = ["text", "summary"]
+contain_complete_sentence = ["prompt", "learning"]
+least_contain_one = ["a", "b", "c"]
+not_contain = []
+google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence=contain_complete_sentence,
+                              least_contain_one=least_contain_one, not_contain=not_contain, need_retrieve_file=True,
+                              proxy="127.0.0.1:33210", file_sava_directory="E:\\")
 ```
 
 ## PDF处理
@@ -359,26 +381,6 @@ for i in range(100):
   time.sleep(0.1)
 ```
 
-## 谷歌学术爬虫
-```python
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.crawler_util import *
-from PaperCrawlerUtil.document_util import *
-
-"""
-搜素谷歌学术，并且可以下载有PDF链接的文件，
-contain_all，contain_complete_sentence，least_contain_one，not_contain和q只需要提供一个，
-并且q的优先级高于四个高级查询列表。
-必须提供一个可以访问谷歌的代理
-"""
-contain_all = ["text", "summary"]
-contain_complete_sentence = ["prompt", "learning"]
-least_contain_one = ["a", "b", "c"]
-not_contain = []
-google_scholar_search_crawler(contain_all=contain_all, contain_complete_sentence=contain_complete_sentence,
-                              least_contain_one=least_contain_one, not_contain=not_contain, need_retrieve_file=True,
-                              proxy="127.0.0.1:33210", file_sava_directory="E:\\")
-```
 ## CSV文件处理
 ```python
 from PaperCrawlerUtil.common_util import *
@@ -397,9 +399,11 @@ with open("C:\\Users\\李武第\\Desktop\\export2022.08.06-07.56.18.csv", mode="
         filednames.extend(row)
         count = count + 1
 f.close()
+# 读取数据
 csvp = CsvProcess(file_path="C:\\Users\\李武第\\Desktop\\export2022.08.06-07.56.18.csv")
 a = csvp.csv_data(data_format="dict")
 b = csvp.csv_data(data_format="list")
+# 三种方式写入数据
 with open("C:\\Users\\李武第\\Desktop\\a.csv", mode="w+", encoding="utf-8-sig") as f:
     c = csv.DictWriter(f, fieldnames=filednames)
     c.writeheader()
@@ -420,27 +424,22 @@ from PaperCrawlerUtil.document_util import *
 .xls文件处理，类ExcelProcess
 """
 basic_config(logs_style=LOG_STYLE_PRINT)
-e = ExcelProcess(filename=r"C:\\Users\\李武第\\Desktop\\1.xls")
-res = []
-for k in range(e.row_size):
-    res.append(e.excel_data(index=k))
-res_dict = {}
-for k in res:
-    if len(k[4]) == 0:
-        continue
-    elif k[4] == "非深度学习":
-        continue
-    if not k[4] in res_dict.keys():
-        tem = [k]
-        res_dict[k[4]] = tem
-    else:
-        res_dict[k[4]].append(k)
-res_list = []
-for p in res_dict.items():
-    for k in range(len(p[1])):
-        res_list.append(p[1][k])
-    #log(p[0] + str(len(p[1])))
-    print(len(p[1]))
+e = ExcelProcess(r"C:\Users\李武第\Desktop\1.xls")
+"""
+表格内容
+id	file_execute  exec_time	finish_time	result	args	other	default1	default2	default3	default4
+104	find 2022/1	2022/1	Best Namespace() 90 '' '' '' ''			
+"""
+for i in range(e.row_size):
+  log(e.excel_data(index=i))
+"""
+输出内容
+2022-11-03 10:11:22   ['id', 'file_execute', 'exec_time', 'finish_time', 'result', 'args', 'other', 'default1', 'default2', 'default3', 'default4'] 
+2022-11-03 10:11:22   [104.0, 'find', '2022/1', '2022/1', 'Best', 'Namespace()', 90.0, '', '', '', ''] 		
+"""
+
+# 写文件
+res_list = [[1, 2][3, 4]]
 e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
 ```  
 
@@ -458,7 +457,9 @@ c = {
   "ssl_pwd": "服务器密码",
   "ssl_db_port": "服务器上数据库端口",
   "ssl_port": "ssl 端口，一般为22",
-  "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True"
+  "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True",
+  "db_database": "自己建的数据库名称，默认为research",
+  "db_table": "自己建的数据表名，默认为record_result，注意自己建表时要继承列，详见方法参数"
 }
 """
 c = {
