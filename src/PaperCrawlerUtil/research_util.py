@@ -176,24 +176,23 @@ class ResearchRecord(object):
         """
         导出文件
         :param export_path: 导出文件的地址，默认为当前目录
-        :param id_range:id的范围，可以在select general中查询，当id_range中有负值存在时，负值生效，且只生效第一个负值
+        :param id_range:id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
         负值表示从倒数方向导出，i.e. -100表示导出最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
         :param file_type: 导出的类型，包括["csv", "xls"]
         :return:
         """
         id_list = []
-        neg_flag = False
+        neg_id_min = 0
         if type(id_range) == list:
             for i in id_range:
-                if i < 0:
-                    id_list.clear()
+                if i < 0 and i < neg_id_min:
+                    neg_id_min = i
+                elif i > 0:
                     id_list.append(i)
-                    neg_flag = True
-                    break
-                id_list.append(i)
         elif type(id_range) == tuple:
             if len(id_range) == 1:
-                id_list.append(id_range[0])
+                if id_range[0] < 0 and id_range[0] < neg_id_min:
+                    neg_id_min = id_range[0]
             elif len(id_range) >= 2:
                 l = id_range[0] if id_range[0] <= id_range[1] else id_range[1]
                 r = id_range[1] if id_range[0] <= id_range[1] else id_range[0]
@@ -203,9 +202,9 @@ class ResearchRecord(object):
             log("仅支持tuple和list", print_file=sys.stderr)
             return False
         res_list = []
-        if neg_flag:
+        if neg_id_min < 0:
             sql = "select * from  " + self.db_database + "." + self.db_table + \
-                  " order by id desc limit {}".format(str(abs(id_list[0])))
+                  " order by id desc limit {}".format(str(abs(neg_id_min)))
             if self._execute(sql):
                 temp = []
                 for i in self.cursor.fetchall():
@@ -213,22 +212,22 @@ class ResearchRecord(object):
                 res_list.extend(temp)
             else:
                 res_list.extend([])
+
+        s = ""
+        for i in range(len(id_list)):
+            if i == len(id_list) - 1:
+                s = s + "'" + str(id_list[i]) + "'"
+            else:
+                s = s + "'" + str(id_list[i]) + "', "
+        sql = "select * from  " + self.db_database + "." + self.db_table + \
+              " where id in({})".format(s)
+        if self._execute(sql):
+            temp = []
+            for i in self.cursor.fetchall():
+                temp.append(list(i))
+            res_list.extend(temp)
         else:
-            s = ""
-            for i in range(len(id_list)):
-                if i == len(id_list) - 1:
-                    s = s + "'" + str(id_list[i]) + "'"
-                else:
-                    s = s + "'" + str(id_list[i]) + "', "
-            sql = "select * from  " + self.db_database + "." + self.db_table + \
-                  " where id in({})".format(s)
-            if self._execute(sql):
-                temp = []
-                for i in self.cursor.fetchall():
-                    temp.append(list(i))
-                res_list.extend(temp)
-            else:
-                res_list.extend([])
+            res_list.extend([])
         res_list.insert(0, TABLE_TITLE)
         export_path = export_path if len(export_path) > 0 else \
             local_path_generate("", suffix=".csv" if file_type == "csv" else ".xls")
@@ -245,7 +244,7 @@ class ResearchRecord(object):
 
     def generate_sql(self, kvs: dict, op_type: str, condition: dict[str: tuple], limit: int = 100) -> str:
         """
-        根据给定的值生成简单的sql
+        根据给定的值生成简单的sql，其中select语句最难生成，因此只能是给个参考，慎用本方法生成select语句
         :param condition:键值对，键是元组，长度为两个元素，值是条件参数，例如：
         {("dass", 231): "="}，代码会转换为“dass” = 231 作为条件加入where语句
         :param limit:select 语句中防止查询过大，默认100
@@ -266,13 +265,16 @@ class ResearchRecord(object):
         fields = []
         values = []
         condition_clause = "WHERE "
-        for kv in kvs.items():
-            fields.append("`" + str(kv[0]) + "`")
-            t = type(kv[1])
-            if t == int or t == float:
-                values.append(str(kv[1]))
-            else:
-                values.append("\"" + str(kv[1]) + "\"")
+        if op_type == OP_TYPE[3] and (kvs is None or len(kvs) == 0):
+            fields = "*"
+        else:
+            for kv in kvs.items():
+                fields.append("`" + str(kv[0]) + "`")
+                t = type(kv[1])
+                if t == int or t == float:
+                    values.append(str(kv[1]))
+                else:
+                    values.append("\"" + str(kv[1]) + "\"")
         if condition is None or len(condition) == 0:
             condition_clause = ""
         else:
@@ -281,7 +283,9 @@ class ResearchRecord(object):
                 t = type(kv[0][1])
                 if t == int or t == float:
                     condition_clause = condition_clause + str(kv[0][0]) + " " + str(kv[1]) + " " + str(kv[0][1])
-                else:
+                elif t == tuple:
+                    condition_clause = condition_clause + str(kv[0][0]) + " " + str(kv[1]) + " " + str(kv[0][1])
+                elif t == str:
                     condition_clause = condition_clause + \
                                        str(kv[0][0]) + " " + str(kv[1]) + " " + "\"" + str(kv[0][1]) + "\""
                 if count < len(condition) - 1:
