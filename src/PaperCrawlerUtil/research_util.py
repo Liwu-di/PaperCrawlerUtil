@@ -194,6 +194,17 @@ class ResearchRecord(object):
             if len(id_range) == 1:
                 if id_range[0] < 0 and id_range[0] < neg_id_min:
                     neg_id_min = id_range[0]
+                elif id_range[0] > 0:
+                    sql = "select id from  " + self.db_database + "." + self.db_table + \
+                            " order by id desc limit {}".format(str(abs(-1)))
+                    if self._execute(sql):
+                        last_id = self.cursor.fetchone()[0]
+                        l = id_range[0] if id_range[0] <= last_id else last_id
+                        r = last_id if id_range[0] <= last_id else id_range[0]
+                        for i in range(l, r):
+                            id_list.append(i)
+                    else:
+                        id_list.append(id_range[0])
             elif len(id_range) >= 2:
                 l = id_range[0] if id_range[0] <= id_range[1] else id_range[1]
                 r = id_range[1] if id_range[0] <= id_range[1] else id_range[0]
