@@ -179,6 +179,7 @@ class ResearchRecord(object):
         :param export_path: 导出文件的地址，默认为当前目录
         :param id_range:id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
         负值表示从倒数方向导出，i.e. -100表示导出最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
+        i.e. : 给定tuple=(106, 224)，会查找id在[106, 224)的记录，所以如果需要导出106-224的记录，请输入(106, 225)
         :param file_type: 导出的类型，包括["csv", "xls"]
         :return:
         """
@@ -201,7 +202,7 @@ class ResearchRecord(object):
                         last_id = self.cursor.fetchone()[0]
                         l = id_range[0] if id_range[0] <= last_id else last_id
                         r = last_id if id_range[0] <= last_id else id_range[0]
-                        for i in range(l, r):
+                        for i in range(l, r + 1):
                             id_list.append(i)
                     else:
                         id_list.append(id_range[0])
@@ -240,6 +241,7 @@ class ResearchRecord(object):
             res_list.extend(temp)
         else:
             res_list.extend([])
+        log("成功导出数据{}条".format(len(res_list)))
         res_list.insert(0, TABLE_TITLE)
         export_path = export_path if len(export_path) > 0 else \
             local_path_generate("", suffix=".csv" if file_type == "csv" else ".xls")
