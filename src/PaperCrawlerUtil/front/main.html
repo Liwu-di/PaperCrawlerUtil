@@ -66,16 +66,15 @@
             pageno = initno
         }
         obj = {
-            "c": "{\"db_url\":\"47.94.21.180\",\"db_username\":\"root\",\"pass\":\"Q7NRPeJao7GkOium\",\"port\":3306,\"ssl_ip\":\"47.94.21.180\",\"ssl_admin\":\"root\",\"ssl_pwd\":\"liwudi1998328.\",\"ssl_db_port\":3306,\"ssl_port\":22,\"ignore_error\":True}",
+            "c": "这里给出数据库访问的一些数值",
             "page":100,
             "no":pageno
         }
         $.ajax({
             type:"post",
-            url:"http://liwudi.fun/python/get_record/",
+            url:"http://这里给出url",
             data:JSON.stringify(obj),
-            dataType:'json',  //【这里要小心啊，不要用jsonp，一定是json】
-            //crossDomain: true,  //【这个很重要，一定要加】
+            dataType:'json',
             success:function(result){
                 pre = "<tr><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><th>args</th><th>other</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><th>op</th></tr>"
                 var table = document.getElementById("main");
@@ -101,13 +100,10 @@
             getElementByClassName("info")[i].childNodes[0].childNodes[0].childNodes[1].innerHTML = pageno
         }
     }
-    // 删除方法
+
     function deleteTr(object) {
-        // 获取table节点
         var table = object.parentNode.parentNode.parentNode;
-        // 获取te节点
         var tr = object.parentNode.parentNode;
-        // 删除（并返回）当前节点的指定子节点。
         table.removeChild(tr);
     }
     $(document).ready(function(){ 
