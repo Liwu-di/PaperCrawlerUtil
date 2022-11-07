@@ -21,7 +21,22 @@
     </style>
 </head>
 <body>
-<table class="info"><tr><td>当前是第</td><td>0</td><td>页</td><td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td><td><button onclick="reqnext()">下一页</button></td><td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td></tr></table>
+<table class="info">
+    <tr>
+        <td>当前是第</td>
+        <td>0</td>
+        <td>页</td>
+        <td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
+        <td><button onclick="reqnext()">下一页</button></td>
+        <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
+        <td>
+            <form action="http://" enctype="multipart/form-data" method="post">
+                范围: <input type="text" name="range">
+                <input type="submit" value="导出">
+            </form>
+        </td>
+    </tr>
+</table>
 
 <table id = "main">
     <!-- 表格标题 -->
@@ -30,7 +45,22 @@
     
 </table>
 
-<table class="info"><tr><td>当前是第</td><td>0</td><td>页</td><td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td><td><button onclick="reqnext()">下一页</button></td><td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td></tr></table>
+<table class="info">
+    <tr>
+        <td>当前是第</td>
+        <td>0</td>
+        <td>页</td>
+        <td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
+        <td><button onclick="reqnext()">下一页</button></td>
+        <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
+        <td>
+            <form action="http://" enctype="multipart/form-data" method="post">
+                范围: <input type="text" name="range">
+                <input type="submit" value="导出">
+            </form>
+        </td>
+    </tr>
+</table>
 <script>
     
     function reqnext(initno, neg, refresh){
