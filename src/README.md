@@ -509,4 +509,7 @@ for p in OP_TYPE:
 ### 科研记录
 目前可以使用原生和jquery组成的简单页面进行查看记录
 方法是在服务器端启动一个python后端，并且使用nginx进行代理
+```commandline
+nohup python application.py --port=xxx
+```
 前端页面见PaperCrawlerUtil/front，直接打开即可
