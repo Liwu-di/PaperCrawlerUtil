@@ -6,6 +6,7 @@
 # @Email   ：liwudi@liwudi.fun
 import sys
 import time
+from typing import Callable
 
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.common_util import *
@@ -173,9 +174,11 @@ class ResearchRecord(object):
         else:
             return []
 
-    def export(self, id_range: tuple or List = [-100], file_type: str = "csv", export_path: str = "") -> bool:
+    def export(self, id_range: tuple or List = [-100], file_type: str = "csv", export_path: str = "",
+               process: Callable[[List[str]], List] = None) -> bool:
         """
         导出文件
+        :param process: 导出时对于列数据的处理，传入每行数据，输出改变后的每一行数据
         :param export_path: 导出文件的地址，默认为当前目录
         :param id_range:id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
         负值表示从倒数方向导出，i.e. -100表示导出最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
@@ -241,6 +244,12 @@ class ResearchRecord(object):
             res_list.extend(temp)
         else:
             res_list.extend([])
+        if process is not None:
+            try:
+                for i in range(len(res_list)):
+                    res_list[i] = process(res_list[i])
+            except Exception as e:
+                log("处理数据程序错误：{}".format(e), print_file=sys.stderr)
         log("成功导出数据{}条".format(len(res_list)))
         res_list.insert(0, TABLE_TITLE)
         export_path = export_path if len(export_path) > 0 else \
