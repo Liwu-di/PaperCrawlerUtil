@@ -59,7 +59,7 @@ def get_record():
     page = data["page"]
     no = data["no"]
     record = ResearchRecord(**c)
-    data = {"data": list(record.select_page(page, no)), "code": 0}
+    data = generate_result(data=list(record.select_page(page, no)))
     return json.encoder.JSONEncoder().encode(data).replace("\n", "")
 
 
@@ -74,7 +74,7 @@ def export_research_record():
     c = ast.literal_eval(data["c"])
     record = ResearchRecord(**c)
     res = record.export(id_range=range, file_type="xls")
-    data = {"data": str(res), "code": 0}
+    data = generate_result(data=str(res))
     return data
 
 

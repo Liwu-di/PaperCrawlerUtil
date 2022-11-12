@@ -815,6 +815,17 @@ class ThreadStopException(Exception):
         return super().__repr__()
 
 
+def generate_result(code: int = 0, msg: str = "success", data: object = None):
+    """
+    生成api的返回结果
+    :param code: 状态码
+    :param msg: 消息
+    :param data: 数据
+    :return:
+    """
+    return {"code": code, "msg": msg, "data": data}
+
+
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
 
