@@ -245,11 +245,11 @@ class ResearchRecord(object):
         else:
             res_list.extend([])
         if process is not None:
-            try:
-                for i in range(len(res_list)):
+            for i in range(len(res_list)):
+                try:
                     res_list[i] = process(res_list[i])
-            except Exception as e:
-                log("处理数据程序错误：{}".format(e), print_file=sys.stderr)
+                except Exception as e:
+                    log("处理数据程序错误：{}".format(e), print_file=sys.stderr)
         log("成功导出数据{}条".format(len(res_list)))
         res_list.insert(0, TABLE_TITLE)
         export_path = export_path if len(export_path) > 0 else \
