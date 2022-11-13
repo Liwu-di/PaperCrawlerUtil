@@ -167,7 +167,7 @@ class ResearchRecord(object):
         :return:
         """
         res = []
-        sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` LIMIT {} OFFSET {}" \
+        sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` WHERE `delete_flag` = 0" + " LIMIT {} OFFSET {}" \
             .format(str(page), str(page_no * page))
         if self._execute(sql):
             return self.cursor.fetchall()
