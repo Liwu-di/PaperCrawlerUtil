@@ -6,7 +6,7 @@
 # @Email   ：liwudi@liwudi.fun
 import sys
 import time
-from typing import Callable
+from typing import Callable, Dict
 
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.common_util import *
@@ -159,16 +159,17 @@ class ResearchRecord(object):
         else:
             return []
 
-    def select_page(self, page: int = 100, page_no: int = 0) -> List:
+    def select_page(self, page: int = 100, page_no: int = 0, delete_flag: int = 0) -> List:
         """
         分页查找
+        :param delete_flag: 删除标记
         :param page:页面大小
         :param page_no: 页面号
         :return:
         """
         res = []
-        sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` WHERE `delete_flag` = 0" + " LIMIT {} OFFSET {}" \
-            .format(str(page), str(page_no * page))
+        sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` WHERE `delete_flag` = " + \
+              "{}".format(str(delete_flag)) + " LIMIT {} OFFSET {}".format(str(page), str(page_no * page))
         if self._execute(sql):
             return self.cursor.fetchall()
         else:
@@ -265,7 +266,7 @@ class ResearchRecord(object):
             log("导出失败：{}".format(e))
             return False
 
-    def generate_sql(self, kvs: dict, op_type: str, condition: dict[str: tuple], limit: int = 100) -> str:
+    def generate_sql(self, kvs: dict, op_type: str, condition: Dict[str, tuple], limit: int = 100) -> str:
         """
         根据给定的值生成简单的sql，其中select语句最难生成，因此只能是给个参考，慎用本方法生成select语句
         :param condition:键值对，键是元组，长度为两个元素，值是条件参数，例如：
