@@ -6,7 +6,7 @@
 # @Email   ：liwudi@liwudi.fun
 import sys
 import time
-from typing import Callable, Dict
+from typing import Callable, Dict, Tuple
 
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.common_util import *
@@ -189,35 +189,7 @@ class ResearchRecord(object):
         """
         id_list = []
         neg_id_min = 0
-        if type(id_range) == list:
-            for i in id_range:
-                if i < 0 and i < neg_id_min:
-                    neg_id_min = i
-                elif i > 0:
-                    id_list.append(i)
-        elif type(id_range) == tuple:
-            if len(id_range) == 1:
-                if id_range[0] < 0 and id_range[0] < neg_id_min:
-                    neg_id_min = id_range[0]
-                elif id_range[0] > 0:
-                    sql = "select id from  " + self.db_database + "." + self.db_table + \
-                            " order by id desc limit {}".format(str(abs(-1)))
-                    if self._execute(sql):
-                        last_id = self.cursor.fetchone()[0]
-                        l = id_range[0] if id_range[0] <= last_id else last_id
-                        r = last_id if id_range[0] <= last_id else id_range[0]
-                        for i in range(l, r + 1):
-                            id_list.append(i)
-                    else:
-                        id_list.append(id_range[0])
-            elif len(id_range) >= 2:
-                l = id_range[0] if id_range[0] <= id_range[1] else id_range[1]
-                r = id_range[1] if id_range[0] <= id_range[1] else id_range[0]
-                for i in range(l, r):
-                    id_list.append(i)
-        else:
-            log("仅支持tuple和list", print_file=sys.stderr)
-            return False
+        id_list, neg_id_min = self.generate_id(id_range)
         res_list = []
         if neg_id_min < 0:
             sql = "select * from  " + self.db_database + "." + self.db_table + \
@@ -266,7 +238,9 @@ class ResearchRecord(object):
             log("导出失败：{}".format(e))
             return False
 
-    def generate_sql(self, kvs: dict, op_type: str, condition: Dict[str, tuple], limit: int = 100) -> str:
+    def generate_sql(self, kvs: Dict = None, op_type: str = OP_TYPE[3],
+                     condition: Dict[Tuple[str, int or float or str or Tuple], str] = None,
+                     limit: int = 100) -> str:
         """
         根据给定的值生成简单的sql，其中select语句最难生成，因此只能是给个参考，慎用本方法生成select语句
         :param condition:键值对，键是元组，长度为两个元素，值是条件参数，例如：
@@ -336,6 +310,70 @@ class ResearchRecord(object):
                 ", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {};". \
                       format(condition_clause, str(limit))
         return sql
+
+    def delete(self, ids: List or Tuple) -> bool:
+        """
+        对特定元素进行标记删除
+        :param ids: id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
+        负值表示从倒数方向导出，i.e. -100表示删除最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
+        i.e. : 给定tuple=(106, 224)，会查找id在[106, 224)的记录，所以如果需要删除106-224的记录，请输入(106, 225)
+        :return:
+        """
+        id_list, neg_id_min = self.generate_id(id_range=ids)
+        sql = "select id from  " + self.db_database + "." + self.db_table + \
+              " order by id desc limit {}".format(str(abs(neg_id_min)))
+        self._execute(sql=sql)
+        res = self.cursor.fetchall()
+        id_list.extend(list(i[0] for i in res))
+        sql = self.generate_sql({"delete_flag": 1}, op_type=OP_TYPE[1], condition={("id", tuple(ids)): "in"})
+        if self._execute(sql):
+            return True
+        else:
+            return False
+
+    def generate_id(self, id_range: List or Tuple) -> (list, int):
+        """
+        id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
+        负值表示从倒数方向导出，i.e. -100表示生成最后100条的id。 tuple表示连续的id值，list表示单个id，tuple不支持负值
+        i.e. : 给定tuple=(106, 224)，会查找id[106, 224)，所以如果需要生成106-224的记录，请输入(106, 225)
+        :param id_range:
+        :return:
+        """
+        id_list = []
+        neg_id_min = 0
+        if id_range is None or len(id_range) == 0:
+            return id_list, neg_id_min
+        if type(id_range) == list:
+            for i in id_range:
+                if i < 0 and i < neg_id_min:
+                    neg_id_min = i
+                elif i > 0:
+                    id_list.append(i)
+            return id_list, neg_id_min
+        elif type(id_range) == tuple:
+            if len(id_range) == 1:
+                if id_range[0] < 0 and id_range[0] < neg_id_min:
+                    neg_id_min = id_range[0]
+                elif id_range[0] > 0:
+                    sql = "select id from  " + self.db_database + "." + self.db_table + \
+                          " order by id desc limit {}".format(str(abs(-1)))
+                    if self._execute(sql):
+                        last_id = self.cursor.fetchone()[0]
+                        l = id_range[0] if id_range[0] <= last_id else last_id
+                        r = last_id if id_range[0] <= last_id else id_range[0]
+                        for i in range(l, r + 1):
+                            id_list.append(i)
+                    else:
+                        id_list.append(id_range[0])
+            elif len(id_range) >= 2:
+                l = id_range[0] if id_range[0] <= id_range[1] else id_range[1]
+                r = id_range[1] if id_range[0] <= id_range[1] else id_range[0]
+                for i in range(l, r):
+                    id_list.append(i)
+            return id_list, neg_id_min
+        else:
+            log("仅支持tuple和list", print_file=sys.stderr)
+            return id_list, neg_id_min
 
     def __del__(self):
         """
