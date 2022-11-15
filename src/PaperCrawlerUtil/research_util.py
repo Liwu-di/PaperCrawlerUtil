@@ -391,3 +391,33 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    import ast
+
+    c = '{"db_url":"47.94.21.180","db_username":"root","pass":"Q7NRPeJao7GkOium","port":3306,"ssl_ip":"47.94.21.180","ssl_admin":"root","ssl_pwd":"liwudi1998328.","ssl_db_port":3306,"ssl_port":22,"ignore_error":True}'
+    c = ast.literal_eval(c)
+    a = ResearchRecord(**c)
+
+
+    def p(i) -> List:
+        if len(i[4]) == 0 or len(i[5]) == 0:
+            return []
+        strs = ", c=\'{\"db_url\":\"47.94.21.180\",\"db_username\":\"root\",\"pass\":\"Q7NRPeJao7GkOium\",\"port\":3306,\"ssl_ip\":\"47.94.21.180\",\"ssl_admin\":\"root\",\"ssl_pwd\":\"liwudi1998328.\",\"ssl_db_port\":3306,\"ssl_port\":22,\"ignore_error\":True}\'"
+        i[7] = i[4].replace("Best test rmse", "").replace("mae ", "").split(",")[0]
+        i[8] = i[4].replace("Best test rmse", "").replace("mae ", "").split(",")[1]
+        p = i[5].replace(strs, "").replace("Namespace(", "{").replace(")", "}").replace("{", "{\"").replace("=",
+                                                                                                            "\"=").replace(
+            ", ", ", \"")
+        p = p.replace("{", "").replace("}", "")
+        k = p.split(", ")
+        m = {}
+        for q in k:
+            m[q.split("=")[0].replace("\"", "")] = q.split("=")[1]
+        i[9] = ""
+        for q in ["data_amount", "dataname", "datatype"]:
+            i[9] = i[9] + ", " + str(m[q])
+        i[10] = m["topk_m"]
+        i[6] = m["scity"]
+        return i
+
+    a.delete(ids=[13,4,1,-100])
+    a.export(id_range=(745, 1000), file_type="xls", process=p)
