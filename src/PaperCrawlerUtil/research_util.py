@@ -320,12 +320,13 @@ class ResearchRecord(object):
         :return:
         """
         id_list, neg_id_min = self.generate_id(id_range=ids)
-        sql = "select id from  " + self.db_database + "." + self.db_table + \
-              " order by id desc limit {}".format(str(abs(neg_id_min)))
-        self._execute(sql=sql)
-        res = self.cursor.fetchall()
-        id_list.extend(list(i[0] for i in res))
-        sql = self.generate_sql({"delete_flag": 1}, op_type=OP_TYPE[1], condition={("id", tuple(ids)): "in"})
+        if neg_id_min < 0:
+            sql = "select id from  " + self.db_database + "." + self.db_table + \
+                  " order by id desc limit {}".format(str(abs(neg_id_min)))
+            self._execute(sql=sql)
+            res = self.cursor.fetchall()
+            id_list.extend(list(i[0] for i in res))
+        sql = self.generate_sql({"delete_flag": 1}, op_type=OP_TYPE[1], condition={("id", tuple(id_list)): "in"})
         if self._execute(sql):
             return True
         else:
