@@ -513,3 +513,6 @@ for p in OP_TYPE:
 nohup python application.py --port=xxx
 ```
 前端页面见PaperCrawlerUtil/front，直接打开即可
+
+导出功能只会把文件保存在服务器端，如果服务器与客户端不在同一个机器，
+推荐使用一个[文件下载服务](https://github.com/freelamb/simple_http_server)
