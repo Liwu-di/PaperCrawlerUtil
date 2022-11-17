@@ -8,7 +8,7 @@
         table{
             border: 1px solid;
             margin: auto;
-            width: 500px;
+            width: 1000px;
         }
         td,th{
             text-align: center;
@@ -30,10 +30,10 @@
         <td><button onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td>
-            <form action="http://" enctype="multipart/form-data" method="post">
-                范围: <input type="text" name="range">
-                <input type="submit" value="导出">
-            </form>
+            <div>
+                范围: <input type="text" name="range" id="range">
+                <input type="submit" value="导出" id="export" onclick="export_xls()">
+            </div>
         </td>
     </tr>
 </table>
@@ -54,15 +54,34 @@
         <td><button onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td>
-            <form action="http://" enctype="multipart/form-data" method="post">
-                范围: <input type="text" name="range">
-                <input type="submit" value="导出">
-            </form>
+            <div>
+                范围: <input type="text" name="range" id="range">
+                <input type="submit" value="导出" id="export" onclick="export_xls()">
+            </div>
         </td>
     </tr>
 </table>
 <script>
-    
+    function export_xls(){
+        range = document.getElementById("range").value;
+        console.log(range);
+        obj = {
+            "range": range,
+            "c": "这里给出数据库信息"
+        };
+        $.ajax({
+            type:"post",
+            url:"http://链接",
+            data:JSON.stringify(obj),
+            dataType:'json',
+            success:function(result){
+                alert("导出成功")
+            },
+            error:function(result){
+                alert(result);
+            }
+        });
+    }
     function reqnext(initno, neg, refresh){
         function getElementByClassName(classnames){ 
             var objArray= new Array();//定义返回对象数组
@@ -80,7 +99,7 @@
         }
         pageno = 0
         if (typeof(initno) == "undefined"){
-            pageno = getElementByClassName("info")[0].childNodes[0].childNodes[0].childNodes[1].innerHTML
+            pageno = getElementByClassName("info")[0].firstElementChild.firstElementChild.children[1].innerHTML;
             pageno = parseInt(pageno, 10);
             if(neg == 1){
                 pageno = pageno - 1
@@ -127,7 +146,7 @@
             }
         });
         for(var i = 0; i < getElementByClassName("info").length; ++i){
-            getElementByClassName("info")[i].childNodes[0].childNodes[0].childNodes[1].innerHTML = pageno
+            getElementByClassName("info")[i].firstElementChild.firstElementChild.children[1].innerHTML = pageno
         }
     }
 
