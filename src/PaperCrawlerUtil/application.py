@@ -78,6 +78,21 @@ def export_research_record():
     return data
 
 
+@applications.route("/delete_records/", methods=[POST])
+def delete_records():
+    """
+    标记删除research结果记录
+    :return:
+    """
+    data = json.loads(request.get_data())
+    range = ast.literal_eval(data["range"])
+    c = ast.literal_eval(data["c"])
+    record = ResearchRecord(**c)
+    res = record.delete(range)
+    data = generate_result(data=str(res))
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
