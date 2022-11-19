@@ -33,6 +33,7 @@
             <div>
                 范围: <input type="text" name="range" id="range" value="(1, 2)">
                 <input type="submit" value="导出" id="export" onclick="export_xls()">
+                <input type="submit" value="删除" id="delete" onclick="delete_ids()">
             </div>
         </td>
     </tr>
@@ -57,6 +58,7 @@
             <div>
                 范围: <input type="text" name="range" id="range">
                 <input type="submit" value="导出" id="export" onclick="export_xls()">
+                <input type="submit" value="删除" id="delete" onclick="delete_ids()">
             </div>
         </td>
     </tr>
@@ -76,6 +78,27 @@
             dataType:'json',
             success:function(result){
                 alert("导出成功")
+            },
+            error:function(result){
+                alert(result);
+            }
+        });
+    }
+
+    function delete_ids(){
+        range = document.getElementById("range").value;
+        console.log(range);
+        obj = {
+            "range": range,
+            "c": "数据库信息"
+        };
+        $.ajax({
+            type:"post",
+            url:"link",
+            data:JSON.stringify(obj),
+            dataType:'json',
+            success:function(result){
+                alert("删除成功")
             },
             error:function(result){
                 alert(result);
