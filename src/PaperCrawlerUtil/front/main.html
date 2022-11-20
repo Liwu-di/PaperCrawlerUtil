@@ -31,7 +31,7 @@
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td>
             <div>
-                范围: <input type="text" name="range" id="range" value="(1, 2)">
+                范围: <input type="text" name="range" id="range" value="(1, 3)">
                 <input type="submit" value="导出" id="export" onclick="export_xls()">
                 <input type="submit" value="删除" id="delete" onclick="delete_ids()">
             </div>
@@ -56,7 +56,7 @@
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td>
             <div>
-                范围: <input type="text" name="range" id="range">
+                范围: <input type="text" name="range" id="range" value="(1, 3)">
                 <input type="submit" value="导出" id="export" onclick="export_xls()">
                 <input type="submit" value="删除" id="delete" onclick="delete_ids()">
             </div>
@@ -98,7 +98,12 @@
             data:JSON.stringify(obj),
             dataType:'json',
             success:function(result){
-                alert("删除成功")
+                if(result["data"] == "True"){
+                    alert("删除成功")
+                }
+                else{
+                    alert("删除失败，注意范围是左闭右开的集合，即输入(1,2),会报错，应该输入(1,3),如果删除单个值，需要使用(1)")
+                }
             },
             error:function(result){
                 alert(result);
