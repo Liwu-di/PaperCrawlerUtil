@@ -20,7 +20,8 @@ class ResearchRecord(object):
     通过在程序中调用该对象方法，在数据库中记录参数，运行的文件， 运行的时间等信息
     也提供了基本的数据库操作的封装和导出，也可以执行自定义SQL
     建表语句可以通过类的静态方法获得：ResearchRecord.create_db_table()
-    也可以自己建表，自己建表时至少继承如下列：["id", "file_execute", "execute_time", "finish_time", "result", "args", "other"]
+    也可以自己建表，自己建表时至少继承如下列：
+    ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other"， "delete_flag"]
     """
 
     def __init__(self, **db_conf) -> None:
