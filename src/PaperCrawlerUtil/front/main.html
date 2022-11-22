@@ -32,8 +32,8 @@
         <td>
             <div>
                 范围: <input type="text" name="range" id="range" value="(1, 3)">
-                <input type="submit" value="导出" id="export" onclick="export_xls()">
-                <input type="submit" value="删除" id="delete" onclick="delete_ids()">
+                <input type="submit" value="导出" id="export" onclick="export_xls(document.getElementById('range').value)">
+                <input type="submit" value="删除" id="delete" onclick="delete_ids(document.getElementById('range').value)">
             </div>
         </td>
     </tr>
@@ -56,17 +56,15 @@
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td>
             <div>
-                范围: <input type="text" name="range" id="range" value="(1, 3)">
-                <input type="submit" value="导出" id="export" onclick="export_xls()">
-                <input type="submit" value="删除" id="delete" onclick="delete_ids()">
+                范围: <input type="text" name="range" id="range2" value="(1, 3)">
+                <input type="submit" value="导出" id="export2" onclick="export_xls(document.getElementById('range2').value)">
+                <input type="submit" value="删除" id="delete2" onclick="delete_ids(document.getElementById('range2').value)">
             </div>
         </td>
     </tr>
 </table>
 <script>
-    function export_xls(){
-        range = document.getElementById("range").value;
-        console.log(range);
+    function export_xls(range){
         obj = {
             "range": range,
             "c": "这里给出数据库信息"
@@ -85,9 +83,7 @@
         });
     }
 
-    function delete_ids(){
-        range = document.getElementById("range").value;
-        console.log(range);
+    function delete_ids(range){
         obj = {
             "range": range,
             "c": "数据库信息"
