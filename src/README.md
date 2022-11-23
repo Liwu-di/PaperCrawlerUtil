@@ -507,7 +507,8 @@ for p in OP_TYPE:
 
 ## 前后端交互部分
 ### 科研记录
-目前可以使用原生和jquery组成的简单页面进行查看记录
+目前可以使用原生和jquery组成的简单页面进行查看记录，随时随地查看实验进度与结果
+![前端效果](https://github.com/Liwu-di/PaperCrawlerUtil/blob/main/pic/front.png)
 方法是在服务器端启动一个python后端，并且使用nginx进行代理
 ```commandline
 nohup python application.py --port=xxx
