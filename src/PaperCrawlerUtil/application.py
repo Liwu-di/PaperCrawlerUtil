@@ -59,7 +59,9 @@ def get_record():
     page = data["page"]
     no = data["no"]
     record = ResearchRecord(**c)
-    data = generate_result(data=list(record.select_page(page, no)))
+    data, page_sum = record.select_page(page, no)
+    data = {"data": data, "sum": page_sum}
+    data = generate_result(data=data)
     return json.encoder.JSONEncoder().encode(data).replace("\n", "")
 
 
