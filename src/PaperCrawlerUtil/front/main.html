@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>动态表格</title>
     <script src="./jquery.min.js"></script>
+    <script src="./config.js"></script>
     <style>
         table{
             border: 1px solid;
@@ -69,11 +70,11 @@
     function export_xls(range){
         obj = {
             "range": range,
-            "c": "这里给出数据库信息"
+            "c": db_info
         };
         $.ajax({
             type:"post",
-            url:"http://链接",
+            url:export_link,
             data:JSON.stringify(obj),
             dataType:'json',
             success:function(result){
@@ -88,11 +89,11 @@
     function delete_ids(range){
         obj = {
             "range": range,
-            "c": "数据库信息"
+            "c": db_info
         };
         $.ajax({
             type:"post",
-            url:"link",
+            url:delete_link,
             data:JSON.stringify(obj),
             dataType:'json',
             success:function(result){
@@ -146,13 +147,13 @@
             pages[i].value = pages[0].value
         }
         obj = {
-            "c": "这里给出数据库访问的一些数值",
+            "c": db_info,
             "page":parseInt(pages[0].value),
             "no":pageno
         }
         $.ajax({
             type:"post",
-            url:"http://这里给出url",
+            url:change_page_link,
             data:JSON.stringify(obj),
             dataType:'json',
             success:function(result){
