@@ -169,12 +169,20 @@ class ResearchRecord(object):
         :return:
         """
         res = []
+        sql = "select count(*) from `" + self.db_database + "`.`" + self.db_table + "` WHERE `delete_flag` = " + \
+              "{}".format(str(delete_flag))
+        sum_page = None
+        if self._execute(sql):
+            sum_page = self.cursor.fetchone()[0]
+            sum_page = int(sum_page / page) + 1
+        else:
+            sum_page = 0
         sql = "select * from `" + self.db_database + "`.`" + self.db_table + "` WHERE `delete_flag` = " + \
               "{}".format(str(delete_flag)) + " LIMIT {} OFFSET {}".format(str(page), str(page_no * page))
         if self._execute(sql):
-            return self.cursor.fetchall()
+            return self.cursor.fetchall(), sum_page
         else:
-            return []
+            return [], 0
 
     def export(self, id_range: tuple or List = [-100], file_type: str = "csv", export_path: str = "",
                process: Callable[[List[str]], List] = None) -> bool:
@@ -394,4 +402,3 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-

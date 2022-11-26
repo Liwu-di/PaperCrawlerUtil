@@ -25,10 +25,11 @@
 <table class="info">
     <tr>
         <td>当前是第</td>
-        <td>0</td>
+        <td class="page">0</td>
         <td>页</td>
-        <td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
-        <td><button onclick="reqnext()">下一页</button></td>
+        <td class="sum" readonly>共0页</td>
+        <td><button class="left" onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
+        <td><button class="right" onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)"></td>
         <td>
@@ -51,10 +52,11 @@
 <table class="info">
     <tr>
         <td>当前是第</td>
-        <td>0</td>
+        <td class="page">0</td>
         <td>页</td>
-        <td><button onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
-        <td><button onclick="reqnext()">下一页</button></td>
+        <td class="sum" readonly>共0页</td>
+        <td><button class="left" onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
+        <td><button class="right" onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
         <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)" readonly></td>
         <td>
@@ -160,26 +162,56 @@
                 pre = "<tr><th>op</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><th>args</th><th>other</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><th>delete_flag</th></tr>"
                 var table = document.getElementById("main");
                 sum_tr = ""
-                for(var i =0; i < result["data"].length; i++){
-                    result["data"][i]
+                for(var i =0; i < result["data"]["data"].length; i++){
                     tr = "<tr>"
                     tr = tr + "<td><a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a></td>"
-                    for(var j = 0; j < result["data"][i].length; ++j){
-                        tr = tr + "<td>" + result["data"][i][j] + "</td>"
+                    for(var j = 0; j < result["data"]["data"][i].length; ++j){
+                        tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>"
                     }
                     tr = tr + "</tr>"
                     tr = tr + "\n"
                     sum_tr = sum_tr + tr
                 }
                 table.innerHTML = pre + sum_tr
+                tds = getElementByClassName("sum")
+                for(i=0; i<tds.length; ++i){
+                    tds[i].innerHTML = "共" + (parseInt(result["data"]["sum"]) - 1) + "页"
+                }
+                for(var i = 0; i < getElementByClassName("info").length; ++i){
+                    getElementByClassName("info")[i].firstElementChild.firstElementChild.children[1].innerHTML = pageno
+                }
+                pages = getElementByClassName("page")
+                if(pages[0].innerHTML == 0){
+                    lefts = getElementByClassName("left");
+                    for(i = 0; i < lefts.length; ++i){
+                        lefts[i].disabled = true;
+                    }
+                }
+                else{
+                    lefts = getElementByClassName("left");
+                    for(i = 0; i < lefts.length; ++i){
+                        lefts[i].disabled = false;
+                    }
+                }
+                tds = getElementByClassName("sum")
+                if("共" + pages[0].innerHTML + "页" == tds[0].innerHTML){
+                    rights = getElementByClassName("right");
+                    for(i = 0; i < rights.length; ++i){
+                        rights[i].disabled = true;
+                    }
+                }
+                else{
+                    rights = getElementByClassName("right");
+                    for(i = 0; i < rights.length; ++i){
+                        rights[i].disabled = false;
+                    }
+                }
             },
             error:function(result){
                 alert(result);
             }
         });
-        for(var i = 0; i < getElementByClassName("info").length; ++i){
-            getElementByClassName("info")[i].firstElementChild.firstElementChild.children[1].innerHTML = pageno
-        }
+
     }
 
     function deleteTr(object) {
