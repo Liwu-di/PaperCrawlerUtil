@@ -753,8 +753,8 @@ def save_obj(src: object, path: str = "") -> bool:
     :param path: 保存的路径
     :return: 返回是否保存成功,True 表示成功
     """
-    path = path if len(path) > 0 else local_path_generate("", suffix="." + "".join(filter(str.isalpha, str(type([])))).
-                                                          replace("class", ""))
+    path = path if len(path) > 0 else local_path_generate("", suffix="." + "".join(filter(str.isalpha, str(type(src)))).
+                                                          replace("class", "")).replace("main", "")
     try:
         with open(path, mode="wb") as f:
             pickle.dump(src, f, pickle.HIGHEST_PROTOCOL)
