@@ -29,6 +29,9 @@ class ResearchRecord(object):
         :param db_conf:详见readme文件
         """
         super().__init__()
+        self.conn = None
+        self.cursor = None
+        self.ssl = None
         if len(db_conf) <= 0:
             log("需要配置字典", print_file=sys.stderr)
             return None
@@ -43,9 +46,6 @@ class ResearchRecord(object):
                 remote_bind_address=('localhost', db_conf["ssl_db_port"])
             )
             self.ssl.start()
-        else:
-            self.ssl = None
-
         self.db_url = "127.0.0.1" if check_ssl else db_conf["db_url"]
         self.db_username = db_conf["db_username"]
         self.db_pass = db_conf["pass"]
@@ -53,8 +53,7 @@ class ResearchRecord(object):
         self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
         self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
         self.db_type = "mysql"
-        self.conn = None
-        self.cursor = None
+
         self.ignore_error = db_conf.get("ignore_error") if db_conf.get("ignore_error") is not None else True
         try:
             self.create_db_conn()
@@ -402,3 +401,5 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    c = {}
+    a = ResearchRecord(**c)
