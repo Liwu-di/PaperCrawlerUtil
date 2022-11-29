@@ -43,13 +43,13 @@ class ResearchRecord(object):
                 ssh_address_or_host=(db_conf.get("ssl_ip"), db_conf.get("ssl_port")),
                 ssh_username=db_conf.get("ssl_admin"),
                 ssh_password=db_conf.get("ssl_pwd"),
-                remote_bind_address=('localhost', db_conf["ssl_db_port"])
+                remote_bind_address=('localhost', db_conf.get("ssl_db_port"))
             )
             self.ssl.start()
-        self.db_url = "127.0.0.1" if check_ssl else db_conf["db_url"]
-        self.db_username = db_conf["db_username"]
-        self.db_pass = db_conf["pass"]
-        self.port = self.ssl.local_bind_port if check_ssl else db_conf["port"]
+        self.db_url = "127.0.0.1" if check_ssl else db_conf.get("db_url")
+        self.db_username = db_conf.get("db_username")
+        self.db_pass = db_conf.get("pass")
+        self.port = self.ssl.local_bind_port if check_ssl else db_conf.get("port")
         self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
         self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
         self.db_type = "mysql"
