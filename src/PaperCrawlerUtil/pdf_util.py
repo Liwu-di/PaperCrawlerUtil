@@ -597,30 +597,6 @@ def get_para_from_pdf(path: str, begin_tag: list = None, end_tag: list = None, r
     return txt
 
 
-def getAllFiles(target_dir: str) -> list:
-    """
-    遍历文件夹
-    :param target_dir: 遍历的文件夹
-    :return: 所有文件的名称
-    """
-    files = []
-    if len(target_dir) == 0:
-        log(string="文件路径为空", print_file=sys.stderr)
-        return files
-    try:
-        listFiles = os.listdir(target_dir)
-    except Exception as e:
-        log(string="打开文件夹{}异常：{}".format(target_dir, e), print_file=sys.stderr)
-        return files
-    for i in range(0, len(listFiles)):
-        path = os.path.join(target_dir, listFiles[i])
-        if os.path.isdir(path):
-            files.extend(getAllFiles(path))
-        elif os.path.isfile(path):
-            files.append(path)
-    return files
-
-
 class sub_func_write_pdf(threading.Thread):
 
     def __init__(self, out_path: str, out_stream: io.BufferedWriter, out_pdf: PdfFileWriter) -> None:

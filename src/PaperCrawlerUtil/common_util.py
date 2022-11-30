@@ -826,6 +826,30 @@ def generate_result(code: int = 0, msg: str = "success", data: object = None):
     return {"code": code, "msg": msg, "data": data}
 
 
+def getAllFiles(target_dir: str) -> list:
+    """
+    遍历文件夹
+    :param target_dir: 遍历的文件夹
+    :return: 所有文件的名称
+    """
+    files = []
+    if len(target_dir) == 0:
+        log(string="文件路径为空", print_file=sys.stderr)
+        return files
+    try:
+        listFiles = os.listdir(target_dir)
+    except Exception as e:
+        log(string="打开文件夹{}异常：{}".format(target_dir, e), print_file=sys.stderr)
+        return files
+    for i in range(0, len(listFiles)):
+        path = os.path.join(target_dir, listFiles[i])
+        if os.path.isdir(path):
+            files.extend(getAllFiles(path))
+        elif os.path.isfile(path):
+            files.append(path)
+    return files
+
+
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
 
