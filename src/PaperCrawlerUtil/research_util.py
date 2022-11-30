@@ -4,6 +4,7 @@
 # @FileName: research_util.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
+import ast
 import sys
 import time
 from typing import Callable, Dict, Tuple
@@ -384,6 +385,18 @@ class ResearchRecord(object):
         else:
             log("仅支持tuple和list", print_file=sys.stderr)
             return id_list, neg_id_min
+
+    def modify(self, data: Dict) -> bool:
+        try:
+            id = data["id"]
+        except Exception as e:
+            log("请提供id，{}".format(e))
+        other = data["other"]
+        sql = self.generate_sql({"other": other}, condition={("id", id): "="}, op_type=OP_TYPE[1])
+        if self._execute(sql):
+            return True
+        else:
+            return False
 
     def __del__(self):
         """
