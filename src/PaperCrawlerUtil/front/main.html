@@ -31,7 +31,7 @@
         <td><button class="left" onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
         <td><button class="right" onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
-        <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)"></td>
+        <td><input value="50" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)"></td>
         <td>
             <div>
                 范围: <input type="text" name="range" id="range" value="(1, 3)">
@@ -58,7 +58,7 @@
         <td><button class="left" onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
         <td><button class="right" onclick="reqnext()">下一页</button></td>
         <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
-        <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)" readonly></td>
+        <td><input value="50" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)" readonly></td>
         <td>
             <div>
                 范围: <input type="text" name="range" id="range2" value="(1, 3)">
@@ -159,14 +159,22 @@
             data:JSON.stringify(obj),
             dataType:'json',
             success:function(result){
-                pre = "<tr><th>op</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><th>args</th><th>other</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><th>delete_flag</th></tr>"
+                pre = "<tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><th>parameter</th><th>comment</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><th>delete_flag</th></tr>"
                 var table = document.getElementById("main");
                 sum_tr = ""
                 for(var i =0; i < result["data"]["data"].length; i++){
                     tr = "<tr>"
-                    tr = tr + "<td><a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a></td>"
+                    tr = tr + "<td>" +
+                                    "<a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a> \n" +
+                                    "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a>" +
+                                "</td>"
                     for(var j = 0; j < result["data"]["data"][i].length; ++j){
-                        tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>"
+                        if(j == 5){
+                            tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>"
+                        }
+                        else{
+                            tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>"
+                        }
                     }
                     tr = tr + "</tr>"
                     tr = tr + "\n"
@@ -218,7 +226,35 @@
         var id = object.parentNode.parentNode.children[1].innerHTML;
         delete_ids("[" + id + ", " + id + "]");
     }
-    $(document).ready(function(){ 
+
+    function modifyTr(object) {
+        var id = object.parentNode.parentNode.children[1].innerHTML;
+        var comment = prompt("please input comment：", "xxx");
+        var data = {
+            "id": id,
+            "other": comment,
+            "c": db_info
+        }
+        $.ajax(
+            {
+                type:"post",
+                url: modify_link,
+                data:JSON.stringify(data),
+                dataType:'json',
+                success:function(result){
+                    if(result["data"] == "True"){
+                        alert("success")
+                        reqnext(initno=undefined, neg=0, refresh=1)
+                    }
+                    else{
+                        alert("failure")
+                    }
+                }, error: function(result){
+                    alert(result)
+                }
+            })
+    }
+    $(document).ready(function(){
         reqnext(init=0)
     });
 </script>
