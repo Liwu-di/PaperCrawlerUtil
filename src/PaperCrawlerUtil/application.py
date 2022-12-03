@@ -7,7 +7,11 @@
 import argparse
 import ast
 import json
+import sys
+
+import global_val
 from PaperCrawlerUtil.common_util import *
+from PaperCrawlerUtil.global_val import *
 from flask import Flask, request
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.research_util import *
@@ -18,34 +22,28 @@ and can run by Flask and provide services to website
 
 applications = Flask(__name__)
 
+c = ""
+
+
+def get_c(front_end_data: str = None) -> Dict:
+    """
+    获取数据库配置
+    :return:
+    """
+    def translate(s: str) -> Dict:
+        try:
+            return ast.literal_eval(s)
+        except Exception as e:
+            log(e, print_file=sys.stderr)
+            return {}
+    if front_end_data is None or len(front_end_data) == 0:
+        return translate(global_val.get_value("c"))
+    else:
+        return translate(front_end_data)
 
 @applications.route("/")
 def hello_world():
     return 'hello world'
-
-
-@applications.route("/code_generate/", methods=[POST])
-def generate():
-    data = json.loads(request.get_data())
-    # 到最终保存或提取文件需要多少层
-    layer = data['layer']
-    # rule， 爬取链接之后，需要根据这个条件抽取元素，每层一个
-    rule = data['rule']
-    element = data['element']
-    url_pre = data["url_pre"]
-    ele_split = data["ele_split"]
-    file_directory = data["file_directory"]
-    url = data["url"]
-    imports = "from PaperCrawlerUtil.common_util import * \n from PaperCrawlerUtil.crawler_util import * \nfrom PaperCrawlerUtil.document_util import *\n\n"
-    config = "basic_config(logs_style=LOG_STYLE_PRINT, require_proxy_pool=True, need_tester_log=False, need_getter_log=False)\n"
-    body = ""
-    for l in range(int(layer)):
-        body = body + get_split(lens=l, style="   ") + "html_" + str(l) + " = " + "random_proxy_header_access(\"" + url + "\"," + ")\n"
-        body = body + get_split(lens=l, style="   ") + "attr_list_" + str(l) + " = get_attribute_of_html(html_" + str(l) + ", " + str(rule[l]) + ")\n"
-        body = body + get_split(lens=l, style="   ") + "for ele_" + str(l) + " in attr_list_"+ str(l) +":\n"
-        body = body + get_split(lens=l+1, style="   ") + "path_" + str(l) + " = ele_" + str(l) + ".split(\"" + ele_split[2 * l] +"\")[1].split(\"" + ele_split[2 * l + 1] + "\")[0]\n"
-    code = imports + config + body
-    return code
 
 
 @applications.route("/get_record/", methods=[POST])
@@ -55,7 +53,7 @@ def get_record():
     :return:
     """
     data = json.loads(request.get_data())
-    c = ast.literal_eval(data["c"])
+    c = get_c(data["c"])
     page = data["page"]
     no = data["no"]
     record = ResearchRecord(**c)
@@ -73,7 +71,7 @@ def export_research_record():
     """
     data = json.loads(request.get_data())
     range = ast.literal_eval(data["range"])
-    c = ast.literal_eval(data["c"])
+    c = get_c(data["c"])
     record = ResearchRecord(**c)
     res = record.export(id_range=range, file_type="xls")
     data = generate_result(data=str(res))
@@ -88,7 +86,7 @@ def delete_records():
     """
     data = json.loads(request.get_data())
     range = ast.literal_eval(data["range"])
-    c = ast.literal_eval(data["c"])
+    c = get_c(data["c"])
     record = ResearchRecord(**c)
     res = record.delete(range)
     data = generate_result(data=str(res))
@@ -102,7 +100,7 @@ def modify_records():
     :return:
     """
     data = json.loads(request.get_data())
-    c = ast.literal_eval(data["c"])
+    c = get_c(data["c"])
     record = ResearchRecord(**c)
     res = record.modify(data)
     data = generate_result(data=str(res))
@@ -112,5 +110,7 @@ def modify_records():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
+    parser.add_argument('--c', type=str, default="{}", help="access data base")
     args = parser.parse_args()
-    applications.run(host="0.0.0.0", port=args.port, debug=True)
+    global_val.set_value("c", args.c)
+    applications.run(host="0.0.0.0", port=args.port, debug=False)
