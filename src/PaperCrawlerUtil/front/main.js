@@ -91,7 +91,7 @@ function reqnext(initno, neg, refresh){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            pre = "<tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><th>parameter</th><th>comment</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><th>delete_flag</th></tr>"
+            pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><!--            <th>parameter</th>--><th>comment</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><!--<th>delete_flag</th>--></tr></thead>";
             var table = document.getElementById("main");
             sum_tr = "";
             for(var i =0; i < result["data"]["data"].length; i++){
@@ -101,8 +101,8 @@ function reqnext(initno, neg, refresh){
                                 "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a>" +
                             "</td>";
                 for(var j = 0; j < result['data']['data'][i].length; ++j){
-                    if(j ===5){
-                        tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>";
+                    if(j ===5 || j === 11){
+                        //tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>";
                     }
                     else{
                         tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>";
