@@ -398,6 +398,22 @@ class ResearchRecord(object):
         else:
             return False
 
+    def get_by_id(self, data: Dict) -> List:
+        """
+        根据id获取信息
+        :param data:
+        :return:
+        """
+        try:
+            id = data["id"]
+        except Exception as e:
+            log("请提供id，{}".format(e))
+        sql = self.generate_sql(condition={("id", id): "="}, op_type=SELECT)
+        if self._execute(sql):
+            return list(self.cursor.fetchone())
+        else:
+            return []
+
     def __del__(self):
         """
         关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错

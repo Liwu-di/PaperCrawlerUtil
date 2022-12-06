@@ -137,7 +137,10 @@ CREATE_DB_TABLE = "\nCREATE SCHEMA `research` ;" \
 TABLE_TITLE = ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "default1", "default2",
                "default3", "default4", "delete_flag"]
 OP_TYPE = ["INSERT", "UPDATE", "DELETE", "SELECT"]
-
+INSERT = OP_TYPE[0]
+UPDATE = OP_TYPE[1]
+DELETE = OP_TYPE[2]
+SELECT = OP_TYPE[3]
 
 """自动识别，只能用在源语言"""
 AUTO = "auto"

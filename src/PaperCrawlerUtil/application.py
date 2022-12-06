@@ -107,6 +107,20 @@ def modify_records():
     return data
 
 
+@applications.route("/get_by_id/", methods=[POST])
+def get_by_id():
+    """
+    修改research结果记录
+    :return:
+    """
+    data = json.loads(request.get_data())
+    c = get_c(data["c"])
+    record = ResearchRecord(**c)
+    res = record.get_by_id(data)
+    data = generate_result(data=str(res))
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
