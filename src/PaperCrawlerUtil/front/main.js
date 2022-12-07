@@ -91,17 +91,21 @@ function reqnext(initno, neg, refresh){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th><!--            <th>parameter</th>--><th>comment</th><th>default1</th><th>default2</th><th>default3</th><th>default4</th><!--<th>delete_flag</th>--></tr></thead>";
+            pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th>" +
+            "<!--<th>parameter</th>-->" +
+            "<th>comment</th>" +
+            "<!--<th>default1</th><th>default2</th><th>default3</th><th>default4</th>--><!--<th>delete_flag</th>--></tr></thead>";
             var table = document.getElementById("main");
             sum_tr = "";
             for(var i =0; i < result["data"]["data"].length; i++){
                 tr = "<tr>";
                 tr = tr + "<td>" +
-                                "<a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a> \n" +
-                                "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a>" +
+                                "<a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a> " +
+                                "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a> " +
+                                "<a href=\"javascript:void(0);\" onclick=\"detail(this)\" >详情</a> " +
                             "</td>";
                 for(var j = 0; j < result['data']['data'][i].length; ++j){
-                    if(j ===5 || j === 11){
+                    if(j === 11 || j === 5 || j=== 10 || j === 9 || j === 8 || j=== 7){
                         //tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>";
                     }
                     else{
@@ -157,6 +161,28 @@ function reqnext(initno, neg, refresh){
 function deleteTr(object) {
     var id = object.parentNode.parentNode.children[1].innerHTML;
     delete_ids("[" + id + ", " + id + "]");
+}
+function get_id(id){
+    obj = {
+        "id": id,
+        "c": db_info
+    };
+    $.ajax({
+        type:"post",
+        url:get_id_link,
+        data:JSON.stringify(obj),
+        dataType:'json',
+        success:function(result){
+            alert(result["data"]);
+        },
+        error:function(result){
+            alert(result);
+        }
+    });
+}
+function detail(object) {
+    var id = object.parentNode.parentNode.children[1].innerHTML;
+    get_id(id);
 }
 
 function modifyTr(object) {
