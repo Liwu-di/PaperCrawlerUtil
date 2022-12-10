@@ -16,6 +16,88 @@ from PaperCrawlerUtil.office_util import *
 import pymysql
 
 
+class DB_util(object):
+
+    def __init__(self, **db_conf) -> None:
+        super().__init__()
+        self.conn = None
+        self.cursor = None
+        self.ssl = None
+        if len(db_conf) <= 0:
+            log("需要配置字典", print_file=sys.stderr)
+            return None
+        check_ssl = True if db_conf.get("ssl_ip") is not None and db_conf.get("ssl_admin") is not None and \
+                            db_conf.get("ssl_pwd") is not None and db_conf.get("ssl_db_port") is not None \
+                            and db_conf.get("ssl_port") is not None else False
+        if check_ssl:
+            self.ssl = SSHTunnelForwarder(
+                ssh_address_or_host=(db_conf.get("ssl_ip"), db_conf.get("ssl_port")),
+                ssh_username=db_conf.get("ssl_admin"),
+                ssh_password=db_conf.get("ssl_pwd"),
+                remote_bind_address=('localhost', db_conf.get("ssl_db_port"))
+            )
+            self.ssl.start()
+        self.db_url = "127.0.0.1" if check_ssl else db_conf.get("db_url")
+        self.db_username = db_conf.get("db_username")
+        self.db_pass = db_conf.get("pass")
+        self.port = self.ssl.local_bind_port if check_ssl else db_conf.get("port")
+        self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
+        self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
+        self.db_field = db_conf.get("db_field") if db_conf.get("db_field") is not None \
+            else ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other","delete_flag"]
+        self.db_type = db_conf.get("db_type") if db_conf.get("db_type") is not None else "mysql"
+
+        self.ignore_error = db_conf.get("ignore_error") if db_conf.get("ignore_error") is not None else True
+        try:
+            self.create_db_conn()
+            self.cursor = self.conn.cursor()
+        except Exception as e:
+            log("链接数据库失败，请修改配置，云服务器请配置ssl：{}".format(e))
+
+    def create_db_conn(self):
+        """
+        链接数据库，不返回链接，全局使用一个连接conn
+        :return:
+        """
+        connection = pymysql.connect(host=self.db_url,
+                                     user=self.db_username,
+                                     password=self.db_pass,
+                                     db=self.db_database,
+                                     port=self.port,
+                                     charset="utf8"
+                                     )
+        self.conn = connection
+        self.conn.autocommit(True)
+
+    def _execute(self, sql: str) -> bool:
+        """
+        内部方法，执行sql
+        也可以执行用户自定义的sql，比如利用建表时默认的四个默认列记录数据等
+        :param sql: 待执行的sql
+        :return:
+        """
+        try:
+            self.cursor.execute(sql)
+            return True
+        except Exception as e:
+            log("执行失败：{}".format(e))
+            if self.ignore_error:
+                write_file(local_path_generate("", "record_error.log"), mode="a+", string=sql + "\n")
+            return False
+
+    def __del__(self):
+        """
+        关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
+        TypeError: 'NoneType' object is not callable
+        :return:
+        """
+        if self.ssl is not None:
+            self.ssl.stop
+        if self.conn is not None:
+            self.conn.close
+        if self.cursor is not None:
+            self.cursor.close
+
 class ResearchRecord(object):
     """
     通过在程序中调用该对象方法，在数据库中记录参数，运行的文件， 运行的时间等信息
