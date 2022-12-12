@@ -44,7 +44,7 @@ class DB_util(object):
         self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
         self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
         self.db_field = db_conf.get("db_field") if db_conf.get("db_field") is not None \
-            else ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other","delete_flag"]
+            else ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
         self.db_type = db_conf.get("db_type") if db_conf.get("db_type") is not None else "mysql"
 
         self.ignore_error = db_conf.get("ignore_error") if db_conf.get("ignore_error") is not None else True
@@ -69,7 +69,7 @@ class DB_util(object):
         self.conn = connection
         self.conn.autocommit(True)
 
-    def _execute(self, sql: str) -> bool:
+    def execute(self, sql: str) -> bool:
         """
         内部方法，执行sql
         也可以执行用户自定义的sql，比如利用建表时默认的四个默认列记录数据等
@@ -85,6 +85,24 @@ class DB_util(object):
                 write_file(local_path_generate("", "record_error.log"), mode="a+", string=sql + "\n")
             return False
 
+    def select_one(self, condition: Dict) -> List:
+        return []
+
+    def select_page(self, condition: Dict, limit: int = 100) -> List[List]:
+        return []
+
+    def insert_one(self, kvs: Dict[str:str] or List[str]) -> bool:
+        return True
+
+    def update(self, condition: Dict) -> bool:
+        return True
+
+    def delete(self, condition: Dict) -> bool:
+        return True
+
+    def export(self, condition: Dict) -> bool:
+        return True
+
     def __del__(self):
         """
         关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
@@ -97,6 +115,7 @@ class DB_util(object):
             self.conn.close
         if self.cursor is not None:
             self.cursor.close
+
 
 class ResearchRecord(object):
     """
