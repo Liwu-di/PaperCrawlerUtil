@@ -59,7 +59,7 @@ def baidu_translate(string: str,
         result = json.loads(result_all)
         time.sleep(sleep_time)
     except Exception as e:
-        log(string=e, print_file=sys.stderr)
+        log(e, print_file=sys.stderr)
         time.sleep(sleep_time)
     finally:
         if httpClient:
@@ -68,7 +68,7 @@ def baidu_translate(string: str,
     try:
         res = result["trans_result"][0]["dst"]
     except Exception as e:
-        log(string="翻译错误：{}".format(e), print_file=sys.stderr)
+        log("翻译错误：{}".format(e), print_file=sys.stderr)
     return res
 
 
@@ -97,7 +97,7 @@ def google_translate(string: str, src: str = 'en', dest: str = 'zh-cn',
         time.sleep(sleep_time)
         return trans.text
     except Exception as e:
-        log(string="翻译错误：{}".format(e), print_file=sys.stderr)
+        log("翻译错误：{}".format(e), print_file=sys.stderr)
         time.sleep(sleep_time)
     return ""
 

@@ -484,7 +484,7 @@ def pdf2docx(pdf_path: str, word_path: str, end_pages: int = None,
                 count = count + 1
                 log("总计pdf文件个数{}，已经完成{}".format(len(file_list), count))
             except Exception as e:
-                log(string="转换失败文件{},{}".format(ele, e), print_file=sys.stderr)
+                log("转换失败文件{},{}".format(ele, e), print_file=sys.stderr)
             finally:
                 cv.close()
 
@@ -546,7 +546,7 @@ def get_para_from_one_pdf(path: str, begin_tag: list = None,
         pdf.close()
         return txt
     except Exception as e:
-        log(string="打开PDF异常：{}".format(e), print_file=sys.stderr)
+        log("打开PDF异常：{}".format(e), print_file=sys.stderr)
         return txt
 
 
@@ -588,11 +588,11 @@ def get_para_from_pdf(path: str, begin_tag: list = None, end_tag: list = None, r
                 if need_log:
                     log("有效抽取文件：{}".format(ele))
             else:
-                log(string="抽取文件疑似失败：{}".format(ele), print_file=sys.stderr)
+                log("抽取文件疑似失败：{}".format(ele), print_file=sys.stderr)
             sum_count = sum_count + 1
         else:
             sum_count = sum_count + 1
-            log(string="错误：{}不是PDF文件".format(ele), print_file=sys.stderr)
+            log("错误：{}不是PDF文件".format(ele), print_file=sys.stderr)
     log("总计抽取了文件数量：{}，其中有效抽取（>{}）数量：{}".format(sum_count, valid_threshold, valid_count))
     return txt
 
@@ -613,7 +613,7 @@ class sub_func_write_pdf(threading.Thread):
             self.res = True
             self.out_stream.close()
         except Exception as e:
-            log(string=threading.currentThread().getName() + "写PDF出现异常：{}".format(e), print_file=sys.stderr)
+            log(threading.currentThread().getName() + "写PDF出现异常：{}".format(e), print_file=sys.stderr)
             self.res = False
 
     def getRes(self):
@@ -637,10 +637,10 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
         """
 
     if len(path) == 0:
-        log(string="路径参数为空，返回错误", print_file=sys.stderr)
+        log("路径参数为空，返回错误", print_file=sys.stderr)
         return False
     if type(page_range) != tuple and type(page_range) != list:
-        log(string="页码范围有误，返回错误", print_file=sys.stderr)
+        log("页码范围有误，返回错误", print_file=sys.stderr)
         return False
     output = None
     pdf_file = None
@@ -650,13 +650,13 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
         pdf_file = PdfFileReader(open(path, "rb"))
         pdf_pages_len = pdf_file.getNumPages()
     except Exception as e:
-        log(string="打开文件异常：{}".format(e), print_file=sys.stderr)
+        log("打开文件异常：{}".format(e), print_file=sys.stderr)
         return False
     iters = None
     if type(page_range) == tuple:
         new_page_range = ()
         if len(page_range) == 0:
-            log(string="页码范围不明确，返回错误", print_file=sys.stderr)
+            log("页码范围不明确，返回错误", print_file=sys.stderr)
             return False
         elif len(page_range) == 1:
             log("使用范围截取，但只有一个参数，结束参数默认为最大值")
@@ -684,7 +684,7 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
         for k in page_range:
             '''@todo: 完善verify_rule()'''
             if not (0 <= k <= pdf_pages_len - 1):
-                log(string="范围参数有错", print_file=sys.stderr)
+                log("范围参数有错", print_file=sys.stderr)
                 return False
         iters = page_range
     for i in iters:
@@ -700,12 +700,12 @@ def getSomePagesFromOnePDF(path: str, out_path: str, page_range: tuple or list,
             sub.raiseException()
         except Exception as e:
             if need_log:
-                log(string=e, print_file=sys.stderr)
+                log(e, print_file=sys.stderr)
         if need_log or not success:
             log(("从文件{}截取页面到{}成功".format(path, out_path)) if success else ("从文件{}截取页面到{}失败".format(path, out_path)))
         return True
     except Exception as e:
-        log(string="写文件出错：{}".format(e), print_file=sys.stderr)
+        log("写文件出错：{}".format(e), print_file=sys.stderr)
         return False
     finally:
         pdf_file.stream.close()
@@ -745,7 +745,7 @@ def getSomePagesFromFileOrDirectory(path: str, page_range: tuple or list, out_di
         p.process(0, 1, total)
         for k in files:
             if not k.endswith(".pdf"):
-                log(string="文件{}不是PDF文件".format(k), print_file=sys.stderr)
+                log("文件{}不是PDF文件".format(k), print_file=sys.stderr)
                 continue
             sum = sum + 1
             if getSomePagesFromOnePDF(k, local_path_generate(out_directory, need_log=need_log), page_range, need_log,
@@ -786,19 +786,19 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
     try:
         output = PdfFileWriter()
     except Exception as e:
-        log(string="打开PDF写文件工具失败：{}".format(e), print_file=sys.stderr)
+        log("打开PDF写文件工具失败：{}".format(e), print_file=sys.stderr)
     file_readers = []
     for file in files:
         reader = None
         if not file.endswith(".pdf"):
-            log(string="文件{}不是PDF文件，略过".format(file), print_file=sys.stderr)
+            log("文件{}不是PDF文件，略过".format(file), print_file=sys.stderr)
             continue
         try:
             if file == out_path:
                 continue
             reader = PdfFileReader(open(file, "rb"))
         except Exception as e:
-            log(string="打开文件{}失败{}".format(file, e), print_file=sys.stderr)
+            log("打开文件{}失败{}".format(file, e), print_file=sys.stderr)
             continue
         pdf_pages_len = reader.getNumPages()
         iters = None
@@ -824,10 +824,10 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
             for k in page_range:
                 try:
                     if not (verify_rule({0: GREATER_AND_EQUAL, pdf_pages_len - 1: LESS_THAN_AND_EQUAL}, float(k))):
-                        log(string="范围参数有错", print_file=sys.stderr)
+                        log("范围参数有错", print_file=sys.stderr)
                         return False
                 except Exception as e:
-                    log(string="参数范围输入格式错误：{}".format(e), print_file=sys.stderr)
+                    log("参数范围输入格式错误：{}".format(e), print_file=sys.stderr)
                     return False
             iters = page_range
         for i in iters:
@@ -837,7 +837,7 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
     try:
         outputStream = open(out_path, "wb")
     except Exception as e:
-        log(string="打开文件异常：{}".format(e), print_file=sys.stderr)
+        log("打开文件异常：{}".format(e), print_file=sys.stderr)
         return False
     sub = sub_func_write_pdf(out_path, outputStream, output)
     # sub.setDaemon(True)
@@ -859,7 +859,7 @@ def cooperatePdfWithLimit(files: list, page_range: tuple or list = None, out_pat
             log("合并文件到{}成功，共计{}文件，合并总数{}".format(out_path, str(len(files)), str(count)))
         return True
     else:
-        log(string="合并失败", print_file=sys.stderr)
+        log("合并失败", print_file=sys.stderr)
         return False
 
 

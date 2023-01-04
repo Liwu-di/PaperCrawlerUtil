@@ -18,11 +18,13 @@ def random_proxy_header_access(url: str, proxy: str = '',
                                need_log: bool = True, cookie: str = "", if_bytes_encoding: str = "utf-8",
                                method: str = GET, get_params: List[tuple] or dict or bytes = None,
                                post_data: dict or List[tuple] or bytes = None,
-                               json=None, allow_redirects: bool = True, return_type: str = "str") -> str or object:
+                               json=None, allow_redirects: bool = True, return_type: str = "str",
+                               need_random_headers: bool = True) -> str or object:
     """
     如果达到max_retry之后，仍然访问不到，返回空值
     use random header and proxy to access url and get content
     if access the url beyond max_retry, will return a blank string
+    :param need_random_headers: 是否需要随机请求头
     :param allow_redirects: 是否启用重定向
     :param json: 请求体json序列化对象
     :param method: 请求方法
@@ -60,8 +62,11 @@ def random_proxy_header_access(url: str, proxy: str = '',
             if require_proxy:
                 if need_log:
                     log("使用代理：{}".format(proxy))
-            ua = UserAgent()  # 实例化
-            headers = {"User-Agent": ua.random}
+            if need_random_headers:
+                ua = UserAgent()
+                headers = {"User-Agent": ua.random}
+            else:
+                headers = None
             proxies = {'http': "http://" + proxy, 'https': 'http://' + proxy}
             if need_log:
                 log("第{}次准备爬取{}的内容".format(str(i), url))
@@ -100,7 +105,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
         except NoProxyException as e:
             raise e
         except Exception as result:
-            log(string="错误信息:%s" % result, print_file=sys.stderr)
+            log("错误信息:%s" % result, print_file=sys.stderr)
             log("尝试重连")
             time.sleep(sleep_time)
         if (type(html) == str or type(html) == bytes) and len(html) > 0 and return_type == "str":
@@ -110,7 +115,7 @@ def random_proxy_header_access(url: str, proxy: str = '',
                 try:
                     html = str(html, encoding=if_bytes_encoding)
                 except Exception as e:
-                    log(string="字节转字符串错误：{}".format(e), print_file=sys.stderr)
+                    log("字节转字符串错误：{}".format(e), print_file=sys.stderr)
             return html
     if return_type == "str":
         return ""
@@ -118,13 +123,37 @@ def random_proxy_header_access(url: str, proxy: str = '',
         return None
 
 
-def retrieve_file(url: str, path: str, proxies: str = "",
+def get_opener(require_proxy, random_proxy, need_random_header, proxies):
+
+    opener = urllib.request.build_opener()
+    if require_proxy and need_random_header:
+        ua = UserAgent()
+        if random_proxy and two_one_choose():
+            opener.addheaders = [('User-Agent', ua.random),
+                                 ('proxy', "http://" + proxies),
+                                 ('proxy', "https://" + proxies)]
+        elif random_proxy and not two_one_choose():
+            opener.addheaders = [('User-Agent', ua.random)]
+        else:
+            opener.addheaders = [('User-Agent', ua.random)]
+    elif require_proxy:
+        if random_proxy and two_one_choose():
+            opener.addheaders = [('proxy', "http://" + proxies),
+                                 ('proxy', "https://" + proxies)]
+    elif need_random_header:
+        ua = UserAgent()
+        opener.addheaders = [('User-Agent', ua.random)]
+    return opener
+
+
+def retrieve_file(url: str, path: str = "", proxies: str = "",
                   require_proxy: bool = False, max_retry: int = 10,
                   sleep_time: float = 1.2, random_proxy: bool = True,
                   need_log: bool = True, reporthook: Callable[[], None] = None,
-                  data: str = None) -> bool:
+                  data: str = None, need_random_header: bool = True) -> bool:
     """
     retrieve file from provided url and save to path
+    :param need_random_header: 是否需要使用随机header
     :param data: 使用url encode的参数
     :param reporthook: 用来在获取url链接信息之后调用的函数,例如函数def test(a: int, b: int, c: int) -> None,
     三个参数分别表示，当前下载第几块，每块的大小，文件的总大小
@@ -141,6 +170,8 @@ def retrieve_file(url: str, path: str, proxies: str = "",
     """
     success = False
     proxy_provide = False
+    if len(path) == 0:
+        path = local_path_generate("")
     if len(proxies) == 0:
         proxy_provide = False
     else:
@@ -153,19 +184,7 @@ def retrieve_file(url: str, path: str, proxies: str = "",
                 proxies = get_proxy()
             if not proxy_provide and require_proxy:
                 proxies = get_proxy()
-            opener = urllib.request.build_opener()
-            ua = UserAgent()
-            if require_proxy:
-                if random_proxy and two_one_choose():
-                    opener.addheaders = [('User-Agent', ua.random),
-                                         ('proxy', "http://" + proxies),
-                                         ('proxy', "https://" + proxies)]
-                elif random_proxy and not two_one_choose():
-                    opener.addheaders = [('User-Agent', ua.random)]
-                else:
-                    opener.addheaders = [('User-Agent', ua.random)]
-            else:
-                opener.addheaders = [('User-Agent', ua.random)]
+            opener = get_opener(require_proxy, random_proxy, need_random_header, proxies)
             urllib.request.install_opener(opener)
             bar = None
             if reporthook:
@@ -174,20 +193,16 @@ def retrieve_file(url: str, path: str, proxies: str = "",
                 bar = process_bar(final_prompt="文件下载完成", desc="文件下载进度：")
                 reporthook = bar.process
             urlretrieve(url=url, filename=path, reporthook=reporthook, data=data)
-            # if need_log:
-            #     log("文件提取成功")
             success = True
             time.sleep(sleep_time)
-        except NoProxyException as e:
-            raise e
         except Exception as e:
-            log(string="抽取:{},失败:{}".format(url, e), print_file=sys.stderr)
+            log("抽取:{},失败:{}".format(url, e), print_file=sys.stderr)
             time.sleep(sleep_time)
         if success:
             return success
             time.sleep(sleep_time)
     if not success:
-        log(string="{}提取失败".format(url), print_file=sys.stderr)
+        log("{}提取失败".format(url), print_file=sys.stderr)
         time.sleep(sleep_time)
         return success
 
@@ -202,7 +217,7 @@ def get_pdf_link_from_sci_hub_download_page_and_download(html: str, work_path: s
         try:
             path = paths.split("href=")[1].split("?download")[0]
         except Exception as e:
-            log(string="链接{}截取错误:{}".format(paths, e), print_file=sys.stderr)
+            log("链接{}截取错误:{}".format(paths, e), print_file=sys.stderr)
             continue
         time.sleep(sleep_time)
         for i in range(max_retry):
@@ -223,7 +238,7 @@ def get_pdf_link_from_sci_hub_download_page_and_download(html: str, work_path: s
                     log("文件{}提取成功".format(work_path))
                 return True
         if not success:
-            log(string="抽取文件达到最大次数，停止获取{}".format(path), print_file=sys.stderr)
+            log("抽取文件达到最大次数，停止获取{}".format(path), print_file=sys.stderr)
             return False
     return False
 
@@ -256,11 +271,11 @@ def get_pdf_url_by_doi(search: str, work_path: str, sleep_time: float = 1.2, max
                                               random_proxy=random_proxy,
                                               require_proxy=require_proxy)
             if len(html) == 0:
-                log(string="爬取失败，字符串长度为0", print_file=sys.stderr)
+                log("爬取失败，字符串长度为0", print_file=sys.stderr)
                 time.sleep(sleep_time)
                 continue
             elif len(html) != 0 and len(get_attribute_of_html(html, {"href=": "in"}, ["button"])) == 0:
-                log(string="爬取失败，无法从字符串中提取需要的元素", print_file=sys.stderr)
+                log("爬取失败，无法从字符串中提取需要的元素", print_file=sys.stderr)
                 time.sleep(sleep_time)
                 continue
             else:
@@ -268,7 +283,7 @@ def get_pdf_url_by_doi(search: str, work_path: str, sleep_time: float = 1.2, max
                     log("从sichub获取目标文件链接成功，等待分析提取")
                 break
         if len(html) == 0:
-            log(string="获取html文件达到最大次数，停止获取doi:{}".format(search), print_file=sys.stderr)
+            log("获取html文件达到最大次数，停止获取doi:{}".format(search), print_file=sys.stderr)
             return
         return get_pdf_link_from_sci_hub_download_page_and_download(html=html, work_path=work_path,
                                                                     sleep_time=sleep_time,
@@ -305,7 +320,7 @@ def get_pdf_url_by_doi(search: str, work_path: str, sleep_time: float = 1.2, max
                 log("访问失败，状态为：{}".format(str(html.status_code)), print_file=sys.stderr)
             else:
                 log("访问出错，再次尝试", print_file=sys.stderr)
-        log(string="抽取文件达到最大次数，停止获取文件:{}".format(search), print_file=sys.stderr)
+        log("抽取文件达到最大次数，停止获取文件:{}".format(search), print_file=sys.stderr)
         return False
 
 
