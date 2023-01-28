@@ -16,6 +16,17 @@ from PaperCrawlerUtil.office_util import *
 import pymysql
 
 
+class Conditions(dict):
+
+    relations = ["=", ">", ">=", "<", "<=", "in"]
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def add_condition(self, key: str, value: str, relation: str = "="):
+        self.__setitem__((key, value), relation)
+
+
 class DB_util(object):
 
     def __init__(self, **db_conf) -> None:
@@ -54,6 +65,85 @@ class DB_util(object):
         except Exception as e:
             log("链接数据库失败，请修改配置，云服务器请配置ssl：{}".format(e))
 
+    def generate_sql(self, kvs: Dict = None, op_type: str = OP_TYPE[3],
+                     condition: Dict[Tuple[str, int or float or str or Tuple], str] = None,
+                     limit: int = 100, offset: int = 0, field_quota: bool = True) -> str:
+        """
+        根据给定的值生成简单的sql，其中select语句最难生成，因此只能是给个参考，慎用本方法生成select语句
+        :param field_quota: 是否需要在查询时，给字段名加引号
+        :param offset: 分页查询时，从0开始的偏移量
+        :param condition:键值对，键是元组，长度为两个元素，值是条件参数，例如：
+        {("dass", 231): "="}，代码会转换为“dass” = 231 作为条件加入where语句
+        :param limit:select 语句中防止查询过大，默认100
+        :param kvs:修改，增加时，需要给定该参数，指示需要修改或新增行时的参数，例如
+            {"id": 2, "file_execute": "file", "execute_time": "2022年11月1日21:24:58"}，代码会将之转换为如下：
+
+            INSERT INTO `research`.`record_result` (`id`, `file_execute`, `execute_time`)
+            VALUES (2, "file", "2022年11月1日21:24:58");
+
+            UPDATE `research`.`record_result` SET `id` = 2, `file_execute` = "file",
+            `execute_time` = "2022年11月1日21:24:58";
+
+            SELECT `id`, `file_execute`, `execute_time` FROM `research`.`record_result`;
+
+        :param op_type: 取值为["INSERT", "UPDATE", "DELETE", "SELECT"]，指明生成的sql类型
+        :return:生成的sql
+        """
+        fields = []
+        values = []
+        condition_clause = "WHERE "
+        if op_type == OP_TYPE[3] and (kvs is None or len(kvs) == 0):
+            fields = "*"
+        else:
+            for kv in kvs.items():
+                if field_quota:
+                    fields.append("`" + str(kv[0]) + "`")
+                else:
+                    fields.append(str(kv[0]))
+                t = type(kv[1])
+                if t == int or t == float:
+                    values.append(str(kv[1]))
+                else:
+                    values.append("\"" + str(kv[1]) + "\"")
+        if condition is None or len(condition) == 0:
+            condition_clause = ""
+        else:
+            count = 0
+            for kv in condition.items():
+                t = type(kv[0][1])
+                if t == int or t == float:
+                    condition_clause = condition_clause + str(kv[0][0]) + " " + str(kv[1]) + " " + str(kv[0][1])
+                elif t == tuple:
+                    tuple_str = str(kv[0][1]) if len(kv[0][1]) > 1 else str(kv[0][1]).replace(",", "")
+                    condition_clause = condition_clause + str(kv[0][0]) + " " + str(kv[1]) + " " + tuple_str
+                elif t == str:
+                    condition_clause = condition_clause + \
+                                       str(kv[0][0]) + " " + str(kv[1]) + " " + "\"" + str(kv[0][1]) + "\""
+                if count < len(condition) - 1:
+                    condition_clause = condition_clause + " AND "
+                count = count + 1
+        if op_type not in OP_TYPE:
+            op_type = SELECT
+        if op_type == INSERT:
+            sql = "INSERT INTO `" + self.db_database + "`.`" + self.db_table + "` ({})" + " VALUES ({});"
+            sql = sql.format(", ".join(fields), ", ".join(values))
+        elif op_type == UPDATE:
+            sql = "UPDATE `" + self.db_database + "`.`" + self.db_table + "` SET {} {};"
+            modify = ""
+            for i in range(len(fields)):
+                modify = modify + fields[i] + " = " + values[i]
+                if i < len(fields) - 1:
+                    modify = modify + ", "
+            sql = sql.format(modify, condition_clause)
+        elif op_type == DELETE:
+            sql = "DELETE FROM `" + self.db_database + "`.`" + self.db_table + "` {};"
+            sql = sql.format(condition_clause)
+        elif op_type == SELECT:
+            sql = "SELECT" + " {} ".format(
+                ", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {} OFFSET {};". \
+                      format(condition_clause, str(limit), str(offset))
+        return sql
+
     def create_db_conn(self):
         """
         链接数据库，不返回链接，全局使用一个连接conn
@@ -85,13 +175,53 @@ class DB_util(object):
                 write_file(local_path_generate("", "record_error.log"), mode="a+", string=sql + "\n")
             return False
 
-    def select_one(self, condition: Dict) -> List:
-        return []
+    def select_one(self, condition: Dict = None, kvs: Dict or List = None) -> List:
+        """
+        查询一个记录
+        :param kvs: 要查询的字段，可以接受字典，列表，其中字典的value并没有使用，只使用key
+        :param condition:条件字典，形如{("a", "b") : "="} 即 where a = b，或者{"a":"b"},后台会自动将后一种形式转换为前一种，
+        但是，二者的关系只能是"="，即后面一种形式是前一种形式的特定情况简化版。
+        :return:
+        """
+        if type(kvs) == list:
+            t = {}
+            for i in kvs:
+                t[i] = ""
+            kvs = t
+        sql = self.generate_sql(condition=condition, op_type=SELECT, kvs=kvs)
+        if self.execute(sql):
+            return self.cursor.fetchone()
+        else:
+            return []
 
-    def select_page(self, condition: Dict, limit: int = 100) -> List[List]:
-        return []
+    def select_page(self, condition: Conditions = None, delete_flag: int = 0, page: int = 100, page_no: int = 0) -> List[List]:
+        """
+        分页查找
+        :param limit:
+        :param condition:
+        :param delete_flag: 删除标记
+        :param page:页面大小
+        :param page_no: 页面号
+        :return:
+        """
+        res = []
+        if condition is None:
+            condition = Conditions()
+        condition.add_condition("delete_flag", delete_flag, "=")
+        sql = self.generate_sql(kvs={"count(*) ": ""}, op_type=SELECT, condition=condition, field_quota=False)
+        sum_page = None
+        if self.execute(sql):
+            sum_page = self.cursor.fetchone()[0]
+            sum_page = int(sum_page / page) + 1
+        else:
+            sum_page = 0
+        sql = self.generate_sql(op_type=SELECT, limit=page, offset=page_no * page, condition=condition)
+        if self.execute(sql):
+            return self.cursor.fetchall(), sum_page
+        else:
+            return [], 0
 
-    def insert_one(self, kvs: Dict[str:str] or List[str]) -> bool:
+    def insert_one(self, kvs: Dict or List) -> bool:
         return True
 
     def update(self, condition: Dict) -> bool:
