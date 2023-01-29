@@ -64,6 +64,7 @@ class DB_util(object):
             self.cursor = self.conn.cursor()
         except Exception as e:
             log("链接数据库失败，请修改配置，云服务器请配置ssl：{}".format(e))
+        self.show_sql = db_conf.get("show_sql") if db_conf.get("show_sql") is not None else True
 
     def generate_sql(self, kvs: Dict = None, op_type: str = OP_TYPE[3],
                      condition: Dict[Tuple[str, int or float or str or Tuple], str] = None,
@@ -94,6 +95,8 @@ class DB_util(object):
         condition_clause = "WHERE "
         if op_type == OP_TYPE[3] and (kvs is None or len(kvs) == 0):
             fields = "*"
+        elif op_type == DELETE:
+            fields = ""
         else:
             for kv in kvs.items():
                 if field_quota:
@@ -142,6 +145,8 @@ class DB_util(object):
             sql = "SELECT" + " {} ".format(
                 ", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {} OFFSET {};". \
                       format(condition_clause, str(limit), str(offset))
+        if self.show_sql:
+            log(sql)
         return sql
 
     def create_db_conn(self):
@@ -222,12 +227,41 @@ class DB_util(object):
             return [], 0
 
     def insert_one(self, kvs: Dict or List) -> bool:
-        return True
+        if type(kvs) == list and len(kvs) != len(self.db_field):
+            log("when input has only list, the len of list must equal with table fileds")
+            return False
+        elif type(kvs) == list and len(kvs) == len(self.db_field):
+            t = {}
+            for i in range(len(self.db_field)):
+                t[self.db_field[i]] = kvs[i]
+            kvs = t
+        sql = self.generate_sql(kvs=kvs, op_type=INSERT)
+        if self.execute(sql):
+            return True
+        else:
+            return False
 
-    def update(self, condition: Dict) -> bool:
-        return True
+    def update(self, condition: Conditions, kvs: Dict or List) -> bool:
+        if type(kvs) == list and len(kvs) != len(self.db_field):
+            log("when input has only list, the len of list must equal with table fileds")
+            return False
+        elif type(kvs) == list and len(kvs) == len(self.db_field):
+            t = {}
+            for i in range(len(self.db_field)):
+                t[self.db_field[i]] = kvs[i]
+            kvs = t
+        sql = self.generate_sql(kvs=kvs, op_type=UPDATE, condition=condition)
+        if self.execute(sql):
+            return True
+        else:
+            return False
 
-    def delete(self, condition: Dict) -> bool:
+    def delete(self, condition: Conditions) -> bool:
+        sql = self.generate_sql(op_type=DELETE, condition=condition)
+        if self.execute(sql):
+            return True
+        else:
+            return False
         return True
 
     def export(self, condition: Dict) -> bool:
@@ -505,6 +539,8 @@ class ResearchRecord(object):
         condition_clause = "WHERE "
         if op_type == OP_TYPE[3] and (kvs is None or len(kvs) == 0):
             fields = "*"
+        elif op_type == DELETE:
+            fields = ""
         else:
             for kv in kvs.items():
                 fields.append("`" + str(kv[0]) + "`")
