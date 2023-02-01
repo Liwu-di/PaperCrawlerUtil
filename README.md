@@ -442,8 +442,39 @@ for i in range(e.row_size):
 res_list = [[1, 2][3, 4]]
 e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
 ```  
-
-## 科研工具，记录执行情况
+## 数据库工具
+提供数据库的访问，包括查询一个，分页查询，CUD操作，导出到excel等
+```python
+from PaperCrawlerUtil.research_util import *
+c = {
+  "db_url": "数据库的ip地址",
+  "db_username": "数据库用户名",
+  "pass": "数据库密码",
+  "port": "数据库端口",
+  "ssl_ip": "如果是云端服务器，需要使用ssl，这里就是服务器ip",
+  "ssl_admin": "服务器用户名",
+  "ssl_pwd": "服务器密码",
+  "ssl_db_port": "服务器上数据库端口",
+  "ssl_port": "ssl 端口，一般为22",
+  "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True",
+  "db_database": "自己建的数据库名称，默认为research",
+  "db_table": "自己建的数据表名，默认为record_result",
+  "db_type": "数据库类型，默认mysql",
+  "show_sql": "是否需要显示生成的sql，默认True"
+ }
+a = DB_util(**c)
+# insert 包括两种方式，一种使用字典，进行插入，只插入对应的值，另一种使用列表，要求给定列表的数量和表的列一致
+log(a.insert_one({"file_execute": "aaa", "delete_flag": "0"}))
+log(a.insert_one(["1578", "avavsa", "asafaf", "afdafda", "fafdafda", "afsdafda", "afsdafd", "0"]))
+con = Conditions()
+con.add_condition("id", "100", ">=")
+con.add_condition("id", "110", "<=")
+a.update(condition=con, kvs={"delete_flag": "0"})
+a.delete(condition=con)
+a.select(condition=con, format="all")
+a.export(condition=con)
+```
+### 科研工具，记录执行情况，数据库工具的一个应用实例
 ```python
 from PaperCrawlerUtil.research_util import *
 """
@@ -460,6 +491,9 @@ c = {
   "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True",
   "db_database": "自己建的数据库名称，默认为research",
   "db_table": "自己建的数据表名，默认为record_result，注意自己建表时要继承列，详见方法参数"
+  "db_field": "自己建的表字段名称列表，默认为["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
+  "db_type": "数据库类型，默认mysql"
+  "show_sql": "是否需要显示生成的sql，默认True"
 }
 """
 c = {
