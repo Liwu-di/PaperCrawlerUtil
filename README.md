@@ -27,8 +27,9 @@ A set of tools , including
    4. proxy connection acquisition and proxy link acquisition through api  
    5. PDF file merging  
    6. PDF file intercepting certain pages, etc.  
-3. Research related
-   * Through a given database connection, automatically record the time of running the code, the end time, the running file, etc.
+3. Database related
+    * Through a given database connection, provide simple CRUD and export functions
+    * Construct a ready-made example from the above tools - record the time, files and results of each code run
 # 安装与使用
 ```commandline
 可以直接安装本包
