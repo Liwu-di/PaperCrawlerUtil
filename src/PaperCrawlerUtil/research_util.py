@@ -738,14 +738,5 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
-    c = {"db_url":"47.94.21.180","db_username":"root","pass":"Q7NRPeJao7GkOium","port":3306,"ssl_ip":"47.94.21.180","ssl_admin":"root","ssl_pwd":"liwudi1998328.","ssl_db_port":3306,"ssl_port":22,"ignore_error":True}
-    a = DB_util(**c)
-    # log(a.insert_one({"file_execute": "aaa", "delete_flag": "0"}))
-    # log(a.insert_one(["1578", "avavsa", "asafaf", "afdafda", "fafdafda", "afsdafda", "afsdafd", "0"]))
-    con = Conditions()
-    con.add_condition("id", "100", ">=")
-    con.add_condition("id", "110", "<=")
 
-    log(a.db_field)
 
