@@ -161,6 +161,10 @@ class DB_util(object):
         self.conn.autocommit(True)
 
     def query_table_field(self):
+        """
+        查询表中所有的字段名称
+        :return:
+        """
         sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '{}';".format(self.db_table)
         if self.execute(sql):
             return [i[0] for i in self.cursor.fetchall()]
@@ -190,8 +194,7 @@ class DB_util(object):
         查询一个记录
         :param format: 查询的规模，"one"，代表查询一个记录， "all"代表查询所有
         :param kvs: 要查询的字段，可以接受字典，列表，其中字典的value并没有使用，只使用key
-        :param condition:条件字典，形如{("a", "b") : "="} 即 where a = b，或者{"a":"b"},后台会自动将后一种形式转换为前一种，
-        但是，二者的关系只能是"="，即后面一种形式是前一种形式的特定情况简化版。
+        :param condition:条件字典，形如{("a", "b") : "="} 即 where a = b
         :return:
         """
         if type(kvs) == list:
@@ -205,12 +208,10 @@ class DB_util(object):
         else:
             return []
 
-    def select_page(self, condition: Conditions = None, delete_flag: int = 0, page: int = 100, page_no: int = 0) -> List[List]:
+    def select_page(self, condition: Conditions = None, page: int = 100, page_no: int = 0) -> List[List]:
         """
         分页查找
-        :param limit:
-        :param condition:
-        :param delete_flag: 删除标记
+        :param condition:条件
         :param page:页面大小
         :param page_no: 页面号
         :return:
@@ -218,7 +219,6 @@ class DB_util(object):
         res = []
         if condition is None:
             condition = Conditions()
-        condition.add_condition("delete_flag", delete_flag, "=")
         sql = self.generate_sql(kvs={"count(*) ": ""}, op_type=SELECT, condition=condition, field_quota=False)
         sum_page = None
         if self.execute(sql):
@@ -233,6 +233,11 @@ class DB_util(object):
             return [], 0
 
     def insert_one(self, kvs: Dict or List) -> bool:
+        """
+        插入一条记录
+        :param kvs:需要插入的字段以及对应的值，当为list时，要求值与表所有字段对应
+        :return:
+        """
         if type(kvs) == list and len(kvs) != len(self.db_field):
             log("when input has only list, the len of list must equal with table fileds")
             return False
@@ -248,6 +253,12 @@ class DB_util(object):
             return False
 
     def update(self, condition: Conditions, kvs: Dict or List) -> bool:
+        """
+        更新记录
+        :param condition: 条件
+        :param kvs: 需要插入的字段以及对应的值，当为list时，要求值与表所有字段对应
+        :return:
+        """
         if type(kvs) == list and len(kvs) != len(self.db_field):
             log("when input has only list, the len of list must equal with table fileds")
             return False
@@ -263,6 +274,11 @@ class DB_util(object):
             return False
 
     def delete(self, condition: Conditions) -> bool:
+        """
+        删除记录
+        :param condition: 条件
+        :return:
+        """
         sql = self.generate_sql(op_type=DELETE, condition=condition)
         if self.execute(sql):
             return True
@@ -277,9 +293,7 @@ class DB_util(object):
         :param field_name: 数据表中列的名称，默认为空
         :param process: 导出时对于列数据的处理，传入每行数据，输出改变后的每一行数据
         :param export_path: 导出文件的地址，默认为当前目录
-        :param condition:id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
-        负值表示从倒数方向导出，i.e. -100表示导出最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
-        i.e. : 给定tuple=(106, 224)，会查找id在[106, 224)的记录，所以如果需要导出106-224的记录，请输入(106, 225)
+        :param condition:条件
         :param file_type: 导出的类型，包括["csv", "xls"]
         :return:
         """
@@ -738,5 +752,16 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
+    ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
+    c = {"db_url": "47.94.21.180", "db_username": "root", "pass": "Q7NRPeJao7GkOium", "port": 3306,
+         "ssl_ip": "47.94.21.180", "ssl_admin": "root", "ssl_pwd": "liwudi1998328.", "ssl_db_port": 3306,
+         "ssl_port": 22, "ignore_error": True}
+    a = DB_util(**c)
+    # log(a.insert_one({"file_execute": "aaa", "delete_flag": "0"}))
+    # log(a.insert_one(["1578", "avavsa", "asafaf", "afdafda", "fafdafda", "afsdafda", "afsdafd", "0"]))
+    con = Conditions()
+    con.add_condition("id", "100", ">=")
+    con.add_condition("id", "110", "<=")
 
+    log(a.db_field)
 
