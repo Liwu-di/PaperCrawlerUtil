@@ -18,7 +18,7 @@ import pymysql
 
 class Conditions(dict):
 
-    relations = ["=", ">", ">=", "<", "<=", "in"]
+    relations = ["=", ">", ">=", "<", "<=", "in", "not in"]
 
     def __init__(self) -> None:
         super().__init__()
@@ -54,10 +54,7 @@ class DB_util(object):
         self.port = self.ssl.local_bind_port if check_ssl else db_conf.get("port")
         self.db_database = db_conf.get("db_database") if db_conf.get("db_database") is not None else "research"
         self.db_table = db_conf.get("db_table") if db_conf.get("db_table") is not None else "record_result"
-        self.db_field = db_conf.get("db_field") if db_conf.get("db_field") is not None \
-            else ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
         self.db_type = db_conf.get("db_type") if db_conf.get("db_type") is not None else "mysql"
-
         self.ignore_error = db_conf.get("ignore_error") if db_conf.get("ignore_error") is not None else True
         try:
             self.create_db_conn()
@@ -65,6 +62,7 @@ class DB_util(object):
         except Exception as e:
             log("链接数据库失败，请修改配置，云服务器请配置ssl：{}".format(e))
         self.show_sql = db_conf.get("show_sql") if db_conf.get("show_sql") is not None else True
+        self.db_field = self.query_table_field()
 
     def generate_sql(self, kvs: Dict = None, op_type: str = OP_TYPE[3],
                      condition: Dict[Tuple[str, int or float or str or Tuple], str] = None,
@@ -145,8 +143,6 @@ class DB_util(object):
             sql = "SELECT" + " {} ".format(
                 ", ".join(fields)) + "FROM `" + self.db_database + "`.`" + self.db_table + "` {} LIMIT {} OFFSET {};". \
                       format(condition_clause, str(limit), str(offset))
-        if self.show_sql:
-            log(sql)
         return sql
 
     def create_db_conn(self):
@@ -164,13 +160,22 @@ class DB_util(object):
         self.conn = connection
         self.conn.autocommit(True)
 
+    def query_table_field(self):
+        sql = "select COLUMN_NAME from information_schema.COLUMNS where table_name = '{}';".format(self.db_table)
+        if self.execute(sql):
+            return [i[0] for i in self.cursor.fetchall()]
+        else:
+            return []
     def execute(self, sql: str) -> bool:
         """
         内部方法，执行sql
         也可以执行用户自定义的sql，比如利用建表时默认的四个默认列记录数据等
+        :param show_sql: 是否在执行时，显示sql
         :param sql: 待执行的sql
         :return:
         """
+        if self.show_sql:
+            log(sql)
         try:
             self.cursor.execute(sql)
             return True
@@ -180,9 +185,10 @@ class DB_util(object):
                 write_file(local_path_generate("", "record_error.log"), mode="a+", string=sql + "\n")
             return False
 
-    def select_one(self, condition: Dict = None, kvs: Dict or List = None) -> List:
+    def select(self, condition: Dict = None, kvs: Dict or List = None, format: str = "one") -> List:
         """
         查询一个记录
+        :param format: 查询的规模，"one"，代表查询一个记录， "all"代表查询所有
         :param kvs: 要查询的字段，可以接受字典，列表，其中字典的value并没有使用，只使用key
         :param condition:条件字典，形如{("a", "b") : "="} 即 where a = b，或者{"a":"b"},后台会自动将后一种形式转换为前一种，
         但是，二者的关系只能是"="，即后面一种形式是前一种形式的特定情况简化版。
@@ -195,7 +201,7 @@ class DB_util(object):
             kvs = t
         sql = self.generate_sql(condition=condition, op_type=SELECT, kvs=kvs)
         if self.execute(sql):
-            return self.cursor.fetchone()
+            return self.cursor.fetchone() if format == "one" else self.cursor.fetchall()
         else:
             return []
 
@@ -264,7 +270,42 @@ class DB_util(object):
             return False
         return True
 
-    def export(self, condition: Dict) -> bool:
+    def export(self, condition: Conditions, file_type: str = "csv", export_path: str = "",
+               process: Callable[[List[str]], List] = None, field_name: List = None) -> bool:
+        """
+        导出文件
+        :param field_name: 数据表中列的名称，默认为空
+        :param process: 导出时对于列数据的处理，传入每行数据，输出改变后的每一行数据
+        :param export_path: 导出文件的地址，默认为当前目录
+        :param condition:id的范围，可以在select general中查询，当id_range中有负值存在时，只生效最小的负值，例如-110，-200，-200生效
+        负值表示从倒数方向导出，i.e. -100表示导出最后100条。 tuple表示连续的id值，list表示单个id，tuple不支持负值
+        i.e. : 给定tuple=(106, 224)，会查找id在[106, 224)的记录，所以如果需要导出106-224的记录，请输入(106, 225)
+        :param file_type: 导出的类型，包括["csv", "xls"]
+        :return:
+        """
+        if field_name is None:
+            field_name = []
+        res = list(self.select(condition, format="all"))
+        if process is not None:
+            for i in range(len(res)):
+                try:
+                    res[i] = process(res[i])
+                except Exception as e:
+                    log("处理数据程序错误：{}".format(e), print_file=sys.stderr)
+        log("成功导出数据{}条".format(len(res)))
+        res.insert(0, field_name)
+        export_path = export_path if len(export_path) > 0 else \
+            local_path_generate("", suffix=".csv" if file_type == "csv" else ".xls")
+        try:
+            if file_type == "csv":
+                csv = CsvProcess()
+                csv.write_csv(res, write_path=export_path)
+            else:
+                ExcelProcess().write_excel(res, path=export_path)
+            return True
+        except Exception as e:
+            log("导出失败：{}".format(e))
+            return False
         return True
 
     def __del__(self):
@@ -697,5 +738,14 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-    c = {}
-    a = ResearchRecord(**c)
+    ["id", "file_execute", "execute_time", "finish_time", "result", "args", "other", "delete_flag"]
+    c = {"db_url":"47.94.21.180","db_username":"root","pass":"Q7NRPeJao7GkOium","port":3306,"ssl_ip":"47.94.21.180","ssl_admin":"root","ssl_pwd":"liwudi1998328.","ssl_db_port":3306,"ssl_port":22,"ignore_error":True}
+    a = DB_util(**c)
+    # log(a.insert_one({"file_execute": "aaa", "delete_flag": "0"}))
+    # log(a.insert_one(["1578", "avavsa", "asafaf", "afdafda", "fafdafda", "afsdafda", "afsdafd", "0"]))
+    con = Conditions()
+    con.add_condition("id", "100", ">=")
+    con.add_condition("id", "110", "<=")
+
+    log(a.db_field)
+
