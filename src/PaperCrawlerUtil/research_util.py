@@ -17,7 +17,6 @@ import pymysql
 
 
 class Conditions(dict):
-
     relations = ["=", ">", ">=", "<", "<=", "in", "not in"]
 
     def __init__(self) -> None:
@@ -28,6 +27,9 @@ class Conditions(dict):
 
 
 class DB_util(object):
+    """
+    @todo:改为链接池或者提供连接池方式
+    """
 
     def __init__(self, **db_conf) -> None:
         super().__init__()
@@ -170,6 +172,7 @@ class DB_util(object):
             return [i[0] for i in self.cursor.fetchall()]
         else:
             return []
+
     def execute(self, sql: str) -> bool:
         """
         内部方法，执行sql
@@ -324,16 +327,16 @@ class DB_util(object):
 
     def __del__(self):
         """
-        关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
-        TypeError: 'NoneType' object is not callable
+        关闭连接
         :return:
         """
         if self.ssl is not None:
-            self.ssl.stop
+            self.ssl.stop()
         if self.conn is not None:
-            self.conn.close
+            self.conn.close()
         if self.cursor is not None:
-            self.cursor.close
+            self.cursor.close()
+        log("all file close !!!")
 
 
 class ResearchRecord(object):
@@ -738,16 +741,16 @@ class ResearchRecord(object):
 
     def __del__(self):
         """
-        关闭连接，不知道为什么调用的时候加（）会报错，比如self.ssl.stop（），会报错
-        TypeError: 'NoneType' object is not callable
+        关闭连接
         :return:
         """
         if self.ssl is not None:
-            self.ssl.stop
+            self.ssl.stop()
         if self.conn is not None:
-            self.conn.close
+            self.conn.close()
         if self.cursor is not None:
-            self.cursor.close
+            self.cursor.close()
+        log("all file close !!!")
 
 
 if __name__ == "__main__":
