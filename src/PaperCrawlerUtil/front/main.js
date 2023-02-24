@@ -57,27 +57,9 @@ function getElementByClassName(classnames){
     return objArray;
 }
 
-function reqnext(initno, neg, refresh){
 
-    obj = {
-        "c": db_info,
-        "page":100,
-        "no": 0
-    };
-    var sums = 0;
-    $.ajax({
-        type:"post",
-        url:change_page_link,
-        data:JSON.stringify(obj),
-        dataType:'json',
-        success:function(result){
-            sums = parseInt(result["data"]["sum"]);
-        },
-        error:function(result){
-            alert(result);
-        }
-    });
-    pageno = 0;
+
+function pageChange(initno, neg, refresh, pageno){
     if (typeof(initno) === "undefined"){
         pageno = getElementByClassName("info")[0].firstElementChild.firstElementChild.children[1].innerHTML;
         pageno = parseInt(pageno, 10);
@@ -92,7 +74,7 @@ function reqnext(initno, neg, refresh){
         }
     }
     else{
-        pageno = sums - 1;
+        pageno = pageno;
     }
     pages = getElementByClassName("pageno");
     for(i=0; i<pages.length; ++i){
@@ -176,27 +158,32 @@ function reqnext(initno, neg, refresh){
 
 }
 
-function deleteTr(object) {
-    var id = object.parentNode.parentNode.children[1].innerHTML;
-    delete_ids("[" + id + ", " + id + "]");
-}
-function get_id(id){
-    obj = {
-        "id": id,
-        "c": db_info
-    };
-    $.ajax({
-        type:"post",
-        url:get_id_link,
-        data:JSON.stringify(obj),
-        dataType:'json',
-        success:function(result){
-            alert(result["data"]);
-        },
-        error:function(result){
-            alert(result);
-        }
-    });
+
+function reqnext(initno, neg, refresh){
+    if (initno == 0){
+        obj = {
+        "c": db_info,
+        "page":100,
+        "no": 0
+        };
+        var sums = 0;
+        $.ajax({
+            type:"post",
+            url:change_page_link,
+            data:JSON.stringify(obj),
+            dataType:'json',
+            success:function(result){
+                sums = parseInt(result["data"]["sum"]);
+                pageChange(initno, neg, refresh, sums - 1);
+            },
+            error:function(result){
+                alert(result);
+            }
+        });
+    }
+
+    pageChange(initno, neg, refresh, 0);
+
 }
 function detail(object) {
     var id = object.parentNode.parentNode.children[1].innerHTML;
