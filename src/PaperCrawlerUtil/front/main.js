@@ -61,7 +61,7 @@ function reqnext(initno, neg, refresh){
 
     obj = {
         "c": db_info,
-        "page":parseInt(pages[0].value),
+        "page":100,
         "no": 0
     };
     var sums = 0;
