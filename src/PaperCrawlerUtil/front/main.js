@@ -59,6 +59,24 @@ function getElementByClassName(classnames){
 
 function reqnext(initno, neg, refresh){
 
+    obj = {
+        "c": db_info,
+        "page":parseInt(pages[0].value),
+        "no": 0
+    };
+    var sums = 0;
+    $.ajax({
+        type:"post",
+        url:change_page_link,
+        data:JSON.stringify(obj),
+        dataType:'json',
+        success:function(result){
+            sum = parseInt(result["data"]["sum"])
+        },
+        error:function(result){
+            alert(result);
+        }
+    });
     pageno = 0;
     if (typeof(initno) === "undefined"){
         pageno = getElementByClassName("info")[0].firstElementChild.firstElementChild.children[1].innerHTML;
@@ -74,7 +92,7 @@ function reqnext(initno, neg, refresh){
         }
     }
     else{
-        pageno = initno;
+        pageno = sums - 1;
     }
     pages = getElementByClassName("pageno");
     for(i=0; i<pages.length; ++i){
