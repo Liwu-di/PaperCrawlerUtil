@@ -71,7 +71,7 @@ function reqnext(initno, neg, refresh){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            sum = parseInt(result["data"]["sum"])
+            sums = parseInt(result["data"]["sum"]);
         },
         error:function(result){
             alert(result);
