@@ -159,6 +159,26 @@ function pageChange(initno, neg, refresh, pageno){
 }
 
 
+function get_id(id){
+    obj = {
+        "id": id,
+        "c": db_info
+    };
+    $.ajax({
+        type:"post",
+        url:get_id_link,
+        data:JSON.stringify(obj),
+        dataType:'json',
+        success:function(result){
+            alert(result["data"]);
+        },
+        error:function(result){
+            alert(result);
+        }
+    });
+}
+
+
 function reqnext(initno, neg, refresh){
     if (initno == 0){
         obj = {
