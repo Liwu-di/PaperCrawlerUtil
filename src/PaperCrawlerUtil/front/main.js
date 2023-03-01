@@ -158,7 +158,10 @@ function pageChange(initno, neg, refresh, pageno){
 
 }
 
-
+function deleteTr(object) {
+    var id = object.parentNode.parentNode.children[1].innerHTML;
+    delete_ids("[" + id + ", " + id + "]");
+}
 function get_id(id){
     obj = {
         "id": id,
