@@ -135,6 +135,7 @@ def search_pages():
     con.add_condition("id", data["id_range_left"], ">=")
     con.add_condition("id", data["id_range_right"], "<=")
     res = record.select_page_condition(conditions=con, page=1000)
+    res = {"data": res}
     data = generate_result(data=str(res))
     return data
 
