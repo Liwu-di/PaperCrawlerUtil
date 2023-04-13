@@ -60,7 +60,7 @@ function getElementByClassName(classnames){
 }
 
 
-function rewrite_page(result){
+function rewrite_page(result, pageno){
     pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th>" +
         "<!--<th>parameter</th>-->" +
         "<th>comment</th>" +
@@ -155,7 +155,7 @@ function pageChange(initno, neg, refresh, pageno){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            rewrite_page(result);
+            rewrite_page(result, pageno);
         },
         error:function(result){
             alert(result);
