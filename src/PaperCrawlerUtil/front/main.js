@@ -270,7 +270,7 @@ function search_file(file, l, r){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            rewrite_page(result);
+            rewrite_page(result, 0);
         },
         error:function(result){
             alert(result);
