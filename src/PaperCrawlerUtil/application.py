@@ -134,7 +134,7 @@ def search_pages():
     con.add_condition("file_execute", data["search_filed"], "=")
     con.add_condition("id_range_left", data["id_range_left"], ">=")
     con.add_condition("id_range_right", data["id_range_right"], "<=")
-    res = record.select_page_condition(Conditions=con)
+    res = record.select_page_condition(Conditions=con, page=1000)
     data = generate_result(data=str(res))
     return data
 

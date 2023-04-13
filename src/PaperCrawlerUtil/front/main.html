@@ -96,89 +96,89 @@
     </tr>
 </table>
 <script>
-    $(document).ready(function(){
-        //reqnext(init=0);
-        $("#main").DataTable({
-            //表示翻页时是否显示 processing信息（正在加载中），这个信息可以修改
-            processing: true,
-            language: {
-                "processing":   "处理中...",
-                "lengthMenu":   "_MENU_ 记录/页",
-                "zeroRecords":  "没有匹配的记录",
-                "info":         "第 _START_ 至 _END_ 项记录，共 _TOTAL_ 项",
-                "infoEmpty":    "第 0 至 0 项记录，共 0 项",
-                "infoFiltered": "(由 _MAX_ 项记录过滤)",
-                "infoPostFix":  "",
-                "search":       "搜索:",
-                "url":          "",
-                "decimal": ",",
-                "thousands": ".",
-                "emptyTable":"未找到符合条件的数据",
-                "paginate": {
-                    "first":    "首页",
-                    "previous": "上页",
-                    "next":     "下页",
-                    "last":     "末页"
-                }
-            },
-            retrieve: true,
-            paging: true,
-            ordering: false,
-            info: true,
-            autoWidth: false,
-            pageLength: 10,
-            pagingType: "full_numbers", //分页样式：simple,simple_numbers,full,full_numbers，
-            bFilter: true,
-            bLengthChange: true,//也就是页面上确认是否可以进行选择一页展示多少条
-            serverSide: true, //启用服务器端分页，要进行后端分页必须的环节
-            ajax: function (data, callback, settings) {
-                datas = {}
-                datas.c = db_info;
-                datas.page = data.length;
-                datas.no = data.start;
-                json = JSON.stringify(datas);
-                $.ajax({
-                    type: "POST",
-                    url: change_page_link,
-                    cache : false,  //禁用缓存
-                    data: json,   //传入已封装的参数
-                    dataType: "json",//返回数据格式为json
-                    success: function(returns) {
-                        var arr = "";
-                        if ('object' == typeof returns) {
-                            arr = returns;
-                        } else {
-                            arr = $.parseJSON(returns);//将json字符串转化为了一个Object对象
-                        }
-                        var t = [];
-                        console.log(arr);
-                        for(i=0;i<arr.data.data.length;++i){
-                            tem = []
-                            for(j=0;j<arr.data.data[i].length;++j){
-                                if(j===5 || j===11){
-
-                                }
-                                else{
-                                    tem.push(arr.data.data[i][j])
-                                }
-                            }
-                            t.push(tem)
-                        }
-                        returnData = {}
-                        returnData.recordsTotal = arr.data.data.sum * data.length;//totalCount指的是总记录数
-                        returnData.recordsFiltered = arr.data.data.sum * data.length;//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
-                        returnData.data = t;
-                        callback(returnData);
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        $.dialog.alert("查询失败");
-                        $wrapper.spinModal(false);
-                    }
-                });
-            }
-        })
-
-    });
+    // $(document).ready(function(){
+    //     //reqnext(init=0);
+    //     $("#main").DataTable({
+    //         //表示翻页时是否显示 processing信息（正在加载中），这个信息可以修改
+    //         processing: true,
+    //         language: {
+    //             "processing":   "处理中...",
+    //             "lengthMenu":   "_MENU_ 记录/页",
+    //             "zeroRecords":  "没有匹配的记录",
+    //             "info":         "第 _START_ 至 _END_ 项记录，共 _TOTAL_ 项",
+    //             "infoEmpty":    "第 0 至 0 项记录，共 0 项",
+    //             "infoFiltered": "(由 _MAX_ 项记录过滤)",
+    //             "infoPostFix":  "",
+    //             "search":       "搜索:",
+    //             "url":          "",
+    //             "decimal": ",",
+    //             "thousands": ".",
+    //             "emptyTable":"未找到符合条件的数据",
+    //             "paginate": {
+    //                 "first":    "首页",
+    //                 "previous": "上页",
+    //                 "next":     "下页",
+    //                 "last":     "末页"
+    //             }
+    //         },
+    //         retrieve: true,
+    //         paging: true,
+    //         ordering: false,
+    //         info: true,
+    //         autoWidth: false,
+    //         pageLength: 10,
+    //         pagingType: "full_numbers", //分页样式：simple,simple_numbers,full,full_numbers，
+    //         bFilter: true,
+    //         bLengthChange: true,//也就是页面上确认是否可以进行选择一页展示多少条
+    //         serverSide: true, //启用服务器端分页，要进行后端分页必须的环节
+    //         ajax: function (data, callback, settings) {
+    //             datas = {}
+    //             datas.c = db_info;
+    //             datas.page = data.length;
+    //             datas.no = data.start;
+    //             json = JSON.stringify(datas);
+    //             $.ajax({
+    //                 type: "POST",
+    //                 url: change_page_link,
+    //                 cache : false,  //禁用缓存
+    //                 data: json,   //传入已封装的参数
+    //                 dataType: "json",//返回数据格式为json
+    //                 success: function(returns) {
+    //                     var arr = "";
+    //                     if ('object' == typeof returns) {
+    //                         arr = returns;
+    //                     } else {
+    //                         arr = $.parseJSON(returns);//将json字符串转化为了一个Object对象
+    //                     }
+    //                     var t = [];
+    //                     console.log(arr);
+    //                     for(i=0;i<arr.data.data.length;++i){
+    //                         tem = []
+    //                         for(j=0;j<arr.data.data[i].length;++j){
+    //                             if(j===5 || j===11){
+    //
+    //                             }
+    //                             else{
+    //                                 tem.push(arr.data.data[i][j])
+    //                             }
+    //                         }
+    //                         t.push(tem)
+    //                     }
+    //                     returnData = {}
+    //                     returnData.recordsTotal = arr.data.data.sum * data.length;//totalCount指的是总记录数
+    //                     returnData.recordsFiltered = arr.data.data.sum * data.length;//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
+    //                     returnData.data = t;
+    //                     callback(returnData);
+    //                 },
+    //                 error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //                     $.dialog.alert("查询失败");
+    //                     $wrapper.spinModal(false);
+    //                 }
+    //             });
+    //         }
+    //     })
+    //
+    // });
 </script>
 </body>
 </html>
