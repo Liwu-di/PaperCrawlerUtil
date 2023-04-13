@@ -137,7 +137,7 @@ def search_pages():
     res, sums = record.select_page_condition(conditions=con, page=1000)
     res = [list(i) for i in res]
     res = {"data": res}
-    data = generate_result(data=str(res))
+    data = generate_result(data=res)
     return json.encoder.JSONEncoder().encode(data).replace("\n", "")
 
 
