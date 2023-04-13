@@ -254,9 +254,10 @@ def write_log(string: str = "", print_file: object = sys.stdout):
 
 
 def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
-        print_flush: bool = None, need_time_stamp: bool = True) -> bool:
+        print_flush: bool = None, need_time_stamp: bool = True, is_test_out: bool = False) -> bool:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
+    :param is_test_out: 是否是测试输出，正式场合不需要输出，可以通过common_util.basic_config()控制
     :param need_time_stamp: 是否需要对于输出的日志添加时间戳
     :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
     与process_bar的初始化file参数一致，默认为sys.stderr
@@ -271,6 +272,10 @@ def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", pri
     flag = True
     print_file = global_val.get_value(KEEP_PROCESS_BAR_STYLE_FILE) \
         if global_val.get_value(KEEP_PROCESS_BAR_STYLE) else print_file
+    is_test_model = global_val.get_value(IS_LOG_TEST_MODE) \
+        if global_val.get_value(IS_LOG_TEST_MODE) else False
+    if is_test_out and (not is_test_model):
+        return flag
     s = ""
     try:
         for k in string:
@@ -470,8 +475,10 @@ def basic_config(log_file_name: str = "crawler_util.log",
                  api_threaded: bool = True,
                  test_anonymous: bool = True,
                  keep_process_bar_style: bool = True,
-                 keep_process_bar_style_file: object = sys.stderr) -> tuple:
+                 keep_process_bar_style_file: object = sys.stderr,
+                 is_test_out: bool = True) -> tuple:
     """
+    :param is_test_out: 是否需要输出测试内容
     :param keep_process_bar_style_file: 保持进度条格式时，需要的输出流参数
     :param keep_process_bar_style: 是否保持进度条格式，如果此项为True，则log函数中参数print_file参数不会生效
     :param test_anonymous: 是否仅获取匿名代理，默认为True
@@ -530,7 +537,7 @@ def basic_config(log_file_name: str = "crawler_util.log",
          (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
          (ENABLE_SERVER, enable_server), (TEST_VALID_STATUS, test_valid_stats), (TEST_ANONYMOUS, test_anonymous),
          (API_THREADED, api_threaded), (KEEP_PROCESS_BAR_STYLE, keep_process_bar_style),
-         (KEEP_PROCESS_BAR_STYLE_FILE, keep_process_bar_style_file)])
+         (KEEP_PROCESS_BAR_STYLE_FILE, keep_process_bar_style_file), (IS_LOG_TEST_MODE, is_test_out)])
     PROXY_POOL_URL = proxy_pool_url if len(proxy_pool_url) != 0 else PROXY_POOL_URL
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -851,5 +858,5 @@ def getAllFiles(target_dir: str) -> list:
 
 
 if __name__ == "__main__":
-    basic_config(logs_style=LOG_STYLE_PRINT)
+    basic_config(logs_style=LOG_STYLE_PRINT, is_test_out=False)
 
