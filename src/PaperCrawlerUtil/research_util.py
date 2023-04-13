@@ -330,7 +330,7 @@ class DB_util(object):
         关闭连接
         :return:
         """
-        if self.ssl.is_alive():
+        if self.ssl.is_alive:
             self.ssl.stop()
         if self.conn is not None:
             self.conn.close()
