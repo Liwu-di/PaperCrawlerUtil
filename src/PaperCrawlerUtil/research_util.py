@@ -330,7 +330,7 @@ class DB_util(object):
         关闭连接
         :return:
         """
-        if self.ssl is not None:
+        if self.ssl.is_alive():
             self.ssl.stop()
         if self.conn is not None:
             self.conn.close()
@@ -353,6 +353,7 @@ class ResearchRecord(object):
         :param db_conf:详见readme文件
         """
         super().__init__()
+        self.db_util = DB_util(**db_conf)
         self.conn = None
         self.cursor = None
         self.ssl = None
@@ -739,12 +740,25 @@ class ResearchRecord(object):
         else:
             return []
 
+    def select_page_condition(self, page: int = 100, page_no: int = 0, delete_flag: int = 0,
+                              conditions: Conditions = None) -> List:
+        """
+        分页查找
+        :param conditions: 条件
+        :param delete_flag: 删除标记
+        :param page:页面大小
+        :param page_no: 页面号
+        :return:
+        """
+        conditions.add_condition("delete_flag", delete_flag, "=")
+        return self.db_util.select_page(condition=conditions, page=page, page_no=page_no)
+
     def __del__(self):
         """
         关闭连接
         :return:
         """
-        if self.ssl is not None:
+        if self.ssl.is_alive:
             self.ssl.stop()
         if self.conn is not None:
             self.conn.close()
