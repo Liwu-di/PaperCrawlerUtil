@@ -121,6 +121,24 @@ def get_by_id():
     return data
 
 
+@applications.route("/search_pages/", methods=[POST])
+def search_pages():
+    """
+    搜索分页查询
+    :return:
+    """
+    data = json.loads(request.get_data())
+    c = get_c(data["c"])
+    record = ResearchRecord(**c)
+    con = Conditions()
+    con.add_condition("file_execute", data["search_filed"], "=")
+    con.add_condition("id_range_left", data["id_range_left"], ">=")
+    con.add_condition("id_range_right", data["id_range_right"], "<=")
+    res = record.select_page_condition(Conditions=con)
+    data = generate_result(data=str(res))
+    return data
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")

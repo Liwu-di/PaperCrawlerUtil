@@ -17,6 +17,7 @@ function export_xls(range){
         });
     }
 
+
 function delete_ids(range){
     obj = {
         "range": range,
@@ -42,6 +43,7 @@ function delete_ids(range){
     });
 }
 
+
 function getElementByClassName(classnames){
     var objArray= new Array([]);//定义返回对象数组
     var tags=document.getElementsByTagName("*");//获取页面所有元素
@@ -57,6 +59,68 @@ function getElementByClassName(classnames){
     return objArray;
 }
 
+
+function rewrite_page(result){
+    pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th>" +
+        "<!--<th>parameter</th>-->" +
+        "<th>comment</th>" +
+        "<!--<th>default1</th><th>default2</th><th>default3</th><th>default4</th>--><!--<th>delete_flag</th>--></tr></thead>";
+    var table = document.getElementById("main");
+    sum_tr = "";
+    for(var i =0; i < result["data"]["data"].length; i++){
+        tr = "<tr>";
+        tr = tr + "<td>" +
+                        "<a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a> " +
+                        "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a> " +
+                        "<a href=\"javascript:void(0);\" onclick=\"detail(this)\" >详情</a> " +
+                    "</td>";
+        for(var j = 0; j < result['data']['data'][i].length; ++j){
+            if(j === 11 || j === 5 || j=== 10 || j === 9 || j === 8 || j=== 7){
+                //tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>";
+            }
+            else{
+                tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>";
+            }
+        }
+        tr = tr + "</tr>";
+        tr = tr + "\n";
+        sum_tr = sum_tr + tr;
+    }
+    table.innerHTML = pre + sum_tr;
+    tds = getElementByClassName("sum");
+    for(i=0; i<tds.length; ++i){
+        tds[i].innerHTML = "共" + (parseInt(result["data"]["sum"]) - 1) + "页";
+    }
+    for(var i = 0; i < getElementByClassName("info").length; ++i){
+        getElementByClassName("info")[i].firstElementChild.firstElementChild.children[1].innerHTML = pageno
+    }
+    pages = getElementByClassName("page");
+    if(pages[0].innerHTML == 0){
+        lefts = getElementByClassName("left");
+        for(i = 0; i < lefts.length; ++i){
+            lefts[i].disabled = true;
+        }
+    }
+    else{
+        lefts = getElementByClassName("left");
+        for(i = 0; i < lefts.length; ++i){
+            lefts[i].disabled = false;
+        }
+    }
+    tds = getElementByClassName("sum");
+    if("共" + pages[0].innerHTML + "页" === tds[0].innerHTML){
+        rights = getElementByClassName("right");
+        for(i = 0; i < rights.length; ++i){
+            rights[i].disabled = true;
+        }
+    }
+    else{
+        rights = getElementByClassName("right");
+        for(i = 0; i < rights.length; ++i){
+            rights[i].disabled = false;
+        }
+    }
+}
 
 
 function pageChange(initno, neg, refresh, pageno){
@@ -91,65 +155,7 @@ function pageChange(initno, neg, refresh, pageno){
         data:JSON.stringify(obj),
         dataType:'json',
         success:function(result){
-            pre = "<thead><tr><th>operation</th><th>id</th><th>file_execute</th><th>execute_time</th><th>finish_time</th><th>result</th>" +
-            "<!--<th>parameter</th>-->" +
-            "<th>comment</th>" +
-            "<!--<th>default1</th><th>default2</th><th>default3</th><th>default4</th>--><!--<th>delete_flag</th>--></tr></thead>";
-            var table = document.getElementById("main");
-            sum_tr = "";
-            for(var i =0; i < result["data"]["data"].length; i++){
-                tr = "<tr>";
-                tr = tr + "<td>" +
-                                "<a href=\"javascript:void(0);\" onclick=\"deleteTr(this)\" >删除</a> " +
-                                "<a href=\"javascript:void(0);\" onclick=\"modifyTr(this)\" >修改</a> " +
-                                "<a href=\"javascript:void(0);\" onclick=\"detail(this)\" >详情</a> " +
-                            "</td>";
-                for(var j = 0; j < result['data']['data'][i].length; ++j){
-                    if(j === 11 || j === 5 || j=== 10 || j === 9 || j === 8 || j=== 7){
-                        //tr = tr + "<td>" + "前端不显示，请导出查看" + "</td>";
-                    }
-                    else{
-                        tr = tr + "<td>" + result["data"]["data"][i][j] + "</td>";
-                    }
-                }
-                tr = tr + "</tr>";
-                tr = tr + "\n";
-                sum_tr = sum_tr + tr;
-            }
-            table.innerHTML = pre + sum_tr;
-            tds = getElementByClassName("sum");
-            for(i=0; i<tds.length; ++i){
-                tds[i].innerHTML = "共" + (parseInt(result["data"]["sum"]) - 1) + "页";
-            }
-            for(var i = 0; i < getElementByClassName("info").length; ++i){
-                getElementByClassName("info")[i].firstElementChild.firstElementChild.children[1].innerHTML = pageno
-            }
-            pages = getElementByClassName("page");
-            if(pages[0].innerHTML == 0){
-                lefts = getElementByClassName("left");
-                for(i = 0; i < lefts.length; ++i){
-                    lefts[i].disabled = true;
-                }
-            }
-            else{
-                lefts = getElementByClassName("left");
-                for(i = 0; i < lefts.length; ++i){
-                    lefts[i].disabled = false;
-                }
-            }
-            tds = getElementByClassName("sum");
-            if("共" + pages[0].innerHTML + "页" === tds[0].innerHTML){
-                rights = getElementByClassName("right");
-                for(i = 0; i < rights.length; ++i){
-                    rights[i].disabled = true;
-                }
-            }
-            else{
-                rights = getElementByClassName("right");
-                for(i = 0; i < rights.length; ++i){
-                    rights[i].disabled = false;
-                }
-            }
+            rewrite_page(result);
         },
         error:function(result){
             alert(result);
@@ -158,10 +164,13 @@ function pageChange(initno, neg, refresh, pageno){
 
 }
 
+
 function deleteTr(object) {
     var id = object.parentNode.parentNode.children[1].innerHTML;
     delete_ids("[" + id + ", " + id + "]");
 }
+
+
 function get_id(id){
     obj = {
         "id": id,
@@ -208,10 +217,13 @@ function reqnext(initno, neg, refresh){
     pageChange(initno, neg, refresh, 0);
 
 }
+
+
 function detail(object) {
     var id = object.parentNode.parentNode.children[1].innerHTML;
     get_id(id);
 }
+
 
 function modifyTr(object) {
     var id = object.parentNode.parentNode.children[1].innerHTML;
@@ -242,4 +254,26 @@ function modifyTr(object) {
                 alert(result);
             }
         });
+}
+
+
+function search_file(file, l, r){
+    obj = {
+        "c": db_info,
+        "search_field": file,
+        "id_range_left": l,
+        "id_range_right": r
+    };
+    $.ajax({
+        type:"post",
+        url:search_link,
+        data:JSON.stringify(obj),
+        dataType:'json',
+        success:function(result){
+            rewrite_page(result);
+        },
+        error:function(result){
+            alert(result);
+        }
+    });
 }
