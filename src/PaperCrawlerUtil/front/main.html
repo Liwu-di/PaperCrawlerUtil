@@ -44,13 +44,30 @@
             </div>
         </td>
         <td>
-            <div>
-                文件名: <input type="text" name="file" id="file" value="main.py">
-                id范围左: <input type="text" name="l" id="l" value="0">
-                id范围右: <input type="text" name="r" id="r" value="1000000000">
-                <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
+            <table>
+                <tr>
+                    <td>文件名:</td>
+                    <td><input type="text" name="file" id="file" value="main.py"></td>
+                </tr>
+                <tr>
+                    <td>
+                        id范围左:
+                    </td>
+                    <td>
+                        <input type="text" name="l" id="l" value="0">
+                    </td>
+                    <td>
+                        id范围右:
+                    </td>
+                    <td>
+                        <input type="text" name="r" id="r" value="1000000000">
+                    </td>
+                </tr>
+                <tr>
+                    <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
                 document.getElementById('l').value, document.getElementById('r').value)">
-            </div>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
