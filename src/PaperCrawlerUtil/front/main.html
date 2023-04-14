@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-<table class="info">
+<table style="width: 100%" class="info">
     <tr>
         <td>当前是第</td>
         <td class="page">0</td>
@@ -98,56 +98,7 @@
     <!-- 表格第一行：表格表头 -->
 </table>
 
-<table class="info">
-    <tr>
-        <td>当前是第</td>
-        <td class="page">0</td>
-        <td>页</td>
-        <td class="sum" readonly>共0页</td>
-        <td><button class="left" onclick="reqnext(initno=undefined, neg=1, refresh=undefined)">上一页</button></td>
-        <td><button class="right" onclick="reqnext()">下一页</button></td>
-        <td><button onclick="reqnext(initno=undefined, neg=0, refresh=1)">刷新</button></td>
-        <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)"></td>
-        <td>
-            <div>
-                范围: <input type="text" name="range" id="range" value="(1, 3)">
-                <input type="submit" value="导出" id="export" onclick="export_xls(document.getElementById('range').value)">
-                <input type="submit" value="删除" id="delete" onclick="delete_ids(document.getElementById('range').value)">
-            </div>
-        </td>
-        <td>
-            <table style="width: 50%">
-                <tr>
-                    <td>文件名:</td>
-                    <td><input type="text" name="file" id="file" value="main.py"></td>
-                    <td>
-                        id范围左:
-                    </td>
-                    <td>
-                        <input type="text" name="l" id="l" value="0">
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        id范围右:
-                    </td>
-                    <td>
-                        <input type="text" name="r" id="r" value="1000000000">
-                    </td>
-                    <td style>
-                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value)">
-                    </td>
-                    <td>
-                        <input type="submit" value="删除，暂未实现" id="con_delete" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value)">
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+<table style="width: 100%" class="info">
 
 <script>
     reqnext(init=0);
