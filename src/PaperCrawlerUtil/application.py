@@ -132,7 +132,7 @@ def search_pages():
     record = ResearchRecord(**c)
     con = Conditions()
     con.add_condition("file_execute", "%" + data["search_field"] + "%", "like")
-    con.add_condition("machine_code", "%" + data["machine_code"] + "%", "like")
+    con.add_condition("other", "%" + data["machine_code"] + "%", "like")
     con.add_condition("id", data["id_range_left"], ">=")
     con.add_condition("id", data["id_range_right"], "<=")
     res, sums = record.select_page_condition(conditions=con, page=1000)
