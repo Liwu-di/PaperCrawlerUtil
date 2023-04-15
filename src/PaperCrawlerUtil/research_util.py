@@ -17,7 +17,7 @@ import pymysql
 
 
 class Conditions(dict):
-    relations = ["=", ">", ">=", "<", "<=", "in", "not in"]
+    relations = ["=", ">", ">=", "<", "<=", "in", "not in", "like"]
 
     def __init__(self) -> None:
         super().__init__()
@@ -769,5 +769,4 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-
 

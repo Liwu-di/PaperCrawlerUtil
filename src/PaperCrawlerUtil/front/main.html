@@ -48,24 +48,25 @@
                 <tr>
                     <td>文件名:</td>
                     <td><input type="text" name="file" id="file" value="main.py"></td>
+                    <td>机器码:</td>
+                    <td><input type="text" name="file" id="file" value="1032-2080Ti"></td>
+                    <td style>
+                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
+                document.getElementById('l').value, document.getElementById('r').value)">
+                    </td>
+                </tr>
+                <tr>
                     <td>
                         id范围左:
                     </td>
                     <td>
                         <input type="text" name="l" id="l" value="0">
                     </td>
-
-                </tr>
-                <tr>
                     <td>
                         id范围右:
                     </td>
                     <td>
                         <input type="text" name="r" id="r" value="1000000000">
-                    </td>
-                    <td style>
-                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value)">
                     </td>
                     <td>
                         <input type="submit" value="删除，暂未实现" id="con_delete" onclick="search_file(document.getElementById('file').value,
@@ -120,24 +121,25 @@
                 <tr>
                     <td>文件名:</td>
                     <td><input type="text" name="file" id="file" value="main.py"></td>
+                    <td>机器码:</td>
+                    <td><input type="text" name="machine_code" id="machine_code" value="1032-2080Ti"></td>
+                    <td style>
+                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
+                document.getElementById('l').value, document.getElementById('r').value), document.getElementById('machine_code').value">
+                    </td>
+                </tr>
+                <tr>
                     <td>
                         id范围左:
                     </td>
                     <td>
                         <input type="text" name="l" id="l" value="0">
                     </td>
-
-                </tr>
-                <tr>
                     <td>
                         id范围右:
                     </td>
                     <td>
                         <input type="text" name="r" id="r" value="1000000000">
-                    </td>
-                    <td style>
-                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value)">
                     </td>
                     <td>
                         <input type="submit" value="删除，暂未实现" id="con_delete" onclick="search_file(document.getElementById('file').value,

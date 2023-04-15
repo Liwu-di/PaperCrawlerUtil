@@ -257,12 +257,13 @@ function modifyTr(object) {
 }
 
 
-function search_file(file, l, r){
+function search_file(file, l, r, machine_code){
     obj = {
         "c": db_info,
         "search_field": file,
         "id_range_left": l,
-        "id_range_right": r
+        "id_range_right": r,
+        "machine_code": machine_code
     };
     $.ajax({
         type:"post",
