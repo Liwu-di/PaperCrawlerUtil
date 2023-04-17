@@ -111,21 +111,21 @@
         <td><input value="100" class="pageno" onchange="reqnext(initno=0, neg=undefined, refresh=1)"></td>
         <td>
             <div>
-                范围: <input type="text" name="range" id="range" value="(1, 3)">
-                <input type="submit" value="导出" id="export" onclick="export_xls(document.getElementById('range').value)">
-                <input type="submit" value="删除" id="delete" onclick="delete_ids(document.getElementById('range').value)">
+                范围: <input type="text" name="range2" id="range2" value="(1, 3)">
+                <input type="submit" value="导出" id="export2" onclick="export_xls(document.getElementById('range2').value)">
+                <input type="submit" value="删除" id="delete2" onclick="delete_ids(document.getElementById('range2').value)">
             </div>
         </td>
         <td>
             <table style="width: 100%">
                 <tr>
                     <td>文件名:</td>
-                    <td><input type="text" name="file" id="file" value="main.py"></td>
+                    <td><input type="text" name="file2" id="file2" value="main.py"></td>
                     <td>机器码:</td>
-                    <td><input type="text" name="machine_code" id="machine_code" value="1032-2080Ti"></td>
+                    <td><input type="text" name="machine_code2" id="machine_code2" value="1032-2080Ti"></td>
                     <td style>
-                        <input type="submit" value="搜索" id="search" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value, document.getElementById('machine_code').value)">
+                        <input type="submit" value="搜索" id="search2" onclick="search_file(document.getElementById('file2').value,
+                document.getElementById('l2').value, document.getElementById('r2').value, document.getElementById('machine_code2').value)">
                     </td>
                 </tr>
                 <tr>
@@ -133,17 +133,17 @@
                         id范围左:
                     </td>
                     <td>
-                        <input type="text" name="l" id="l" value="0">
+                        <input type="text" name="l2" id="l2" value="0">
                     </td>
                     <td>
                         id范围右:
                     </td>
                     <td>
-                        <input type="text" name="r" id="r" value="1000000000">
+                        <input type="text" name="r2" id="r2" value="1000000000">
                     </td>
                     <td>
-                        <input type="submit" value="删除，暂未实现" id="con_delete" onclick="search_file(document.getElementById('file').value,
-                document.getElementById('l').value, document.getElementById('r').value)">
+                        <input type="submit" value="删除，暂未实现" id="con_delete" onclick="search_file(document.getElementById('file2').value,
+                document.getElementById('l2').value, document.getElementById('r2').value)">
                     </td>
                 </tr>
             </table>
