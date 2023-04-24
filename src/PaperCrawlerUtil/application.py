@@ -138,7 +138,7 @@ def search_pages():
     if data.get("type") is not None:
         if data.get("type") == "delete":
             record.db_util.update(condition=con, kvs={"delete_flag": 1})
-            return generate_result()
+            return generate_result(data="True")
     else:
         res, sums = record.select_page_condition(conditions=con, page=1000)
         res = [list(i) for i in res]
