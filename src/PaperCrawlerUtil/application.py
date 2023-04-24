@@ -135,10 +135,15 @@ def search_pages():
     con.add_condition("other", "%" + data["machine_code"] + "%", "like")
     con.add_condition("id", data["id_range_left"], ">=")
     con.add_condition("id", data["id_range_right"], "<=")
-    res, sums = record.select_page_condition(conditions=con, page=1000)
-    res = [list(i) for i in res]
-    res = {"data": res}
-    data = generate_result(data=res)
+    if data.get("type") is not None:
+        if data.get("type") == "delete":
+            record.db_util.update(condition=con, kvs={"delete_flag": 1})
+            return generate_result()
+    else:
+        res, sums = record.select_page_condition(conditions=con, page=1000)
+        res = [list(i) for i in res]
+        res = {"data": res}
+        data = generate_result(data=res)
     return json.encoder.JSONEncoder().encode(data).replace("\n", "")
 
 
