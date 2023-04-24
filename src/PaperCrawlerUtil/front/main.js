@@ -257,24 +257,46 @@ function modifyTr(object) {
 }
 
 
-function search_file(file, l, r, machine_code){
+function search_file(file, l, r, machine_code, type){
     obj = {
         "c": db_info,
         "search_field": file,
         "id_range_left": l,
         "id_range_right": r,
-        "machine_code": machine_code
+        "machine_code": machine_code,
+        "type": type
     };
-    $.ajax({
-        type:"post",
-        url:search_link,
-        data:JSON.stringify(obj),
-        dataType:'json',
-        success:function(result){
-            rewrite_page(result, 0);
-        },
-        error:function(result){
-            alert(result);
-        }
-    });
+    if (type === "delete"){
+        $.ajax({
+            type: "post",
+            url: search_link,
+            data: JSON.stringify(obj),
+            dataType: 'json',
+            success: function (result) {
+                if(result["data"] === "True"){
+                    alert("删除成功");
+                }
+                else{
+                    alert("删除失败");
+                }
+            },
+            error: function (result) {
+                alert(result);
+            }
+        });
+    }
+    else {
+        $.ajax({
+            type: "post",
+            url: search_link,
+            data: JSON.stringify(obj),
+            dataType: 'json',
+            success: function (result) {
+                rewrite_page(result, 0);
+            },
+            error: function (result) {
+                alert(result);
+            }
+        });
+    }
 }
