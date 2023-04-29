@@ -148,7 +148,7 @@ def search_pages():
 
 
 @applications.route("/insert_record/", methods=[POST])
-def search_pages():
+def insert_record():
     """
     新增记录
     :return:
@@ -161,7 +161,7 @@ def search_pages():
 
 
 @applications.route("/update_record/", methods=[POST])
-def search_pages():
+def update_record():
     """
     更新记录
     :return:
