@@ -147,6 +147,32 @@ def search_pages():
     return json.encoder.JSONEncoder().encode(data).replace("\n", "")
 
 
+@applications.route("/insert_record/", methods=[POST])
+def search_pages():
+    """
+    新增记录
+    :return:
+    """
+    data = json.loads(request.get_data())
+    c = get_c(data["c"])
+    record = ResearchRecord(**c)
+    record_id = record.insert(data["file"], data["exec_time"], data["args"])
+    return generate_result(data=record_id)
+
+
+@applications.route("/update_record/", methods=[POST])
+def search_pages():
+    """
+    更新记录
+    :return:
+    """
+    data = json.loads(request.get_data())
+    c = get_c(data["c"])
+    record = ResearchRecord(**c)
+    res = record.update(data["file"], data["finish_time"], data["result"], data["reamrk"])
+    return generate_result() if res else generate_result(1, "failure")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=8000, help="port number will be used to start")
