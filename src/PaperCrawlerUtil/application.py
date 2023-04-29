@@ -169,7 +169,7 @@ def update_record():
     data = json.loads(request.get_data())
     c = get_c(data["c"])
     record = ResearchRecord(**c)
-    res = record.update(data["file"], data["finish_time"], data["result"], data["reamrk"])
+    res = record.update(data["id"], data["finish_time"], data["result"], data["reamrk"])
     return generate_result() if res else generate_result(1, "failure")
 
 
