@@ -833,9 +833,10 @@ def generate_result(code: int = 0, msg: str = "success", data: object = None):
     return {"code": code, "msg": msg, "data": data}
 
 
-def getAllFiles(target_dir: str) -> list:
+def getAllFiles(target_dir: str, cascade: bool = True) -> list:
     """
     遍历文件夹
+    :param cascade: 是否级联遍历子文件夹
     :param target_dir: 遍历的文件夹
     :return: 所有文件的名称
     """
@@ -850,7 +851,7 @@ def getAllFiles(target_dir: str) -> list:
         return files
     for i in range(0, len(listFiles)):
         path = os.path.join(target_dir, listFiles[i])
-        if os.path.isdir(path):
+        if os.path.isdir(path) and cascade:
             files.extend(getAllFiles(path))
         elif os.path.isfile(path):
             files.append(path)
