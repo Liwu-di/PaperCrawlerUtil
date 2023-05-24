@@ -36,7 +36,30 @@ A set of tools , including
 pip install PaperCrawlerUtil
 ```
 
-## 基本使用
+# 基本使用
+
+## 日志系统
+
+```python
+from PaperCrawlerUtil.common_util import *
+
+#目前支持qq和163邮箱，建议使用qq，163没有测试过
+#邮箱通知是最高级的通知，请慎用防止消息爆炸
+"""
+可以通过basic_config(logs_style=LOG_STYLE_PRINT, log_level=logging.WARNING)
+进行控制logs_style控制使用命令行输出或者日志文件或者两者兼有，log_level控制日志文件输出的等级
+"""
+
+logger = Logs("xxx@qq.com", "xxxxxx", "xx@xx.xx")
+logger.log_email("ahufsdihusdfiahu")
+logger.log_debug("adfsadf")
+logger.log_info("jsdfikaos")
+logger.log_warn("fjdiasofjds")
+logger.log_error("jdiaofjsoiafjisd")
+
+
+```
+
 本项目依赖proxypool项目，该项目可以爬取免费的代理，
 [proxy pool项目仓库](https://github.com/Python3WebSpider/ProxyPool)  
 感谢大佬为开源社区做出的贡献  

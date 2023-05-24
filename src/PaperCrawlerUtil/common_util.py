@@ -33,6 +33,9 @@ from PaperCrawlerUtil.proxypool.processors.server import app
 from PaperCrawlerUtil.proxypool.processors.tester import Tester
 from PaperCrawlerUtil.constant import *
 from tqdm import tqdm
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formataddr
 
 PROXY_POOL_URL = ""
 log_style = LOG_STYLE_PRINT
@@ -246,17 +249,23 @@ def get_timestamp(split: str or list = ["-", "-", " ", ":", ":"], accuracy: int 
     return time.strftime(time_style, time.localtime())
 
 
-def write_log(string: str = "", print_file: object = sys.stdout):
-    if print_file == sys.stdout:
-        logging.warning(string)
+def write_log(string: str = "", print_file: object = sys.stdout, func: callable = None):
+    if func is not None:
+        func(string)
     else:
-        logging.error(string)
+        if print_file == sys.stdout:
+            logging.warning(string)
+        else:
+            logging.error(string)
 
 
 def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
-        print_flush: bool = None, need_time_stamp: bool = True, is_test_out: bool = False) -> bool:
+        print_flush: bool = None, need_time_stamp: bool = True, is_test_out: bool = False,
+        funcs: callable = None, level: str = None) -> bool:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
+    :param level: 日志等级
+    :param funcs: 日志输出函数
     :param is_test_out: 是否是测试输出，正式场合不需要输出，可以通过common_util.basic_config()控制
     :param need_time_stamp: 是否需要对于输出的日志添加时间戳
     :param process_bar_file: 如果使用process_bar参数并且需要保持格式不变，则设置此项参数
@@ -276,6 +285,7 @@ def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", pri
         if global_val.get_value(IS_LOG_TEST_MODE) else False
     if is_test_out and (not is_test_model):
         return flag
+    global_log_level = global_val.get_value(GLOBAL_LOG_LEVEL)
     s = ""
     try:
         for k in string:
@@ -290,13 +300,133 @@ def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", pri
     if need_time_stamp and type(s) == str:
         s = get_timestamp(split=["-", "-", " ", ":", ":"]) + get_split(lens=3, style=" ") + s
     if log_style == LOG_STYLE_LOG:
-        write_log(s, print_file)
+        write_log(s, print_file, func=funcs)
     elif log_style == LOG_STYLE_PRINT:
-        tqdm.write(s=s, file=print_file, end=print_end)
+        if (LEVEL2NUM[global_log_level] if type(global_log_level) == str else global_log_level) <= \
+                (LEVEL2NUM[level] if type(level) == str else level):
+            tqdm.write(s=s, file=print_file, end=print_end)
     elif log_style == LOG_STYLE_ALL:
-        write_log(s, print_file)
-        tqdm.write(s=s, file=print_file, end=print_end)
+        if (LEVEL2NUM[global_log_level] if type(global_log_level) == str else global_log_level) <= \
+                (LEVEL2NUM[level] if type(level) == str else level):
+            write_log(s, print_file, func=funcs)
+            tqdm.write(s=s, file=print_file, end=print_end)
     return flag
+
+
+def send_email(sender_email, sender_password, receiver_email,
+               message, subject="default subject"):
+    """
+    send email
+    :param sender_email:
+    :param sender_password:
+    :param receiver_email:
+    :param message:
+    :param subject:
+    :return:
+    """
+    try:
+        if sender_email.endswith('@163.com'):
+            smtp_server = 'smtp.163.com'
+            smtp_port = 25
+        elif sender_email.endswith('@qq.com'):
+            smtp_server = 'smtp.qq.com'
+            smtp_port = 465
+        else:
+            Logs.log_error('Unsupported email domain')
+
+        msg = MIMEText(message, 'plain', 'utf-8')
+        msg['From'] = formataddr(('Sender', sender_email))
+        msg['To'] = formataddr(('Receiver', receiver_email))
+        msg['Subject'] = subject
+
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, [receiver_email], msg.as_string())
+
+        Logs.log_info('Email sent successfully!')
+    except Exception as e:
+        Logs.log_error('Error sending email:', str(e))
+
+
+class Logs(object):
+
+    def __init__(self, sender_email, sender_password, receiver_email):
+        super().__init__()
+        self.sender_email = sender_email
+        self.sender_password = sender_password
+        self.receiver_email = receiver_email
+
+    class LOG(object):
+
+        def __init__(self, ):
+            super().__init__()
+
+        @staticmethod
+        def log_info(string, *args, **keywords):
+            logging.info(string, *args, **keywords)
+
+        @staticmethod
+        def log_warning(string, *args, **keywords):
+            logging.warning(string, *args, **keywords)
+
+        @staticmethod
+        def log_error(string, *args, **keywords):
+            logging.error(string, *args, **keywords)
+
+        @staticmethod
+        def log_debug(string, *args, **keywords):
+            logging.debug(string, *args, **keywords)
+
+        @staticmethod
+        def log_email(sender_email, sender_password, receiver_email,
+                      message, subject="default subject"):
+            sender_email(sender_email, sender_password, receiver_email,
+                         message, subject="default subject")
+
+        def getMethod(self, funcs):
+            return getattr(self, funcs, self.log_warning)
+
+    @staticmethod
+    def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n",
+            print_file: object = sys.stdout,
+            print_flush: bool = None, need_time_stamp: bool = True, level: str = INFO, is_test_out: bool = False,
+            **email_param):
+        func_factory = Logs.LOG()
+        funcs = func_factory.getMethod("log_" + level)
+        log(*string, print_sep=print_sep, print_end=print_end, print_file=print_file, print_flush=print_flush,
+            need_time_stamp=need_time_stamp, is_test_out=is_test_out, funcs=funcs, level=level, **email_param)
+
+    @staticmethod
+    def log_warn(*string: str or object, print_sep: str = ' ', print_end: str = "\n",
+                 print_file: object = sys.stdout,
+                 print_flush: bool = None, need_time_stamp: bool = True):
+        Logs.log(*string, print_sep=print_sep, print_end=print_end, print_file=print_file, print_flush=print_flush,
+                 need_time_stamp=need_time_stamp, is_test_out=False, level=WARN)
+
+    @staticmethod
+    def log_info(*string: str or object, print_sep: str = ' ', print_end: str = "\n",
+                 print_file: object = sys.stdout,
+                 print_flush: bool = None, need_time_stamp: bool = True):
+        Logs.log(*string, print_sep=print_sep, print_end=print_end, print_file=print_file, print_flush=print_flush,
+                 need_time_stamp=need_time_stamp, is_test_out=False, level=INFO)
+
+    @staticmethod
+    def log_debug(*string: str or object, print_sep: str = ' ', print_end: str = "\n",
+                  print_file: object = sys.stdout,
+                  print_flush: bool = None, need_time_stamp: bool = True):
+        Logs.log(*string, print_sep=print_sep, print_end=print_end, print_file=print_file, print_flush=print_flush,
+                 need_time_stamp=need_time_stamp, is_test_out=False, level=DEBUG)
+
+    @staticmethod
+    def log_error(*string: str or object, print_sep: str = ' ', print_end: str = "\n",
+                  print_file: object = sys.stdout,
+                  print_flush: bool = None, need_time_stamp: bool = True):
+        Logs.log(*string, print_sep=print_sep, print_end=print_end, print_file=print_file, print_flush=print_flush,
+                 need_time_stamp=need_time_stamp, is_test_out=False, level=ERROR)
+
+    def log_email(self, message, subject="default subject"):
+        send_email(sender_email=self.sender_email, sender_password=self.sender_password,
+                   receiver_email=self.receiver_email, message=message, subject=subject)
 
 
 class CanStopThread(threading.Thread):
@@ -439,7 +569,7 @@ def stop_thread(thread_list: List[CanStopThread] = []) -> int:
 
 
 def basic_config(log_file_name: str = "crawler_util.log",
-                 log_level=logging.WARNING,
+                 log_level=logging.DEBUG,
                  proxy_pool_url: str = "",
                  logs_style: str = LOG_STYLE_PRINT,
                  require_proxy_pool: bool = False,
@@ -537,7 +667,8 @@ def basic_config(log_file_name: str = "crawler_util.log",
          (ENABLE_TESTER, enable_tester), (ENABLE_GETTER, enable_getter),
          (ENABLE_SERVER, enable_server), (TEST_VALID_STATUS, test_valid_stats), (TEST_ANONYMOUS, test_anonymous),
          (API_THREADED, api_threaded), (KEEP_PROCESS_BAR_STYLE, keep_process_bar_style),
-         (KEEP_PROCESS_BAR_STYLE_FILE, keep_process_bar_style_file), (IS_LOG_TEST_MODE, is_test_out)])
+         (KEEP_PROCESS_BAR_STYLE_FILE, keep_process_bar_style_file), (IS_LOG_TEST_MODE, is_test_out),
+         (GLOBAL_LOG_LEVEL, log_level)])
     PROXY_POOL_URL = proxy_pool_url if len(proxy_pool_url) != 0 else PROXY_POOL_URL
     log_style = logs_style
     if require_proxy_pool and PROXY_POOL_CAN_RUN_FLAG and len(
@@ -736,7 +867,7 @@ def deleteSpecialCharFromHtmlElement(html: str = "", sep: str = "") -> str:
     从html文本中删除标签，如：”<a>b</a>“ -> "b"
     :param html: html文本
     :param sep: 在每次去除完一个标签之后，加入的间隔符，如：sep=” “, ”<a>b</a>“ -> " b "
-    :return: 处理玩得字符串
+    :return: 处理完的字符串
     """
     names = []
     flag = True
@@ -859,5 +990,4 @@ def getAllFiles(target_dir: str, cascade: bool = True) -> list:
 
 
 if __name__ == "__main__":
-    basic_config(logs_style=LOG_STYLE_PRINT, is_test_out=False)
-
+    basic_config(logs_style=LOG_STYLE_PRINT, log_level=EMAIL)

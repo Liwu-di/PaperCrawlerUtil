@@ -37,6 +37,19 @@ API_THREADED = "API_THREADED"
 KEEP_PROCESS_BAR_STYLE = "keep_process_bar_style"
 KEEP_PROCESS_BAR_STYLE_FILE = "keep_process_bar_style_file"
 IS_LOG_TEST_MODE = "IS_LOG_TEST_MODE"
+GLOBAL_LOG_LEVEL = "global_log_level"
+
+
+"""
+日志级别
+"""
+INFO = "info"
+WARN = "warn"
+DEBUG = "debug"
+ERROR = "error"
+EMAIL = "email"
+
+LEVEL2NUM = {DEBUG: 10, INFO: 20, WARN: 30, ERROR: 40, EMAIL: 50}
 
 
 """
