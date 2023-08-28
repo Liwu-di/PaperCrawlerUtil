@@ -5,6 +5,17 @@
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
 
+
+"""
+邮箱定义
+"""
+
+SMTP_QQMAIL = 465
+SMTP_163MAIL = 25
+SMTP_URL_QQMAIL = "smtp.qq.com"
+SMTP_URL_163MAIL = "smtp.163.com"
+
+
 """
 跨文件全局变量名定义
 """
