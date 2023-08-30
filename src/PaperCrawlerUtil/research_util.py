@@ -12,7 +12,7 @@ from typing import Callable, Dict, Tuple
 from PaperCrawlerUtil.constant import *
 from PaperCrawlerUtil.common_util import *
 from sshtunnel import SSHTunnelForwarder
-from PaperCrawlerUtil.office_util import *
+from PaperCrawlerUtil.document_util import *
 import pymysql
 
 
