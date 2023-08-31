@@ -1,14 +1,9 @@
-import struct
-import sys
-import time
+import re
 import urllib
 from typing import Callable
 from urllib.request import urlretrieve
-from requests.cookies import RequestsCookieJar
-import requests
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-
 from PaperCrawlerUtil.common_util import *
 
 
@@ -124,7 +119,6 @@ def random_proxy_header_access(url: str, proxy: str = '',
 
 
 def get_opener(require_proxy, random_proxy, need_random_header, proxies):
-
     opener = urllib.request.build_opener()
     if require_proxy and need_random_header:
         ua = UserAgent()
@@ -461,16 +455,53 @@ def google_scholar_search_crawler(contain_all: List[str] = None, contain_complet
         return html
 
 
-def get_all_link_from_html(html: str, get_type: str = ACCURACY):
-    """
-    获取html中所有链接，有两种模式，一种是保证正确型，只识别http，https开头和href开头的
-    还有一种是全面型，尽可能多的识别链接，比如/adta/download/jafs.pdf等等也识别为链接，这种需要配合前缀链接使用
-    后一种返回时，会分为两部分，一部分是保证正确型，另一部分是尽可能多的识别的链接
-    :param get_type:
-    :param html:
-    :return:
-    """
+class HTTPLinkExtractor:
+    def __init__(self):
+        self.links = set()
 
+    def extract_links(self, text, strict_mode=False):
+        if strict_mode:
+            self._extract_links_strict(text)
+        else:
+            self._extract_links_lax(text)
+
+    def _extract_links_lax(self, text):
+        links = re.findall(r'https?://[^\s/$.?#].[^\s]*', text)
+        self.links.update(links)
+
+        domain_links = re.findall(r'(?<!https?://)www\.[^\s/$.?#].[^\s]*', text)
+        self.links.update(domain_links)
+
+    def _extract_links_strict(self, text):
+        self._extract_links_lax(text)
+
+    def get_unique_links(self):
+        return list(self.links)
+
+
+if __name__ == "__main__":
+    input_text = input("请输入文本：")
+    extractor = HTTPLinkExtractor()
+
+    try:
+        # 默认模式，尽可能多地识别链接
+        extractor.extract_links(input_text)
+        all_links = extractor.get_unique_links()
+
+        print("尽可能多地识别的链接：")
+        for link in all_links:
+            print(link)
+
+        # 严格模式，确保正确识别链接
+        extractor.extract_links(input_text, strict_mode=True)
+        strict_links = extractor.get_unique_links()
+
+        print("\n确保正确识别的链接：")
+        for link in strict_links:
+            print(link)
+
+    except Exception as e:
+        print(f"处理时出现异常：{e}")
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
