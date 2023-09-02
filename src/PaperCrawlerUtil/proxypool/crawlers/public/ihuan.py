@@ -1,7 +1,9 @@
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 import re
 import time
+
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+
 BASE_URL = 'https://ip.ihuan.me/today/{path}.html'
 
 
@@ -23,7 +25,7 @@ class IhuanCrawler(BaseCrawler):
         hosts_ports = ip_address.findall(html)
         for addr in hosts_ports:
             addr_split = addr.split(':')
-            if(len(addr_split) == 2):
+            if (len(addr_split) == 2):
                 host = addr_split[0]
                 port = addr_split[1]
                 yield Proxy(host=host, port=port)

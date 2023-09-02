@@ -5,16 +5,15 @@
 # @Software: PyCharm
 # @Email   : liwudi@liwudi.fun
 # @Info    : utils for logging
-from PaperCrawlerUtil.constant import *
-import sys
-import PaperCrawlerUtil.global_val as global_val
 import logging
-from PaperCrawlerUtil.base_util import *
-import tqdm
 import smtplib
+import sys
 from email.mime.text import MIMEText
 from email.utils import formataddr
-from PaperCrawlerUtil.base_util import *
+
+import tqdm
+import PaperCrawlerUtil.global_val as global_val
+from PaperCrawlerUtil.constant import *
 
 
 def write_log(string: str = "", print_file: object = sys.stdout, func: callable = None):

@@ -1,6 +1,7 @@
 from pyquery import PyQuery as pq
-from PaperCrawlerUtil.proxypool.schemas import Proxy
+
 from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BASE_URL = 'https://www.xicidaili.com/'
 

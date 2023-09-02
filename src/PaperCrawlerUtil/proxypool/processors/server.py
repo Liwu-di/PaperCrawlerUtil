@@ -1,11 +1,10 @@
 from flask import Flask, g
 
 import PaperCrawlerUtil.global_val as global_val
-from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
-from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
-from PaperCrawlerUtil.global_val import *
-from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
 from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
+from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
 
 IS_DEV = True
 
@@ -57,7 +56,6 @@ def get_proxy():
         raise e
 
 
-
 @app.route('/all')
 def get_proxy_all():
     """
@@ -83,6 +81,7 @@ def get_count():
     conn = get_conn()
     return str(conn.count())
 
+
 @app.route("/test")
 def testDict():
     """
@@ -96,7 +95,6 @@ def testDict():
         for i in get_conn().dict.items():
             s = s + i[0] + "  :  " + str(i[1]) + "\n"
         return s
-
 
 # if __name__ == '__main__':
 #     API_HOST = global_val.get_value("API_HOST")

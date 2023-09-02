@@ -1,4 +1,3 @@
-import time
 import multiprocessing
 import sys
 
@@ -8,11 +7,11 @@ sys.path.append("../../PaperCrawlerUtil")
 from PaperCrawlerUtil.proxypool.processors.server import app
 from PaperCrawlerUtil.proxypool.processors.getter import Getter
 from PaperCrawlerUtil.proxypool.processors.tester import Tester
-from PaperCrawlerUtil.proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, APP_PROD_METHOD_TORNADO, API_THREADED, \
+from PaperCrawlerUtil.proxypool.setting import APP_PROD_METHOD_GEVENT, APP_PROD_METHOD_MEINHELD, \
+    APP_PROD_METHOD_TORNADO, API_THREADED, \
     IS_PROD, APP_PROD_METHOD, IS_WINDOWS
 from loguru import logger
 from PaperCrawlerUtil.constant import *
-
 
 if IS_WINDOWS:
     multiprocessing.freeze_support()

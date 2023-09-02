@@ -6,7 +6,6 @@
 # @Email   ：liwudi@liwudi.fun
 import threading
 
-
 modify_lock = threading.Lock()
 
 
@@ -27,4 +26,4 @@ def get_value(key):
     try:
         return _global_dict[key]
     except Exception as e:
-        print('读取'+key+'失败:{}\r\n'.format(e))
+        print('读取' + key + '失败:{}\r\n'.format(e))

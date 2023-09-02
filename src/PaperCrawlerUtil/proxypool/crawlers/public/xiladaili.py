@@ -1,6 +1,7 @@
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 from lxml import etree
+
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BASE_URL = "http://www.xiladaili.com/"
 MAX_PAGE = 5

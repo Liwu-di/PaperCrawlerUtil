@@ -1,14 +1,14 @@
-import redis
-
-import PaperCrawlerUtil.global_val as global_val
-from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
-from PaperCrawlerUtil.proxypool.schemas import Proxy
 from random import choice
 from typing import List
-from loguru import logger
-from PaperCrawlerUtil.proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
-from PaperCrawlerUtil.constant import *
 
+import redis
+from loguru import logger
+
+import PaperCrawlerUtil.global_val as global_val
+from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
 
 REDIS_CLIENT_VERSION = redis.__version__
 IS_REDIS_VERSION_2 = REDIS_CLIENT_VERSION.startswith('2.')

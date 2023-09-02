@@ -1,8 +1,8 @@
 import csv
 import io
-import json
 from multiprocessing import Pool, cpu_count
 from time import perf_counter
+
 import fitz
 import pdfplumber
 import xlrd
@@ -13,6 +13,7 @@ from pdf2docx import Converter
 from pdf2docx.converter import ConversionException, MakedocxException
 from pdf2docx.page.Page import Page
 from pdf2docx.page.Pages import Pages
+
 from PaperCrawlerUtil.common_util import *
 
 

@@ -6,17 +6,16 @@
 # @Email   ：liwudi@liwudi.fun
 import os
 import pickle
-import random
-
-from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
-from PaperCrawlerUtil.proxypool.schemas import Proxy
 from random import choice
 from typing import List
+
 from loguru import logger
-from PaperCrawlerUtil.proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
-from PaperCrawlerUtil.global_val import *
+
 import PaperCrawlerUtil.global_val as global_val
 from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.proxypool.exceptions import PoolEmptyException
+from PaperCrawlerUtil.proxypool.schemas import Proxy
+from PaperCrawlerUtil.proxypool.utils.proxy import is_valid_proxy, convert_proxy_or_proxies
 
 
 class ProxyDict(object):
@@ -180,7 +179,6 @@ class ProxyDict(object):
         except Exception as e:
             print("加载字典错误：{}".format(e))
             return {}
-
 
 # if __name__ == '__main__':
 #     conn = ProxyDict()

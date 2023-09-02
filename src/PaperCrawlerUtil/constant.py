@@ -4,8 +4,9 @@
 # @FileName: constant.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
-from bs4 import Tag
 import time
+
+from bs4 import Tag
 
 """
 邮箱定义
@@ -15,7 +16,6 @@ SMTP_QQMAIL = 465
 SMTP_163MAIL = 25
 SMTP_URL_QQMAIL = "smtp.qq.com"
 SMTP_URL_163MAIL = "smtp.163.com"
-
 
 """
 跨文件全局变量名定义
@@ -51,7 +51,6 @@ KEEP_PROCESS_BAR_STYLE_FILE = "keep_process_bar_style_file"
 IS_LOG_TEST_MODE = "IS_LOG_TEST_MODE"
 GLOBAL_LOG_LEVEL = "global_log_level"
 
-
 """
 日志级别
 """
@@ -63,7 +62,6 @@ EMAIL = "email"
 
 LEVEL2NUM = {DEBUG: 10, INFO: 20, WARN: 30, ERROR: 40, EMAIL: 50}
 
-
 """
 chain translate 定义
 """
@@ -71,7 +69,6 @@ ACCURACY = "accuracy"
 MORE = "MORE"
 GOOGLE_TRANSLATOR = "google"
 BAIDU_TRANSLATOR = "baidu"
-
 
 """
 存储方式定义
@@ -117,7 +114,6 @@ HEAD = "HEAD"
 PUT = "PUT"
 PATCH = "PATCH"
 
-
 """
 office 处理
 """
@@ -132,7 +128,6 @@ LIST_OF_VALUE = "list of value"
 TYPE_OF_LENGTH = "length"
 EXCEL_RETURN_TYPE = {LIST_OF_OBJECT: "list of object", LIST_OF_TYPE: "list of type",
                      LIST_OF_VALUE: "list of value", TYPE_OF_LENGTH: "length"}
-
 
 """
 谷歌翻译

@@ -154,7 +154,6 @@ def random_proxy_header_access(url: str, proxy: str = '',
         return None
 
 
-
 class process_bar(object):
     """
     封装进度条类tdqm，实现retrieve_file进度条显示，

@@ -1,7 +1,9 @@
 import re
+
 from pyquery import PyQuery as pq
-from PaperCrawlerUtil.proxypool.schemas import Proxy
+
 from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BASE_URL = "http://www.xsdaili.cn/"
 PAGE_BASE_URL = "http://www.xsdaili.cn/dayProxy/ip/{page}.html"

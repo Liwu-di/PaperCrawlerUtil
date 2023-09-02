@@ -1,7 +1,6 @@
 import re
-import urllib
-from typing import Callable
 from urllib.request import urlretrieve
+
 from bs4 import BeautifulSoup
 
 from PaperCrawlerUtil.common_util import *

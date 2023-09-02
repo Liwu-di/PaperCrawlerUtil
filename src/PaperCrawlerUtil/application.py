@@ -6,15 +6,11 @@
 # @Email   ：liwudi@liwudi.fun
 import argparse
 import ast
-import json
-import sys
 
-import global_val
-from PaperCrawlerUtil.common_util import *
-from PaperCrawlerUtil.global_val import *
 from flask import Flask, request
-from PaperCrawlerUtil.constant import *
+
 from PaperCrawlerUtil.database_util import *
+
 """
 this file is some applications constructed by PaperCrawlerUtil 
 and can run by Flask and provide services to website
@@ -30,16 +26,19 @@ def get_c(front_end_data: str = None) -> Dict:
     获取数据库配置
     :return:
     """
+
     def translate(s: str) -> Dict:
         try:
             return ast.literal_eval(s)
         except Exception as e:
             log(e, print_file=sys.stderr)
             return {}
+
     if front_end_data is None or len(front_end_data) == 0:
         return translate(global_val.get_value("c"))
     else:
         return translate(front_end_data)
+
 
 @applications.route("/")
 def hello_world():

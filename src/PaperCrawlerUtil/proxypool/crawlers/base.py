@@ -1,10 +1,12 @@
-from retrying import RetryError, retry
-import requests
-from loguru import logger
-from PaperCrawlerUtil.constant import *
-import PaperCrawlerUtil.global_val as global_val
-from fake_headers import Headers
 import time
+
+import requests
+from fake_headers import Headers
+from loguru import logger
+from retrying import RetryError, retry
+
+import PaperCrawlerUtil.global_val as global_val
+from PaperCrawlerUtil.constant import *
 
 
 class BaseCrawler(object):

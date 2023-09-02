@@ -1,8 +1,8 @@
 import platform
 from os.path import dirname, abspath, join
+
 from environs import Env
 from loguru import logger
-
 
 env = Env()
 env.read_env()
@@ -22,7 +22,6 @@ APP_DEV = IS_DEV = APP_ENV == DEV_MODE
 APP_PROD = IS_PROD = APP_ENV == PROD_MODE
 APP_TEST = IS_TEST = APP_ENV == TEST_MODE
 
-
 # Which WSGI container is used to run applications
 # - gevent: pip install gevent
 # - tornado: pip install tornado
@@ -32,11 +31,9 @@ APP_PROD_METHOD_TORNADO = 'tornado'
 APP_PROD_METHOD_MEINHELD = 'meinheld'
 APP_PROD_METHOD = env.str('APP_PROD_METHOD', APP_PROD_METHOD_GEVENT).lower()
 
-
 ENABLE_LOG_FILE = env.bool('ENABLE_LOG_FILE', True)
 ENABLE_LOG_RUNTIME_FILE = env.bool('ENABLE_LOG_RUNTIME_FILE', True)
 ENABLE_LOG_ERROR_FILE = env.bool('ENABLE_LOG_ERROR_FILE', True)
-
 
 LOG_LEVEL_MAP = {
     DEV_MODE: "DEBUG",

@@ -1,9 +1,10 @@
-from pyquery import PyQuery as pq
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
-from loguru import logger
 import re
 
+from loguru import logger
+from pyquery import PyQuery as pq
+
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BASE_URL = 'https://www.zdaye.com/dayProxy/{page}.html'
 MAX_PAGE = 5 * 2

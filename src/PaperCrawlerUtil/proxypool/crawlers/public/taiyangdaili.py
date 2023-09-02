@@ -1,6 +1,7 @@
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 from pyquery import PyQuery as pq
+
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BaseUrl = 'http://www.taiyanghttp.com/free/page{num}'
 MAX_PAGE = 3

@@ -1,16 +1,15 @@
 import asyncio
-import time
+from asyncio import TimeoutError
 
 import aiohttp
+from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
 from loguru import logger
 
 import PaperCrawlerUtil.global_val as global_val
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
-from aiohttp import ClientProxyConnectionError, ServerDisconnectedError, ClientOSError, ClientHttpProxyError
-from asyncio import TimeoutError
 from PaperCrawlerUtil.constant import *
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 from PaperCrawlerUtil.proxypool.storages.proxy_dict import ProxyDict
+from PaperCrawlerUtil.proxypool.storages.redis import RedisClient
 
 EXCEPTIONS = (
     ClientProxyConnectionError,
@@ -27,7 +26,7 @@ class Tester(object):
     """
     tester for testing proxies in queue
     """
-    
+
     def __init__(self, redis_host, redis_port, redis_password, redis_database, storage="redis", need_log=True):
         """
         init redis
@@ -41,7 +40,7 @@ class Tester(object):
         self.loop = asyncio.get_event_loop()
         self.need_log = need_log
         self.test_batch = global_val.get_value(TEST_BATCH_NUM)
-    
+
     async def test(self, proxy: Proxy):
         """
         test single proxy
@@ -80,7 +79,7 @@ class Tester(object):
                 self.conn.decrease(proxy)
                 if self.need_log:
                     logger.debug(f'proxy {proxy.string()} is invalid, decrease score')
-    
+
     @logger.catch
     def run(self):
         """
@@ -121,4 +120,3 @@ if __name__ == '__main__':
     tester = Tester()
     tester.run()
     # run_tester()
-

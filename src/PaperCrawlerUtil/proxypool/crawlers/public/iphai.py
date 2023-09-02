@@ -1,9 +1,10 @@
-from PaperCrawlerUtil.proxypool.schemas import Proxy
-from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
 import re
 
+from PaperCrawlerUtil.proxypool.crawlers.base import BaseCrawler
+from PaperCrawlerUtil.proxypool.schemas import Proxy
 
 BASE_URL = 'http://www.iphai.com/'
+
 
 class IPHaiCrawler(BaseCrawler):
     """
@@ -11,7 +12,7 @@ class IPHaiCrawler(BaseCrawler):
     """
     urls = [BASE_URL]
     ignore = True
-    
+
     def parse(self, html):
         """
         parse html file to get proxies
@@ -28,8 +29,8 @@ class IPHaiCrawler(BaseCrawler):
                 proxy = Proxy(host=address.strip(), port=int(port.strip()))
                 yield proxy
 
+
 if __name__ == '__main__':
     crawler = IPHaiCrawler()
     for proxy in crawler.crawl():
         print(proxy)
-

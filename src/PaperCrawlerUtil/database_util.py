@@ -4,16 +4,14 @@
 # @FileName: database_util.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
-import ast
-import sys
-import time
-from typing import Callable, Dict, Tuple
 
-from PaperCrawlerUtil.constant import *
-from PaperCrawlerUtil.common_util import *
-from sshtunnel import SSHTunnelForwarder
-from PaperCrawlerUtil.document_util import *
+
+from typing import Dict, Tuple
+
 import pymysql
+from sshtunnel import SSHTunnelForwarder
+
+from PaperCrawlerUtil.document_util import *
 
 
 class Conditions(dict):
@@ -769,4 +767,3 @@ class ResearchRecord(object):
 
 if __name__ == "__main__":
     basic_config(logs_style=LOG_STYLE_PRINT)
-
