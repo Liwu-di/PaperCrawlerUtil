@@ -14,7 +14,7 @@ from PaperCrawlerUtil.common_util import *
 from PaperCrawlerUtil.global_val import *
 from flask import Flask, request
 from PaperCrawlerUtil.constant import *
-from PaperCrawlerUtil.research_util import *
+from PaperCrawlerUtil.database_util import *
 """
 this file is some applications constructed by PaperCrawlerUtil 
 and can run by Flask and provide services to website

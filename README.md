@@ -469,24 +469,26 @@ e.write_excel(path=r"C:\\Users\\李武第\\Desktop\\2.xls", content=res_list)
 ```  
 ## 数据库工具
 提供数据库的访问，包括查询一个，分页查询，CUD操作，导出到excel等
+
 ```python
-from PaperCrawlerUtil.research_util import *
+from PaperCrawlerUtil.database_util import *
+
 c = {
-  "db_url": "数据库的ip地址",
-  "db_username": "数据库用户名",
-  "pass": "数据库密码",
-  "port": "数据库端口",
-  "ssl_ip": "如果是云端服务器，需要使用ssl，这里就是服务器ip",
-  "ssl_admin": "服务器用户名",
-  "ssl_pwd": "服务器密码",
-  "ssl_db_port": "服务器上数据库端口",
-  "ssl_port": "ssl 端口，一般为22",
-  "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True",
-  "db_database": "自己建的数据库名称，默认为research",
-  "db_table": "自己建的数据表名，默认为record_result",
-  "db_type": "数据库类型，默认mysql",
-  "show_sql": "是否需要显示生成的sql，默认True"
- }
+    "db_url": "数据库的ip地址",
+    "db_username": "数据库用户名",
+    "pass": "数据库密码",
+    "port": "数据库端口",
+    "ssl_ip": "如果是云端服务器，需要使用ssl，这里就是服务器ip",
+    "ssl_admin": "服务器用户名",
+    "ssl_pwd": "服务器密码",
+    "ssl_db_port": "服务器上数据库端口",
+    "ssl_port": "ssl 端口，一般为22",
+    "ignore_error": "是否在数据库记录失败的时候，在本地使用文件记录，默认为True",
+    "db_database": "自己建的数据库名称，默认为research",
+    "db_table": "自己建的数据表名，默认为record_result",
+    "db_type": "数据库类型，默认mysql",
+    "show_sql": "是否需要显示生成的sql，默认True"
+}
 a = DB_util(**c)
 # insert 包括两种方式，一种使用字典，进行插入，只插入对应的值，另一种使用列表，要求给定列表的数量和表的列一致
 log(a.insert_one({"file_execute": "aaa", "delete_flag": "0"}))
@@ -500,8 +502,10 @@ a.select(condition=con, format="all")
 a.export(condition=con)
 ```
 ### 科研工具，记录执行情况，数据库工具的一个应用实例
+
 ```python
-from PaperCrawlerUtil.research_util import *
+from PaperCrawlerUtil.database_util import *
+
 """
 c = {
   "db_url": "数据库的ip地址",
@@ -522,17 +526,17 @@ c = {
 }
 """
 c = {
-        "db_url": "4.x.x.x",
-        "db_username": "root",
-        "pass": "xxxx",
-        "port": 3306,
-        "ssl_ip": "4.x.x.x",
-        "ssl_admin": "root",
-        "ssl_pwd": "xxxx.",
-        "ssl_db_port": 3306,
-        "ssl_port": 22,
-        "ignore_error": True
-    }
+    "db_url": "4.x.x.x",
+    "db_username": "root",
+    "pass": "xxxx",
+    "port": 3306,
+    "ssl_ip": "4.x.x.x",
+    "ssl_admin": "root",
+    "ssl_pwd": "xxxx.",
+    "ssl_db_port": 3306,
+    "ssl_port": 22,
+    "ignore_error": True
+}
 a = ResearchRecord(**c)
 p = a.insert(__file__, get_timestamp())
 p = a.update(p, get_timestamp(), "ffdsfsda")
@@ -544,6 +548,7 @@ k = a.export((100, 200), file_type="xls")
 
 # 生成sql
 import ast
+
 # c指的是数据库的配置，这里省略一下，直接用字符串代替命令行传参
 c = '{"db_url":"xx.xx.xx.x"}'
 # literal_eval 可以吧字符串转成python对象
@@ -553,15 +558,15 @@ kvs = {}
 con = {}
 # 生成条件和键值对，作为例子
 for k in TABLE_TITLE:
-  if random.Random().randint(0, 10) > 5:
-      kvs[k] = "aaaa"
-      con[(k, "156")] = "="
-  else:
-      kvs[k] = 551
-      con[(k, 57275)] = ">"
+    if random.Random().randint(0, 10) > 5:
+        kvs[k] = "aaaa"
+        con[(k, "156")] = "="
+    else:
+        kvs[k] = 551
+        con[(k, 57275)] = ">"
 log(kvs, con)
 for p in OP_TYPE:
-  log(record.generate_sql(kvs, p, con))
+    log(record.generate_sql(kvs, p, con))
 ```
 
 ## 前后端交互部分

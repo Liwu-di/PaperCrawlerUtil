@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2022/10/21 16:39
 # @Author  : 银尘
-# @FileName: research_util.py
+# @FileName: database_util.py
 # @Software: PyCharm
 # @Email   ：liwudi@liwudi.fun
 import ast
