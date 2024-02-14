@@ -14,6 +14,7 @@ from email.utils import formataddr
 import tqdm
 import PaperCrawlerUtil.global_val as global_val
 from PaperCrawlerUtil.constant import *
+log_style = LOG_STYLE_ALL
 
 
 def write_log(string: str = "", print_file: object = sys.stdout, func: callable = None):
