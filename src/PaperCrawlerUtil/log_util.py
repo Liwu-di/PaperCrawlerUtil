@@ -28,7 +28,7 @@ def write_log(string: str = "", print_file: object = sys.stdout, func: callable 
 
 def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", print_file: object = sys.stdout,
         print_flush: bool = None, need_time_stamp: bool = True, is_test_out: bool = False,
-        funcs: callable = None, level: str = None) -> bool:
+        funcs: callable = None, level: str = DEBUG) -> bool:
     """
     本项目的通用输出函数， 使用这个方法可以避免tqdm进度条被中断重新输出
     :param level: 日志等级
