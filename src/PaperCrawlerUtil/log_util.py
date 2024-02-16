@@ -11,7 +11,9 @@ import sys
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-import tqdm
+import tqdm as tqdm
+import tqdm.notebook as tqdm
+import tqdm.std as tqdm
 import PaperCrawlerUtil.global_val as global_val
 from PaperCrawlerUtil.constant import *
 log_style = LOG_STYLE_ALL
@@ -70,12 +72,12 @@ def log(*string: str or object, print_sep: str = ' ', print_end: str = "\n", pri
     elif log_style == LOG_STYLE_PRINT:
         if (LEVEL2NUM[global_log_level] if type(global_log_level) == str else global_log_level) <= \
                 (LEVEL2NUM[level] if type(level) == str else level):
-            tqdm.write(s=s, file=print_file, end=print_end)
+            tqdm.tqdm.write(s=s, file=print_file, end=print_end)
     elif log_style == LOG_STYLE_ALL:
         if (LEVEL2NUM[global_log_level] if type(global_log_level) == str else global_log_level) <= \
                 (LEVEL2NUM[level] if type(level) == str else level):
             write_log(s, print_file, func=funcs)
-            tqdm.write(s=s, file=print_file, end=print_end)
+            tqdm.tqdm.write(s=s, file=print_file, end=print_end)
     return flag
 
 
@@ -193,3 +195,5 @@ class Logs(object):
     def log_email(self, message, subject="default subject"):
         send_email(sender_email=self.sender_email, sender_password=self.sender_password,
                    receiver_email=self.receiver_email, message=message, subject=subject)
+
+
